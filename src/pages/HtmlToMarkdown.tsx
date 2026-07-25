@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { FileCode, ArrowRightLeft, FileText, Copy, Download, CheckCircle, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
+import { FileCode, FileText, Copy, Download, CheckCircle, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
 import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import { convertHtmlToMarkdown } from '../utils/converters/htmlToMd'
@@ -11,7 +11,6 @@ import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 export default function HtmlToMarkdown() {
   const [html, setHtml] = useState<string>('')
   const [markdown, setMarkdown] = useState<string>('')
-  const [isConverting, setIsConverting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const isInitialized = useRef(false)
@@ -19,7 +18,7 @@ export default function HtmlToMarkdown() {
 
   // 同步滚动
   const htmlEditorScrollRef = useRef<HTMLTextAreaElement>(null)
-  const markdownPreviewScrollRef = useRef<HTMLDivElement>(null)
+  const markdownPreviewScrollRef = useRef<HTMLPreElement>(null)
   const { enabled: syncScrollEnabled, toggle: toggleSyncScroll } = useSyncScrollState(false)
   useSyncScroll(htmlEditorScrollRef, markdownPreviewScrollRef, syncScrollEnabled)
 

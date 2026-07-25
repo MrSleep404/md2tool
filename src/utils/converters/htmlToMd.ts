@@ -19,7 +19,7 @@ function createTurndownService(): TurndownService {
 
   // 添加自定义规则：处理 strikethrough（删除线）
   turndownService.addRule('strikethrough', {
-    filter: ['del', 's', 'strike'],
+    filter: ['del', 's'],
     replacement: (content: string) => `~~${content}~~`,
   });
 
@@ -32,7 +32,7 @@ function createTurndownService(): TurndownService {
         node.parentNode?.nodeName === 'LI'
       );
     },
-    replacement: (content: string, node: TurndownService.Node) => {
+    replacement: (_content: string, node: TurndownService.Node) => {
       const input = node as HTMLInputElement;
       return input.checked ? '[x] ' : '[ ] ';
     },

@@ -17,9 +17,8 @@ import {
   TableCell,
   WidthType,
   ImageRun,
-  Math as DocxMath,
 } from 'docx';
-import type { Paragraph as DocxParagraph, Table as DocxTable, ImageRun as DocxImageRun } from 'docx';
+import type { Paragraph as DocxParagraph, Table as DocxTable } from 'docx';
 import { renderMermaidToSvg, svgToPngBase64WithSize, base64ToArrayBuffer } from '../helpers/renderHelpers';
 import { convertLatexToWordMath } from '../helpers/latexToWord';
 
@@ -44,10 +43,10 @@ const MAX_IMAGE_HEIGHT_PX = MAX_IMAGE_HEIGHT_CM * CM_TO_PX; // ≈907像素
  * @returns Paragraph 对象
  */
 function createParagraphWithSpacing(options: ConstructorParameters<typeof Paragraph>[0] = {}): Paragraph {
-  return new Paragraph({
-    ...options,
+  const defaultOptions = {
     spacing: LINE_SPACING_1_5,
-  });
+  };
+  return new Paragraph(Object.assign({}, defaultOptions, options));
 }
 
 /**
@@ -65,7 +64,6 @@ function calculateConstrainedSize(
 
   // 检查是否超过最大尺寸
   const widthExceeded = width > MAX_IMAGE_WIDTH_PX;
-  const heightExceeded = height > MAX_IMAGE_HEIGHT_PX;
 
   // 如果宽度超过限制，按宽度缩放
   if (widthExceeded) {
@@ -182,10 +180,10 @@ function parseMarkdownLine(line: string): TextRun[] {
  * @returns Paragraph、Table、ImageRun 或 DocxMath 对象数组
  */
 async function parseMarkdownToParagraphs(markdown: string): Promise<{
-  paragraphs: (DocxParagraph | DocxTable | DocxImageRun | DocxMath)[];
+  paragraphs: (DocxParagraph | DocxTable)[];
   orderedListId: number;
 }> {
-  const paragraphs: (DocxParagraph | DocxTable | DocxImageRun | DocxMath)[] = [];
+  const paragraphs: (DocxParagraph | DocxTable)[] = [];
   // 统一处理行尾符号，将 Windows 格式（CRLF）转换为 Unix 格式（LF）
   const normalizedMarkdown = markdown.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   const lines = normalizedMarkdown.split('\n');
@@ -462,7 +460,6 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
               width: displayWidth,
               height: displayHeight,
             },
-            type: 'png',
           });
 
           paragraphs.push(
@@ -662,7 +659,8 @@ async function fetchImageAsBuffer(url: string): Promise<ArrayBuffer | null> {
       console.log('尝试从URL下载图片:', url);
 
       // 开发环境：使用本地代理
-      if (import.meta.env.DEV) {
+      // @ts-ignore - Vite环境变量
+      if (import.meta.env?.DEV) {
         const proxyUrl = `/proxy-image?url=${encodeURIComponent(url)}`;
         console.log('使用本地代理:', proxyUrl);
 
@@ -716,7 +714,7 @@ async function fetchImageAsBuffer(url: string): Promise<ArrayBuffer | null> {
  */
 export async function convertMarkdownToWord(
   markdown: string,
-  filename: string = 'document.docx'
+  _filename: string = 'document.docx'
 ): Promise<Blob> {
   try {
     if (!markdown || typeof markdown !== 'string') {
@@ -751,7 +749,7 @@ export async function convertMarkdownToWord(
       sections: [
         {
           properties: {},
-          children: paragraphs,
+          children: paragraphs as any,
         },
       ],
     });

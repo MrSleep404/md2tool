@@ -8,8 +8,9 @@ import mammoth from 'mammoth';
 /**
  * 使用mammoth的transformDocument API获取段落样式信息
  * 更准确地识别标题级别
+ * @deprecated 未使用的函数，保留供未来使用
  */
-async function convertWordToMarkdownAdvanced(file: File): Promise<string> {
+export async function _convertWordToMarkdownAdvanced(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
 
   console.log('========== Word转Markdown（高级模式）==========');
@@ -77,7 +78,7 @@ async function convertWordToMarkdownAdvanced(file: File): Promise<string> {
   // 根据段落信息生成Markdown
   let markdown = '';
 
-  paragraphs.forEach((para, index) => {
+  paragraphs.forEach((para, _index) => {
     const { text, styleName, isBold, fontSize } = para;
 
     // 根据样式名称判断标题级别
@@ -215,8 +216,9 @@ export async function convertWordBufferToMarkdown(arrayBuffer: ArrayBuffer): Pro
  * 后处理 Markdown 文本，优化格式
  * @param text 原始 Markdown 文本
  * @returns 优化后的 Markdown 文本
+ * @deprecated 未使用的函数，保留供未来使用
  */
-function postProcessMarkdown(text: string): string {
+export function _postProcessMarkdown(text: string): string {
   // 移除多余的空行（保留最多一个空行）
   text = text.replace(/\n{3,}/g, '\n\n');
 
@@ -241,7 +243,6 @@ function smartDetectTitles(html: string): string {
 
   // 匹配只包含<strong>的段落
   const strongParagraphRegex = /<p><strong>([^<]+)<\/strong><\/p>/g;
-  let match;
   let titleCount = 0;
 
   // 替换所有符合条件的加粗段落为标题
@@ -275,27 +276,27 @@ function convertHtmlToMarkdown(html: string): string {
   markdown = processTables(markdown);
 
   // 处理标题（提取文本内容）
-  markdown = markdown.replace(/<h1[^>]*>(.*?)<\/h1>/gis, (match, content) => {
+  markdown = markdown.replace(/<h1[^>]*>(.*?)<\/h1>/gis, (_match, content) => {
     const text = cleanHtmlTags(content);
     return `# ${text}\n\n`;
   });
-  markdown = markdown.replace(/<h2[^>]*>(.*?)<\/h2>/gis, (match, content) => {
+  markdown = markdown.replace(/<h2[^>]*>(.*?)<\/h2>/gis, (_match, content) => {
     const text = cleanHtmlTags(content);
     return `## ${text}\n\n`;
   });
-  markdown = markdown.replace(/<h3[^>]*>(.*?)<\/h3>/gis, (match, content) => {
+  markdown = markdown.replace(/<h3[^>]*>(.*?)<\/h3>/gis, (_match, content) => {
     const text = cleanHtmlTags(content);
     return `### ${text}\n\n`;
   });
-  markdown = markdown.replace(/<h4[^>]*>(.*?)<\/h4>/gis, (match, content) => {
+  markdown = markdown.replace(/<h4[^>]*>(.*?)<\/h4>/gis, (_match, content) => {
     const text = cleanHtmlTags(content);
     return `#### ${text}\n\n`;
   });
-  markdown = markdown.replace(/<h5[^>]*>(.*?)<\/h5>/gis, (match, content) => {
+  markdown = markdown.replace(/<h5[^>]*>(.*?)<\/h5>/gis, (_match, content) => {
     const text = cleanHtmlTags(content);
     return `##### ${text}\n\n`;
   });
-  markdown = markdown.replace(/<h6[^>]*>(.*?)<\/h6>/gis, (match, content) => {
+  markdown = markdown.replace(/<h6[^>]*>(.*?)<\/h6>/gis, (_match, content) => {
     const text = cleanHtmlTags(content);
     return `###### ${text}\n\n`;
   });
@@ -319,7 +320,7 @@ function convertHtmlToMarkdown(html: string): string {
     return '\n';
   });
   markdown = markdown.replace(/<\/ol>/gi, '\n');
-  markdown = markdown.replace(/<li[^>]*>(.*?)<\/li>/gis, (match, content) => {
+  markdown = markdown.replace(/<li[^>]*>(.*?)<\/li>/gis, (_match, content) => {
     olCounter++;
     return `${olCounter}. ${content}\n`;
   });

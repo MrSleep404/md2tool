@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { Code, Copy, Download, Loader2, CheckCircle, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
 import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
-import Preview from '../components/common/Preview'
 import { convertMarkdownToHtml, convertMarkdownToHtmlDocument } from '../utils/converters/mdToHtml'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 

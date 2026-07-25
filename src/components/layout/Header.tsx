@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { FileText, FileDown, Code, Table, FileType, ArrowRightLeft, FileCode, FileInput } from 'lucide-react'
+import { FileText, FileDown, Code, Table, FileType, FileCode, FileInput } from 'lucide-react'
 
 const navItems = [
   { path: '/', label: 'Markdown 转 Word', icon: FileText },

@@ -9,10 +9,8 @@ import {
   MathFraction,
   MathRadical,
   MathSuperScript,
-  MathSubScript,
   MathSum,
   MathIntegral,
-  MathFunction,
 } from 'docx';
 
 /**

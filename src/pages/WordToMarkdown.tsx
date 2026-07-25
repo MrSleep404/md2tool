@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { FileText, FileInput, Copy, Download, Loader2, CheckCircle, Upload, Trash2 } from 'lucide-react'
+import { FileInput, Copy, Download, Loader2, CheckCircle, Upload, Trash2 } from 'lucide-react'
 import { saveAs } from 'file-saver'
 import { convertWordToMarkdown } from '../utils/converters/wordToMd'
 

@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo } from 'react'
 import { FileText } from 'lucide-react'
 import 'katex/dist/katex.min.css'
 

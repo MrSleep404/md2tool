@@ -1,5 +1,4 @@
 import ExcelJS from 'exceljs'
-import { marked } from 'marked'
 
 /**
  * 将 Markdown 表格转换为 Excel 文件
