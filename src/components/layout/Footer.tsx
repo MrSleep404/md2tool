@@ -40,7 +40,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-200 pt-6 text-center">
           <p className="text-sm text-gray-600">
-            © {new Date().getFullYear()} 文档转换工具. 免费使用，无需注册.
+            © {new Date().getFullYear()} MD2Tool. 免费使用，无需注册.
           </p>
         </div>
       </div>

@@ -66,7 +66,10 @@ export default function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <LogoIcon className={`h-8 w-8 ${logoColor}`} />
-            <span className="text-xl font-bold text-gray-900">文档转换工具</span>
+            <span className="text-3xl font-bold">
+              <span className={logoColor}>MD</span>
+              <span className="text-gray-900">2Tool</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
