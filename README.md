@@ -1,8 +1,19 @@
-# Markdown 文档转换工具
+# MD2Tool - 免费在线文档格式转换工具
 
-一个纯前端的文档格式转换工具，支持 Markdown、Word、HTML、PDF 之间的互转。
+<div align="center">
 
-## 功能特性
+**🚀 [立即体验](https://md2tool.pages.dev) | 📖 [文档](#使用说明) | 🐛 [反馈问题](https://github.com/MrSleep404/md2tool/issues)**
+
+一个纯前端的文档格式转换工具，支持 Markdown、Word、HTML、PDF、Excel 之间的互转。
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/MrSleep404/md2tool/pulls)
+
+</div>
+
+---
+
+## 🌟 功能特性
 
 ✅ **6大核心转换功能**
 - Markdown 转 Word (.docx)
@@ -10,7 +21,7 @@
 - Markdown 转 HTML
 - HTML 转 Markdown
 - Markdown 转 PDF
-- Markdown 转 DOCX
+- Markdown 转 Excel (.xlsx)
 
 ✅ **隐私保护**
 - 所有转换在浏览器本地完成
@@ -35,6 +46,7 @@
   - marked: Markdown 转 HTML
   - turndown: HTML 转 Markdown
   - jspdf + html2canvas: 生成 PDF
+  - exceljs: 生成 Excel 文档
 
 ## 安装和运行
 
@@ -97,7 +109,7 @@ markdown转化/
 │   │   ├── MarkdownToHtml.tsx
 │   │   ├── HtmlToMarkdown.tsx
 │   │   ├── MarkdownToPdf.tsx
-│   │   └── MarkdownToDocx.tsx
+│   │   └── MarkdownToExcel.tsx
 │   ├── utils/               # 工具函数
 │   │   └── converters/      # 转换工具
 │   │       ├── mdToWord.ts
@@ -165,6 +177,58 @@ npm run lint
 
 MIT
 
+## 部署信息
+
+本项目已部署在 Cloudflare Pages 上：
+
+- **在线地址**: [https://md2tool.pages.dev](https://md2tool.pages.dev)
+- **部署平台**: Cloudflare Pages
+- **域名**: 支持 Cloudflare Pages 默认域名，也支持自定义域名
+
+### 部署步骤
+
+1. Fork 本仓库
+2. 在 Cloudflare Pages 中导入你的 GitHub 仓库
+3. 配置构建命令：
+   - 构建命令：`npm run build`
+   - 输出目录：`dist`
+4. 点击部署即可
+
+## 贡献指南
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
+
 ## 作者
 
-TRAE AI 生成
+**MrSleep404**
+
+- GitHub: [@MrSleep404](https://github.com/MrSleep404)
+
+## 致谢
+
+本项目使用了以下开源项目：
+
+- [React](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [docx](https://github.com/dolanmiu/docx)
+- [mammoth](https://github.com/mwilliamson/mammoth.js)
+- [marked](https://marked.js.org/)
+- [jspdf](https://github.com/parallax/jsPDF)
+- [exceljs](https://github.com/exceljs/exceljs)
+
+---
+
+<div align="center">
+
+如果这个项目对你有帮助，欢迎 ⭐️ Star 支持一下！
+
+Made with ❤️ by MrSleep404
+
+</div>
