@@ -7,6 +7,8 @@ import HtmlToMarkdown from './pages/HtmlToMarkdown'
 import MarkdownToPdf from './pages/MarkdownToPdf'
 import MarkdownToExcel from './pages/MarkdownToExcel'
 import PrivacyPolicy from './pages/PrivacyPolicy'
+import About from './pages/About'
+import Contact from './pages/Contact'
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/markdown-to-pdf" element={<MarkdownToPdf />} />
         <Route path="/markdown-to-excel" element={<MarkdownToExcel />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </Layout>
   )

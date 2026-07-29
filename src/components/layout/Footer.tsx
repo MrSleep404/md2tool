@@ -42,6 +42,14 @@ export default function Footer() {
         <div className="border-t border-gray-200 pt-6 text-center">
           <p className="text-sm text-gray-600">
             © {new Date().getFullYear()} MD2Tool. 免费使用，无需注册.{' '}
+            <Link to="/about" className="text-blue-600 hover:underline">
+              关于我们
+            </Link>
+            {' · '}
+            <Link to="/contact" className="text-blue-600 hover:underline">
+              联系我们
+            </Link>
+            {' · '}
             <Link to="/privacy-policy" className="text-blue-600 hover:underline">
               隐私政策
             </Link>
