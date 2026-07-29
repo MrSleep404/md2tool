@@ -1,0 +1,6 @@
+# Google AdSense ads.txt
+# 重要说明：在AdSense审核通过后，请将下面的 publisher ID 替换为真实的 publisher ID
+# 格式：google.com, pub-你的publisherID, DIRECT, f08c47fec0942fa0
+
+# 占位符示例（审核通过后替换为真实ID）
+# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

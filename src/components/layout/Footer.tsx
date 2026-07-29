@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Shield, Lock, Zap } from 'lucide-react'
 
 export default function Footer() {
@@ -40,7 +41,10 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-200 pt-6 text-center">
           <p className="text-sm text-gray-600">
-            © {new Date().getFullYear()} MD2Tool. 免费使用，无需注册.
+            © {new Date().getFullYear()} MD2Tool. 免费使用，无需注册.{' '}
+            <Link to="/privacy-policy" className="text-blue-600 hover:underline">
+              隐私政策
+            </Link>
           </p>
         </div>
       </div>
