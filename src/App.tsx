@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
+import ScrollToTop from './components/common/ScrollToTop'
 import Home from './pages/Home'
 import WordToMarkdown from './pages/WordToMarkdown'
 import MarkdownToHtml from './pages/MarkdownToHtml'
@@ -13,6 +14,7 @@ import Contact from './pages/Contact'
 function App() {
   return (
     <Layout>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/word-to-markdown" element={<WordToMarkdown />} />
