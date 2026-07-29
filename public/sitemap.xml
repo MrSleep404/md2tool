@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 首页 - Markdown转Word -->
+  <url>
+    <loc>https://md2tool.pages.dev/</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Word转Markdown -->
+  <url>
+    <loc>https://md2tool.pages.dev/word-to-markdown</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Markdown转HTML -->
+  <url>
+    <loc>https://md2tool.pages.dev/markdown-to-html</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- HTML转Markdown -->
+  <url>
+    <loc>https://md2tool.pages.dev/html-to-markdown</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Markdown转PDF -->
+  <url>
+    <loc>https://md2tool.pages.dev/markdown-to-pdf</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Markdown转Excel -->
+  <url>
+    <loc>https://md2tool.pages.dev/markdown-to-excel</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 关于我们 -->
+  <url>
+    <loc>https://md2tool.pages.dev/about</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- 联系我们 -->
+  <url>
+    <loc>https://md2tool.pages.dev/contact</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- 隐私政策 -->
+  <url>
+    <loc>https://md2tool.pages.dev/privacy-policy</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
