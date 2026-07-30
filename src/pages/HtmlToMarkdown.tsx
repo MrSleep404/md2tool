@@ -4,11 +4,15 @@ import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import { convertHtmlToMarkdown } from '../utils/converters/htmlToMd'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * HTML 转 Markdown 页面
  */
 export default function HtmlToMarkdown() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.htmlToMarkdown)
+
   const [html, setHtml] = useState<string>('')
   const [markdown, setMarkdown] = useState<string>('')
   const [error, setError] = useState<string | null>(null)

@@ -6,11 +6,15 @@ import Preview from '../components/common/Preview'
 import { convertMarkdownToHtml } from '../utils/converters/mdToHtml'
 import { convertMarkdownToPdf } from '../utils/converters/mdToPdf'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * Markdown 转 PDF 页面
  */
 export default function MarkdownToPdf() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.markdownToPdf)
+
   const [markdown, setMarkdown] = useState<string>('')
   const [htmlContent, setHtmlContent] = useState<string>('')
   const [isConverting, setIsConverting] = useState(false)

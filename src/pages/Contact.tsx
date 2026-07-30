@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Github, MessageCircle, ExternalLink } from 'lucide-react'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * 联系方式页面
  */
 export default function Contact() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.contact)
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}

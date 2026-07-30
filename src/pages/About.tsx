@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft, FileText, Shield, Zap, Code } from 'lucide-react'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * 关于我们页面
  */
 export default function About() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.about)
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}

@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * 隐私政策页面
  */
 export default function PrivacyPolicy() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.privacyPolicy)
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}

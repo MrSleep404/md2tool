@@ -7,11 +7,15 @@ import {
   previewMarkdownTables,
 } from '../utils/converters/mdToExcel'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * Markdown 转 Excel 页面
  */
 export default function MarkdownToExcel() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.markdownToExcel)
+
   const [markdown, setMarkdown] = useState<string>('')
   const [tables, setTables] = useState<Array<{ headers: string[]; rows: string[][] }>>([])
   const [isConverting, setIsConverting] = useState(false)

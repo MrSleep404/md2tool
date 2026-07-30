@@ -6,11 +6,15 @@ import Preview from '../components/common/Preview'
 import { convertMarkdownToWord } from '../utils/converters/mdToWord'
 import { convertMarkdownToHtml } from '../utils/converters/mdToHtml'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * 主页 - Markdown 转 Word
  */
 export default function Home() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.home)
+
   const [markdown, setMarkdown] = useState<string>('')
   const [htmlContent, setHtmlContent] = useState<string>('')
   const [isConverting, setIsConverting] = useState(false)

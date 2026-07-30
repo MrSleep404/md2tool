@@ -2,11 +2,15 @@ import { useState, useRef } from 'react'
 import { FileInput, Copy, Download, Loader2, CheckCircle, Upload, Trash2 } from 'lucide-react'
 import { saveAs } from 'file-saver'
 import { convertWordToMarkdown } from '../utils/converters/wordToMd'
+import { useSEO, SEO_CONFIGS } from '../utils/seo'
 
 /**
  * Word 转 Markdown 页面
  */
 export default function WordToMarkdown() {
+  // 设置SEO
+  useSEO(SEO_CONFIGS.wordToMarkdown)
+
   const [markdown, setMarkdown] = useState<string>('')
   const [isConverting, setIsConverting] = useState(false)
   const [error, setError] = useState<string | null>(null)
