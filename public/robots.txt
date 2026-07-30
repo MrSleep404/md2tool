@@ -1,5 +1,5 @@
 # robots.txt for MD2Tool
-# https://md2tool.pages.dev
+# https://www.md2tool.com
 
 # 允许所有搜索引擎爬取
 User-agent: *
@@ -9,7 +9,7 @@ Allow: /
 # Disallow: /api/
 
 # Sitemap位置
-Sitemap: https://md2tool.pages.dev/sitemap.xml
+Sitemap: https://www.md2tool.com/sitemap.xml
 
 # 爬取延迟（可选，单位：秒）
 # Crawl-delay: 1

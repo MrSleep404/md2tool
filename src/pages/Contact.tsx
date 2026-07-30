@@ -99,7 +99,7 @@ export default function Contact() {
                       直接访问在线版本，立即体验所有转换功能。
                     </p>
                     <a
-                      href="https://md2tool.pages.dev"
+                      href="https://www.md2tool.com"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"

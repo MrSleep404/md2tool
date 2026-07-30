@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**🚀 [立即体验](https://md2tool.pages.dev) | 📖 [文档](#使用说明) | 🐛 [反馈问题](https://github.com/MrSleep404/md2tool/issues)**
+**🚀 [立即体验](https://www.md2tool.com) | 📖 [文档](#使用说明) | 🐛 [反馈问题](https://github.com/MrSleep404/md2tool/issues)**
 
 一个纯前端的文档格式转换工具，支持 Markdown、Word、HTML、PDF、Excel 之间的互转。
 
@@ -181,7 +181,7 @@ MIT
 
 本项目已部署在 Cloudflare Pages 上：
 
-- **在线地址**: [https://md2tool.pages.dev](https://md2tool.pages.dev)
+- **在线地址**: [https://www.md2tool.com](https://www.md2tool.com)
 - **部署平台**: Cloudflare Pages
 - **域名**: 支持 Cloudflare Pages 默认域名，也支持自定义域名
 

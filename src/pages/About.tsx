@@ -161,12 +161,12 @@ export default function About() {
                   <div>
                     <span className="font-semibold text-gray-900">在线体验：</span>
                     <a
-                      href="https://md2tool.pages.dev"
+                      href="https://www.md2tool.com"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"
                     >
-                      https://md2tool.pages.dev
+                      https://www.md2tool.com
                     </a>
                   </div>
                 </div>
