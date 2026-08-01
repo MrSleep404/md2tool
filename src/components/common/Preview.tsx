@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect, useRef } from 'react'
 import { FileText } from 'lucide-react'
 import 'katex/dist/katex.min.css'
+import { highlightAllCode } from '../../utils/highlight'
 
 /**
  * 预览组件的属性接口
@@ -23,6 +24,22 @@ interface PreviewProps {
  * 实时渲染 Markdown/HTML 内容
  */
 export default function Preview({ content, type, scrollRef, headerActions, showHeader = true }: PreviewProps) {
+  // 预览容器的引用
+  const previewRef = useRef<HTMLDivElement>(null)
+
+  /**
+   * 内容更新后应用代码高亮
+   */
+  useEffect(() => {
+    if (content && previewRef.current) {
+      // 延迟执行，确保DOM已更新
+      const timer = setTimeout(() => {
+        highlightAllCode()
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [content])
+
   /**
    * 处理并转换内容为安全的 HTML
    */
@@ -67,6 +84,7 @@ export default function Preview({ content, type, scrollRef, headerActions, showH
       <div ref={scrollRef} className="flex-1 overflow-auto p-6">
         {content ? (
           <div
+            ref={previewRef}
             className={`markdown-preview ${type === 'html' ? '' : 'prose prose-sm max-w-none'}`}
             dangerouslySetInnerHTML={{ __html: renderedContent }}
             style={{
@@ -85,6 +103,36 @@ export default function Preview({ content, type, scrollRef, headerActions, showH
 
       {/* 全局样式：确保 Mermaid 和 LaTeX 正确显示 */}
       <style>{`
+        /* 代码块高亮样式 */
+        .markdown-preview pre {
+          background-color: #24292e;
+          border-radius: 6px;
+          padding: 16px;
+          overflow-x: auto;
+          margin: 1em 0;
+        }
+
+        .markdown-preview code {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-size: 14px;
+          line-height: 1.5;
+        }
+
+        .markdown-preview pre code {
+          color: #f6f8fa;
+          background: transparent;
+          padding: 0;
+        }
+
+        .markdown-preview p code,
+        .markdown-preview li code {
+          background-color: #f6f8fa;
+          color: #e83e8c;
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-size: 0.9em;
+        }
+
         .markdown-preview .mermaid-container {
           margin: 1.5em 0;
           text-align: center;

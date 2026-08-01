@@ -149,8 +149,9 @@ function parseMarkdownLine(line: string): TextRun[] {
         new TextRun({
           text: codeMatch[1],
           font: 'Consolas',
-          shading: { fill: 'F5F5F5' },
-          size: 24,
+          shading: { fill: 'F6F8FA' }, // 浅灰色背景
+          color: 'E83E8C', // 粉红色文字
+          size: 22, // 稍小的字号
         })
       );
       remaining = remaining.slice(codeMatch[0].length);
@@ -495,8 +496,8 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
         continue;
       }
 
-      // 普通代码块
-      codeLines.forEach(codeLine => {
+      // 普通代码块 - 添加高亮样式
+      codeLines.forEach((codeLine, index) => {
         paragraphs.push(
           createParagraphWithSpacing({
             children: [
@@ -504,9 +505,25 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
                 text: codeLine || ' ',
                 font: 'Consolas',
                 size: 20, // 10pt
+                color: '24292E', // 深灰色文字
               }),
             ],
-            shading: { fill: 'F5F5F5' },
+            shading: { fill: 'F6F8FA' }, // 浅灰色背景
+            spacing: {
+              before: index === 0 ? 100 : 0,
+              after: index === codeLines.length - 1 ? 100 : 0,
+              line: 276, // 1.5倍行距
+            },
+            indent: {
+              left: 200, // 左侧缩进
+            },
+            border: {
+              left: {
+                color: '28A745', // 绿色边框
+                size: 12,
+                space: 100,
+              },
+            },
           })
         );
       });
