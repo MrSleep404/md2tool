@@ -105,7 +105,7 @@ export default function Preview({ content, type, scrollRef, headerActions, showH
       <style>{`
         /* 代码块高亮样式 */
         .markdown-preview pre {
-          background-color: #24292e;
+          background-color: #ffffff;
           border-radius: 6px;
           padding: 16px;
           overflow-x: auto;
@@ -119,7 +119,7 @@ export default function Preview({ content, type, scrollRef, headerActions, showH
         }
 
         .markdown-preview pre code {
-          color: #f6f8fa;
+          color: #000000;
           background: transparent;
           padding: 0;
         }
