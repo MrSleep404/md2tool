@@ -65,80 +65,128 @@ function parseCodeLine(codeLine: string): TextRun[] {
     'is', 'None', 'True', 'False', 'self', 'yield', 'global', 'nonlocal'
   ];
 
-  // 简单的分词和高亮
-  let remaining = codeLine;
-  let hasMatch = true;
+  // 使用简单的分词方法
+  let i = 0;
+  while (i < codeLine.length) {
+    let matched = false;
 
-  while (remaining.length > 0 && hasMatch) {
-    hasMatch = false;
-
-    // 尝试匹配注释（优先级最高）
-    const commentMatch = remaining.match(/^(\/\/.*$|#.*$)/);
-    if (commentMatch) {
+    // 检查注释
+    if (codeLine[i] === '/' && i + 1 < codeLine.length && codeLine[i + 1] === '/') {
+      // 单行注释
+      const comment = codeLine.substring(i);
       runs.push(new TextRun({
-        text: commentMatch[1],
+        text: comment,
         font: 'Consolas',
         size: 20,
         color: CODE_COLORS.comment,
         italics: true,
       }));
-      remaining = remaining.slice(commentMatch[1].length);
-      hasMatch = true;
-      continue;
+      break;
     }
 
-    // 尝试匹配字符串
-    const stringMatch = remaining.match(/^(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)/);
-    if (stringMatch) {
+    if (codeLine[i] === '#') {
+      // Python注释
+      const comment = codeLine.substring(i);
       runs.push(new TextRun({
-        text: stringMatch[0],
+        text: comment,
+        font: 'Consolas',
+        size: 20,
+        color: CODE_COLORS.comment,
+        italics: true,
+      }));
+      break;
+    }
+
+    // 检查字符串
+    if (codeLine[i] === '"' || codeLine[i] === "'" || codeLine[i] === '`') {
+      const quote = codeLine[i];
+      let j = i + 1;
+      while (j < codeLine.length) {
+        if (codeLine[j] === '\\') {
+          j += 2; // 跳过转义字符
+        } else if (codeLine[j] === quote) {
+          j++;
+          break;
+        } else {
+          j++;
+        }
+      }
+      const str = codeLine.substring(i, j);
+      runs.push(new TextRun({
+        text: str,
         font: 'Consolas',
         size: 20,
         color: CODE_COLORS.string,
       }));
-      remaining = remaining.slice(stringMatch[0].length);
-      hasMatch = true;
+      i = j;
+      matched = true;
       continue;
     }
 
-    // 尝试匹配数字
-    const numberMatch = remaining.match(/^\b(\d+\.?\d*)\b/);
-    if (numberMatch) {
+    // 检查数字
+    if (/\d/.test(codeLine[i])) {
+      let j = i;
+      while (j < codeLine.length && /\d/.test(codeLine[j])) {
+        j++;
+      }
+      // 检查是否是浮点数
+      if (j < codeLine.length && codeLine[j] === '.') {
+        j++;
+        while (j < codeLine.length && /\d/.test(codeLine[j])) {
+          j++;
+        }
+      }
+      const num = codeLine.substring(i, j);
       runs.push(new TextRun({
-        text: numberMatch[1],
+        text: num,
         font: 'Consolas',
         size: 20,
         color: CODE_COLORS.number,
       }));
-      remaining = remaining.slice(numberMatch[1].length);
-      hasMatch = true;
+      i = j;
+      matched = true;
       continue;
     }
 
-    // 尝试匹配关键字
-    const keywordMatch = remaining.match(new RegExp(`^\\b(${keywords.join('|')})\\b`));
-    if (keywordMatch) {
-      runs.push(new TextRun({
-        text: keywordMatch[1],
-        font: 'Consolas',
-        size: 20,
-        color: CODE_COLORS.keyword,
-        bold: true,
-      }));
-      remaining = remaining.slice(keywordMatch[1].length);
-      hasMatch = true;
+    // 检查关键字和标识符
+    if (/[a-zA-Z_]/.test(codeLine[i])) {
+      let j = i;
+      while (j < codeLine.length && /[a-zA-Z0-9_]/.test(codeLine[j])) {
+        j++;
+      }
+      const word = codeLine.substring(i, j);
+
+      // 检查是否是关键字
+      if (keywords.includes(word)) {
+        runs.push(new TextRun({
+          text: word,
+          font: 'Consolas',
+          size: 20,
+          color: CODE_COLORS.keyword,
+          bold: true,
+        }));
+      } else {
+        runs.push(new TextRun({
+          text: word,
+          font: 'Consolas',
+          size: 20,
+          color: CODE_COLORS.default,
+        }));
+      }
+      i = j;
+      matched = true;
       continue;
     }
 
-    // 如果没有匹配，取一个字符作为普通文本
-    if (!hasMatch) {
+    // 其他字符（空格、符号等）
+    if (!matched) {
       runs.push(new TextRun({
-        text: remaining[0],
+        text: codeLine[i],
         font: 'Consolas',
         size: 20,
         color: CODE_COLORS.default,
       }));
-      remaining = remaining.slice(1);
+      i++;
     }
   }
 
