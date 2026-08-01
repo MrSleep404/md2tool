@@ -28,6 +28,124 @@ import { convertLatexToWordMath } from '../helpers/latexToWord';
 const LINE_SPACING_1_5 = { line: 360 };
 
 /**
+ * 代码语法高亮颜色配置
+ */
+const CODE_COLORS = {
+  keyword: '0000FF',      // 蓝色 - 关键字
+  string: 'A31515',       // 深红色 - 字符串
+  comment: '008000',      // 绿色 - 注释
+  number: '098658',       // 青色 - 数字
+  function: '795E26',     // 金色 - 函数名
+  operator: 'D16969',     // 红色 - 操作符
+  default: '000000',      // 黑色 - 默认文本
+};
+
+/**
+ * 解析代码行并应用语法高亮
+ * @param codeLine 代码行
+ * @returns TextRun 对象数组
+ */
+function parseCodeLine(codeLine: string): TextRun[] {
+  const runs: TextRun[] = [];
+
+  // 如果行为空，返回一个空格
+  if (!codeLine.trim()) {
+    runs.push(new TextRun({ text: ' ', font: 'Consolas', size: 20 }));
+    return runs;
+  }
+
+  // 常见关键字列表
+  const keywords = [
+    'function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return',
+    'import', 'export', 'from', 'class', 'extends', 'new', 'this', 'super',
+    'async', 'await', 'try', 'catch', 'throw', 'typeof', 'instanceof',
+    'true', 'false', 'null', 'undefined', 'void', 'static', 'get', 'set',
+    'public', 'private', 'protected', 'readonly', 'interface', 'type', 'enum',
+    'def', 'print', 'elif', 'lambda', 'with', 'as', 'in', 'not', 'and', 'or',
+    'is', 'None', 'True', 'False', 'self', 'yield', 'global', 'nonlocal'
+  ];
+
+  // 简单的分词和高亮
+  let remaining = codeLine;
+  let hasMatch = true;
+
+  while (remaining.length > 0 && hasMatch) {
+    hasMatch = false;
+
+    // 尝试匹配注释（优先级最高）
+    const commentMatch = remaining.match(/^(\/\/.*$|#.*$)/);
+    if (commentMatch) {
+      runs.push(new TextRun({
+        text: commentMatch[1],
+        font: 'Consolas',
+        size: 20,
+        color: CODE_COLORS.comment,
+        italics: true,
+      }));
+      remaining = remaining.slice(commentMatch[1].length);
+      hasMatch = true;
+      continue;
+    }
+
+    // 尝试匹配字符串
+    const stringMatch = remaining.match(/^(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)/);
+    if (stringMatch) {
+      runs.push(new TextRun({
+        text: stringMatch[0],
+        font: 'Consolas',
+        size: 20,
+        color: CODE_COLORS.string,
+      }));
+      remaining = remaining.slice(stringMatch[0].length);
+      hasMatch = true;
+      continue;
+    }
+
+    // 尝试匹配数字
+    const numberMatch = remaining.match(/^\b(\d+\.?\d*)\b/);
+    if (numberMatch) {
+      runs.push(new TextRun({
+        text: numberMatch[1],
+        font: 'Consolas',
+        size: 20,
+        color: CODE_COLORS.number,
+      }));
+      remaining = remaining.slice(numberMatch[1].length);
+      hasMatch = true;
+      continue;
+    }
+
+    // 尝试匹配关键字
+    const keywordMatch = remaining.match(new RegExp(`^\\b(${keywords.join('|')})\\b`));
+    if (keywordMatch) {
+      runs.push(new TextRun({
+        text: keywordMatch[1],
+        font: 'Consolas',
+        size: 20,
+        color: CODE_COLORS.keyword,
+        bold: true,
+      }));
+      remaining = remaining.slice(keywordMatch[1].length);
+      hasMatch = true;
+      continue;
+    }
+
+    // 如果没有匹配，取一个字符作为普通文本
+    if (!hasMatch) {
+      runs.push(new TextRun({
+        text: remaining[0],
+        font: 'Consolas',
+        size: 20,
+        color: CODE_COLORS.default,
+      }));
+      remaining = remaining.slice(1);
+    }
+  }
+
+  return runs;
+}
+
+/**
  * 图片尺寸限制（厘米转换为像素，假设96 DPI）
  * Word标准：宽度≤16cm，高度≤24cm
  */
@@ -496,34 +614,16 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
         continue;
       }
 
-      // 普通代码块 - 添加高亮样式
+      // 普通代码块 - 应用语法高亮
       codeLines.forEach((codeLine, index) => {
         paragraphs.push(
           createParagraphWithSpacing({
-            children: [
-              new TextRun({
-                text: codeLine || ' ',
-                font: 'Consolas',
-                size: 20, // 10pt
-                color: '24292E', // 深灰色文字
-              }),
-            ],
+            children: parseCodeLine(codeLine),
             shading: { fill: 'F6F8FA' }, // 浅灰色背景
             spacing: {
               before: index === 0 ? 100 : 0,
               after: index === codeLines.length - 1 ? 100 : 0,
               line: 276, // 1.5倍行距
-            },
-            indent: {
-              left: 200, // 左侧缩进
-            },
-            border: {
-              left: {
-                color: '28A745', // 绿色边框
-                style: BorderStyle.SINGLE,
-                size: 12,
-                space: 100,
-              },
             },
           })
         );
