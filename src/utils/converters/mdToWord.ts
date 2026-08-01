@@ -520,6 +520,7 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
             border: {
               left: {
                 color: '28A745', // 绿色边框
+                style: BorderStyle.SINGLE,
                 size: 12,
                 space: 100,
               },
