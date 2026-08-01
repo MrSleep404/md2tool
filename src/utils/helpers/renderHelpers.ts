@@ -26,6 +26,8 @@ mermaid.initialize({
     secondaryColor: '#F3E5F5',
     tertiaryColor: '#FFF',
   },
+  // 添加更好的错误处理
+  logLevel: 'error', // 只显示错误日志
 });
 
 /**
@@ -43,8 +45,19 @@ function getUniqueMermaidId(): string {
  */
 export async function renderMermaidToSvg(code: string): Promise<string> {
   try {
+    // 验证输入
+    if (!code || typeof code !== 'string') {
+      throw new Error('Mermaid 代码不能为空');
+    }
+
+    // 清理代码：移除多余的空行和空格
+    const cleanedCode = code.trim();
+
+    // 生成唯一 ID
     const id = getUniqueMermaidId();
-    const { svg } = await mermaid.render(id, code);
+
+    // 渲染 Mermaid
+    const { svg } = await mermaid.render(id, cleanedCode);
 
     // 只移除可能导致安全问题的外部链接，保留样式
     const cleanedSvg = svg
@@ -53,8 +66,14 @@ export async function renderMermaidToSvg(code: string): Promise<string> {
 
     return cleanedSvg;
   } catch (error) {
-    console.error('Mermaid 渲染失败:', error);
-    throw error;
+    // 记录详细错误信息
+    console.error('Mermaid 渲染失败:', {
+      error: error instanceof Error ? error.message : '未知错误',
+      code: code.substring(0, 100) // 只记录前100个字符
+    });
+
+    // 抛出更友好的错误信息
+    throw new Error(`Mermaid 渲染失败: ${error instanceof Error ? error.message : '请检查 Mermaid 语法'}`);
   }
 }
 

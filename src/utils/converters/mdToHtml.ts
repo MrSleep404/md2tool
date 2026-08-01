@@ -30,14 +30,20 @@ async function preprocessMarkdown(markdown: string): Promise<string> {
   for (const match of mermaidMatches) {
     const mermaidCode = match[1].trim();
     try {
+      console.log('开始渲染 Mermaid 图表:', mermaidCode.substring(0, 50));
       const svg = await renderMermaidToSvg(mermaidCode);
       // 将 SVG 包装在一个 div 中，方便样式控制
       const svgHtml = `<div class="mermaid-container">${svg}</div>`;
       result = result.replace(match[0], svgHtml);
+      console.log('Mermaid 渲染成功');
     } catch (error) {
-      console.error('Mermaid 渲染失败:', error);
-      // 失败时保留原始代码块
-      result = result.replace(match[0], `<pre><code class="language-mermaid">${mermaidCode}</code></pre>`);
+      console.error('Mermaid 渲染失败，保留原始代码块:', error);
+      // 失败时保留原始代码块，并添加错误提示
+      const errorHtml = `<div class="mermaid-error" style="padding: 16px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 1em 0;">
+        <p style="margin: 0; color: #856404; font-weight: bold;">⚠️ Mermaid 图表渲染失败</p>
+        <pre style="margin-top: 8px; padding: 8px; background-color: #f8f9fa; border-radius: 4px; overflow-x: auto;"><code>${mermaidCode}</code></pre>
+      </div>`;
+      result = result.replace(match[0], errorHtml);
     }
   }
 
