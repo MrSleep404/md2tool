@@ -44,7 +44,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- SEO 兜底内容：爬虫未执行 JS 时也能看到 h1 标签 -->
+      <h1 style="text-align:center;padding:40px 20px;font-family:sans-serif;color:#333;margin-top:20vh;">Markdown转换工具 - 免费在线Markdown转Word/PDF/HTML</h1>
+      <p style="text-align:center;padding:0 20px;font-family:sans-serif;color:#666;font-size:16px;">免费在线Markdown转换工具，支持Markdown转Word、PDF、HTML、Excel，浏览器本地处理，保护隐私。</p>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
