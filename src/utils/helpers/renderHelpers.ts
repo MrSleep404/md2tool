@@ -14,8 +14,8 @@ mermaid.initialize({
   securityLevel: 'loose',
   fontFamily: 'arial, sans-serif',
   flowchart: {
-    useMaxWidth: false, // 禁用 useMaxWidth，生成固定尺寸的 SVG，避免 width="100%" 导致 Image 无法加载
-    htmlLabels: false, // 禁用 htmlLabels，生成纯 SVG <text> 元素，避免 Image 加载 SVG 时 foreignObject 导致失败
+    useMaxWidth: false,
+    htmlLabels: false,
     curve: 'basis',
   },
   themeVariables: {
@@ -26,8 +26,7 @@ mermaid.initialize({
     secondaryColor: '#F3E5F5',
     tertiaryColor: '#FFF',
   },
-  // 添加更好的错误处理
-  logLevel: 'error', // 只显示错误日志
+  logLevel: 'error',
 });
 
 /**
@@ -45,60 +44,67 @@ function getUniqueMermaidId(): string {
  */
 export async function renderMermaidToSvg(code: string): Promise<string> {
   try {
-    // 验证输入
     if (!code || typeof code !== 'string') {
       throw new Error('Mermaid 代码不能为空');
     }
 
-    // 清理代码：移除多余的空行和空格
     const cleanedCode = code.trim();
-
-    // 生成唯一 ID
     const id = getUniqueMermaidId();
 
-    // 渲染 Mermaid
+    console.log('[Mermaid] 开始渲染, ID:', id);
+    console.log('[Mermaid] 代码:', cleanedCode.substring(0, 100));
+
     const { svg } = await mermaid.render(id, cleanedCode);
 
-    // 清理 SVG 并确保它可以被 Image 对象正确加载
-    let cleanedSvg = svg
-      .replace(/xmlns:xlink="[^"]*"/gi, '')
-      .replace(/xlink:href="[^"]*"/gi, '');
+    console.log('[Mermaid] 渲染成功, SVG长度:', svg.length);
 
-    // 确保 SVG 有 xmlns 属性（Image 加载 SVG 时必需）
+    // 清理 SVG，确保可以被 Image 对象正确加载
+    let cleanedSvg = svg;
+
+    // 移除 xlink 相关属性
+    cleanedSvg = cleanedSvg.replace(/xmlns:xlink="[^"]*"/gi, '');
+    cleanedSvg = cleanedSvg.replace(/xlink:href="[^"]*"/gi, '');
+
+    // 移除 foreignObject 元素（可能导致 Image 加载失败）
+    cleanedSvg = cleanedSvg.replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
+
+    // 确保 SVG 有 xmlns 属性
     if (!/xmlns=/.test(cleanedSvg)) {
       cleanedSvg = cleanedSvg.replace(/<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
     }
 
-    // 将 width="100%" 替换为从 viewBox 提取的实际像素值
+    // 从 viewBox 中提取尺寸，只替换 <svg> 根元素的 width/height
     const viewBoxMatch = cleanedSvg.match(/viewBox="([^"]+)"/);
     if (viewBoxMatch) {
       const parts = viewBoxMatch[1].split(/\s+/).map(Number);
       const vbWidth = parts[2];
       const vbHeight = parts[3];
       if (vbWidth && vbHeight) {
-        cleanedSvg = cleanedSvg.replace(/width="[^"]*"/, `width="${vbWidth}"`);
-        cleanedSvg = cleanedSvg.replace(/height="[^"]*"/, `height="${vbHeight}"`);
+        // 只替换 <svg 标签上的 width/height，不影响内部子元素
+        cleanedSvg = cleanedSvg.replace(/(<svg[^>]*?)width="[^"]*"/, `$1width="${vbWidth}"`);
+        cleanedSvg = cleanedSvg.replace(/(<svg[^>]*?)height="[^"]*"/, `$1height="${vbHeight}"`);
       }
     }
 
+    // 如果没有 width/height 属性，添加默认值
+    if (!/width=/.test(cleanedSvg)) {
+      cleanedSvg = cleanedSvg.replace(/<svg/, '<svg width="800"');
+    }
+    if (!/height=/.test(cleanedSvg)) {
+      cleanedSvg = cleanedSvg.replace(/<svg/, '<svg height="600"');
+    }
+
+    console.log('[Mermaid] SVG清理完成, 前300字符:', cleanedSvg.substring(0, 300));
+
     return cleanedSvg;
   } catch (error) {
-    // 记录详细错误信息
-    console.error('Mermaid 渲染失败:', {
-      error: error instanceof Error ? error.message : '未知错误',
-      code: code.substring(0, 100) // 只记录前100个字符
-    });
-
-    // 抛出更友好的错误信息
+    console.error('[Mermaid] 渲染失败:', error);
     throw new Error(`Mermaid 渲染失败: ${error instanceof Error ? error.message : '请检查 Mermaid 语法'}`);
   }
 }
 
 /**
  * 将 LaTeX 公式渲染为 HTML 字符串
- * @param formula LaTeX 公式
- * @param displayMode 是否为块级公式（$$...$$）
- * @returns string HTML 字符串
  */
 export function renderLatexToHtml(formula: string, displayMode: boolean = false): string {
   try {
@@ -115,13 +121,11 @@ export function renderLatexToHtml(formula: string, displayMode: boolean = false)
 
 /**
  * 将 SVG 字符串转换为 Base64 PNG 图片（带尺寸信息）
- * @param svgString SVG 字符串
- * @param scale 缩放比例（默认为3，提高清晰度）
- * @returns Promise<{ base64: string, width: number, height: number }> Base64 PNG 图片和尺寸信息
+ * 使用 Blob URL 方式加载 SVG，比 data URL 更可靠
  */
 export async function svgToPngBase64WithSize(
   svgString: string,
-  scale: number = 3
+  scale: number = 2
 ): Promise<{ base64: string; width: number; height: number }> {
   return new Promise((resolve, reject) => {
     try {
@@ -132,53 +136,73 @@ export async function svgToPngBase64WithSize(
         processedSvg = processedSvg.replace(/<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
       }
 
-      // 从 viewBox 或 width/height 中提取尺寸
+      // 提取尺寸
       let svgWidth = 0;
       let svgHeight = 0;
 
-      const widthMatch = processedSvg.match(/width="(\d+)"/);
-      const heightMatch = processedSvg.match(/height="(\d+)"/);
+      const widthMatch = processedSvg.match(/width="(\d+(?:\.\d+)?)"\b/);
+      const heightMatch = processedSvg.match(/height="(\d+(?:\.\d+)?)"\b/);
 
-      if (widthMatch) svgWidth = parseInt(widthMatch[1]);
-      if (heightMatch) svgHeight = parseInt(heightMatch[1]);
+      if (widthMatch) svgWidth = Math.round(parseFloat(widthMatch[1]));
+      if (heightMatch) svgHeight = Math.round(parseFloat(heightMatch[1]));
 
-      // 如果没有具体像素尺寸，从 viewBox 提取
       if (!svgWidth || !svgHeight) {
         const viewBoxMatch = processedSvg.match(/viewBox="([^"]+)"/);
         if (viewBoxMatch) {
           const parts = viewBoxMatch[1].split(/\s+/).map(Number);
-          if (!svgWidth) svgWidth = parts[2] || 800;
-          if (!svgHeight) svgHeight = parts[3] || 600;
+          if (!svgWidth) svgWidth = Math.round(parts[2]) || 800;
+          if (!svgHeight) svgHeight = Math.round(parts[3]) || 600;
         }
       }
 
-      // 确保 SVG 有明确的像素宽高（替换掉 width="100%" 等百分比值）
-      processedSvg = processedSvg.replace(/width="[^"]*"/, `width="${svgWidth}"`);
-      processedSvg = processedSvg.replace(/height="[^"]*"/, `height="${svgHeight}"`);
+      // 确保有合理的尺寸
+      svgWidth = svgWidth || 800;
+      svgHeight = svgHeight || 600;
 
-      console.log(`SVG 尺寸: ${svgWidth}x${svgHeight}, 缩放: ${scale}x`);
+      // 只替换 <svg> 根元素的 width/height，不影响内部子元素
+      processedSvg = processedSvg.replace(/(<svg[^>]*?)width="[^"]*"/, `$1width="${svgWidth}"`);
+      processedSvg = processedSvg.replace(/(<svg[^>]*?)height="[^"]*"/, `$1height="${svgHeight}"`);
 
-      // 使用 encodeURIComponent 方式构建 Data URL
-      const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(processedSvg)}`;
+      console.log(`[SVG→PNG] 尺寸: ${svgWidth}x${svgHeight}, 缩放: ${scale}x`);
 
-      // 创建 Image 对象
+      // 使用 Blob URL 方式加载 SVG（比 data URL 更可靠）
+      const blob = new Blob([processedSvg], { type: 'image/svg+xml;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(blob);
+
       const img = new Image();
 
+      // 设置超时（10秒）
+      const timeout = setTimeout(() => {
+        URL.revokeObjectURL(blobUrl);
+        console.error('[SVG→PNG] 加载超时');
+        reject(new Error('SVG 加载超时'));
+      }, 10000);
+
       img.onload = () => {
+        clearTimeout(timeout);
         try {
+          const originalWidth = img.naturalWidth || svgWidth;
+          const originalHeight = img.naturalHeight || svgHeight;
+
+          // 限制 Canvas 尺寸，避免超过浏览器限制
+          const maxCanvasSize = 4096;
+          let actualScale = scale;
+          if (originalWidth * scale > maxCanvasSize || originalHeight * scale > maxCanvasSize) {
+            actualScale = Math.min(maxCanvasSize / originalWidth, maxCanvasSize / originalHeight);
+            console.warn(`[SVG→PNG] Canvas 尺寸过大，降低缩放到 ${actualScale.toFixed(2)}x`);
+          }
+
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
           if (!ctx) {
+            URL.revokeObjectURL(blobUrl);
             reject(new Error('无法创建 Canvas 上下文'));
             return;
           }
 
-          const originalWidth = img.naturalWidth || svgWidth;
-          const originalHeight = img.naturalHeight || svgHeight;
-
-          canvas.width = originalWidth * scale;
-          canvas.height = originalHeight * scale;
+          canvas.width = Math.round(originalWidth * actualScale);
+          canvas.height = Math.round(originalHeight * actualScale);
 
           // 填充白色背景
           ctx.fillStyle = '#FFFFFF';
@@ -186,9 +210,11 @@ export async function svgToPngBase64WithSize(
 
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
+          URL.revokeObjectURL(blobUrl);
+
           const pngBase64 = canvas.toDataURL('image/png');
 
-          console.log(`PNG 转换成功: ${canvas.width}x${canvas.height}`);
+          console.log(`[SVG→PNG] 转换成功: ${canvas.width}x${canvas.height}, Base64长度: ${pngBase64.length}`);
 
           resolve({
             base64: pngBase64,
@@ -196,16 +222,19 @@ export async function svgToPngBase64WithSize(
             height: originalHeight,
           });
         } catch (error) {
+          URL.revokeObjectURL(blobUrl);
           reject(error);
         }
       };
 
       img.onerror = () => {
-        console.error('SVG Image 加载失败，SVG 前500字符:', processedSvg.substring(0, 500));
-        reject(new Error('SVG 加载失败（可能包含不支持的元素）'));
+        clearTimeout(timeout);
+        URL.revokeObjectURL(blobUrl);
+        console.error('[SVG→PNG] Image 加载失败, SVG前500字符:', processedSvg.substring(0, 500));
+        reject(new Error('SVG 加载失败'));
       };
 
-      img.src = dataUrl;
+      img.src = blobUrl;
     } catch (error) {
       reject(error);
     }
@@ -214,71 +243,14 @@ export async function svgToPngBase64WithSize(
 
 /**
  * 将 SVG 字符串转换为 Base64 PNG 图片
- * @param svgString SVG 字符串
- * @returns Promise<string> Base64 PNG 图片
  */
 export async function svgToPngBase64(svgString: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    try {
-      // 将 SVG 字符串转换为 Base64 编码的 Data URL
-      // 这样可以避免跨域问题
-      const svgBase64 = btoa(unescape(encodeURIComponent(svgString)));
-      const dataUrl = `data:image/svg+xml;base64,${svgBase64}`;
-
-      // 创建 Image 对象
-      const img = new Image();
-
-      // 设置 crossOrigin 属性
-      img.crossOrigin = 'anonymous';
-
-      img.onload = () => {
-        try {
-          // 创建 Canvas
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-
-          if (!ctx) {
-            reject(new Error('无法创建 Canvas 上下文'));
-            return;
-          }
-
-          // 设置 Canvas 大小（放大2倍以提高清晰度）
-          canvas.width = img.width * 2 || 800;
-          canvas.height = img.height * 2 || 600;
-
-          // 填充白色背景
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // 绘制图片
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-          // 转换为 PNG Base64
-          const pngBase64 = canvas.toDataURL('image/png');
-
-          resolve(pngBase64);
-        } catch (error) {
-          reject(error);
-        }
-      };
-
-      img.onerror = () => {
-        reject(new Error('SVG 加载失败'));
-      };
-
-      img.src = dataUrl;
-    } catch (error) {
-      reject(error);
-    }
-  });
+  const result = await svgToPngBase64WithSize(svgString, 2);
+  return result.base64;
 }
 
 /**
  * 将 HTML 字符串转换为 Base64 PNG 图片
- * @param htmlString HTML 字符串
- * @param width 宽度
- * @param height 高度
- * @returns Promise<string> Base64 PNG 图片
  */
 export async function htmlToPngBase64(
   htmlString: string,
@@ -287,7 +259,6 @@ export async function htmlToPngBase64(
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
-      // 创建临时容器
       const container = document.createElement('div');
       container.innerHTML = htmlString;
       container.style.position = 'absolute';
@@ -299,8 +270,6 @@ export async function htmlToPngBase64(
       container.style.fontSize = '18px';
       document.body.appendChild(container);
 
-      // 使用 html2canvas（如果已安装）
-      // 这里使用简化版本的 Canvas 绘制
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
@@ -310,17 +279,14 @@ export async function htmlToPngBase64(
         return;
       }
 
-      // 等待字体渲染完成
       setTimeout(() => {
         try {
           canvas.width = width;
           canvas.height = height;
 
-          // 填充白色背景
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          // 绘制公式（简化版本，实际应使用 html2canvas）
           ctx.font = '18px KaTeX_Main, serif';
           ctx.fillStyle = '#000000';
           ctx.textBaseline = 'top';
@@ -343,8 +309,6 @@ export async function htmlToPngBase64(
 
 /**
  * 将 Base64 图片数据转换为 ArrayBuffer
- * @param base64 Base64 图片字符串
- * @returns ArrayBuffer
  */
 export function base64ToArrayBuffer(base64: string): ArrayBuffer {
   const base64Data = base64.split(',')[1];

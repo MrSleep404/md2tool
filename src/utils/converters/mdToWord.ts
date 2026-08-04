@@ -615,9 +615,9 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
           console.log('步骤1完成: SVG渲染成功, SVG长度:', svg.length);
           console.log('SVG内容预览:', svg.substring(0, 200));
 
-          // 将 SVG 转换为 PNG（使用高分辨率缩放）
+          // 将 SVG 转换为 PNG
           console.log('步骤2: 开始SVG转PNG...');
-          const { base64, width, height } = await svgToPngBase64WithSize(svg, 6); // 提高到6倍缩放
+          const { base64, width, height } = await svgToPngBase64WithSize(svg, 2);
           console.log('步骤2完成: PNG转换成功');
           console.log('原始尺寸:', width, 'x', height);
           console.log('Base64长度:', base64.length);
@@ -627,13 +627,10 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
           const imageBuffer = base64ToArrayBuffer(base64);
           console.log('步骤3完成: ArrayBuffer长度:', imageBuffer.byteLength);
 
-          // 计算符合Word尺寸限制的尺寸
-          // 原始尺寸的3倍显示
-          const originalDisplayWidth = width * 3;
-          const originalDisplayHeight = height * 3;
+          // 计算符合Word尺寸限制的尺寸（直接使用原始尺寸）
           const { width: displayWidth, height: displayHeight } = calculateConstrainedSize(
-            originalDisplayWidth,
-            originalDisplayHeight
+            width,
+            height
           );
 
           // 创建图片段落
