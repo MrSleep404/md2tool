@@ -841,25 +841,76 @@ async function fetchImageAsBuffer(url: string): Promise<ArrayBuffer | null> {
         return arrayBuffer;
       }
 
-      // 生产环境：尝试直接请求或使用备用方案
+      // 生产环境：多级备选方案
+      // 方案1：直接请求（如果图片服务器支持CORS）
       console.log('生产环境：尝试直接请求');
       try {
         const response = await fetch(url, {
           mode: 'cors',
         });
 
-        if (!response.ok) {
-          console.error('直接请求失败:', response.status);
-          return null;
+        if (response.ok) {
+          const arrayBuffer = await response.arrayBuffer();
+          if (arrayBuffer.byteLength > 0) {
+            console.log('图片下载成功（直接），大小:', arrayBuffer.byteLength);
+            return arrayBuffer;
+          }
         }
-
-        const arrayBuffer = await response.arrayBuffer();
-        console.log('图片下载成功（直接），大小:', arrayBuffer.byteLength);
-        return arrayBuffer;
+        console.warn('直接请求失败，状态码:', response.status);
       } catch (error) {
-        console.error('生产环境图片下载失败:', error);
-        return null;
+        console.warn('直接请求失败（CORS限制），尝试备用方案:', error);
       }
+
+      // 方案2：使用 wsrv.nl 图片代理服务
+      console.log('尝试使用 wsrv.nl 图片代理');
+      try {
+        const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+        const proxyResponse = await fetch(proxyUrl);
+
+        if (proxyResponse.ok) {
+          const arrayBuffer = await proxyResponse.arrayBuffer();
+          if (arrayBuffer.byteLength > 0) {
+            console.log('图片下载成功（wsrv.nl代理），大小:', arrayBuffer.byteLength);
+            return arrayBuffer;
+          }
+        }
+        console.warn('wsrv.nl代理失败，状态码:', proxyResponse.status);
+      } catch (error) {
+        console.warn('wsrv.nl代理失败:', error);
+      }
+
+      // 方案3：使用 corsproxy.io 通用CORS代理
+      console.log('尝试使用 corsproxy.io 代理');
+      try {
+        const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
+        const proxyResponse = await fetch(proxyUrl);
+
+        if (proxyResponse.ok) {
+          const arrayBuffer = await proxyResponse.arrayBuffer();
+          if (arrayBuffer.byteLength > 0) {
+            console.log('图片下载成功（corsproxy.io代理），大小:', arrayBuffer.byteLength);
+            return arrayBuffer;
+          }
+        }
+        console.warn('corsproxy.io代理失败，状态码:', proxyResponse.status);
+      } catch (error) {
+        console.warn('corsproxy.io代理失败:', error);
+      }
+
+      // 方案4：使用 Image + Canvas 方式（最后手段）
+      console.log('尝试使用 Image+Canvas 方式获取图片');
+      try {
+        const arrayBuffer = await fetchImageViaCanvas(url);
+        if (arrayBuffer && arrayBuffer.byteLength > 0) {
+          console.log('图片下载成功（Canvas方式），大小:', arrayBuffer.byteLength);
+          return arrayBuffer;
+        }
+      } catch (error) {
+        console.warn('Canvas方式获取失败:', error);
+      }
+
+      console.error('所有图片下载方案均失败');
+      return null;
     }
 
     // 不支持的格式
@@ -869,6 +920,56 @@ async function fetchImageAsBuffer(url: string): Promise<ArrayBuffer | null> {
     console.error('获取图片失败:', error);
     return null;
   }
+}
+
+/**
+ * 通过 Image + Canvas 方式获取图片数据
+ * 利用浏览器加载图片能力，通过 canvas 导出为 ArrayBuffer
+ */
+function fetchImageViaCanvas(url: string): Promise<ArrayBuffer | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(null);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            blob.arrayBuffer().then(resolve).catch(() => resolve(null));
+          } else {
+            resolve(null);
+          }
+        }, 'image/png');
+      } catch (error) {
+        console.error('Canvas处理失败:', error);
+        resolve(null);
+      }
+    };
+
+    img.onerror = () => {
+      console.error('图片加载失败:', url);
+      resolve(null);
+    };
+
+    // 设置超时（10秒）
+    setTimeout(() => {
+      resolve(null);
+    }, 10000);
+
+    img.src = url;
+  });
 }
 
 /**
