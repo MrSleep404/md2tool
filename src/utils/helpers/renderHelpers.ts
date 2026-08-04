@@ -14,7 +14,7 @@ mermaid.initialize({
   securityLevel: 'loose',
   fontFamily: 'arial, sans-serif',
   flowchart: {
-    useMaxWidth: true,
+    useMaxWidth: false, // 禁用 useMaxWidth，生成固定尺寸的 SVG，避免 width="100%" 导致 Image 无法加载
     htmlLabels: false, // 禁用 htmlLabels，生成纯 SVG <text> 元素，避免 Image 加载 SVG 时 foreignObject 导致失败
     curve: 'basis',
   },
@@ -59,10 +59,27 @@ export async function renderMermaidToSvg(code: string): Promise<string> {
     // 渲染 Mermaid
     const { svg } = await mermaid.render(id, cleanedCode);
 
-    // 只移除可能导致安全问题的外部链接，保留样式
-    const cleanedSvg = svg
+    // 清理 SVG 并确保它可以被 Image 对象正确加载
+    let cleanedSvg = svg
       .replace(/xmlns:xlink="[^"]*"/gi, '')
       .replace(/xlink:href="[^"]*"/gi, '');
+
+    // 确保 SVG 有 xmlns 属性（Image 加载 SVG 时必需）
+    if (!/xmlns=/.test(cleanedSvg)) {
+      cleanedSvg = cleanedSvg.replace(/<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+
+    // 将 width="100%" 替换为从 viewBox 提取的实际像素值
+    const viewBoxMatch = cleanedSvg.match(/viewBox="([^"]+)"/);
+    if (viewBoxMatch) {
+      const parts = viewBoxMatch[1].split(/\s+/).map(Number);
+      const vbWidth = parts[2];
+      const vbHeight = parts[3];
+      if (vbWidth && vbHeight) {
+        cleanedSvg = cleanedSvg.replace(/width="[^"]*"/, `width="${vbWidth}"`);
+        cleanedSvg = cleanedSvg.replace(/height="[^"]*"/, `height="${vbHeight}"`);
+      }
+    }
 
     return cleanedSvg;
   } catch (error) {
@@ -108,24 +125,40 @@ export async function svgToPngBase64WithSize(
 ): Promise<{ base64: string; width: number; height: number }> {
   return new Promise((resolve, reject) => {
     try {
-      // 确保 SVG 有明确的宽高属性
       let processedSvg = svgString;
-      const hasWidth = /width=/.test(svgString);
-      const hasHeight = /height=/.test(svgString);
 
-      // 从 viewBox 中提取尺寸
-      const viewBoxMatch = svgString.match(/viewBox="([^"]+)"/);
-      if (viewBoxMatch) {
-        const [, , vbWidth, vbHeight] = viewBoxMatch[1].split(/\s+/).map(Number);
-        if (!hasWidth && vbWidth) {
-          processedSvg = processedSvg.replace(/<svg/, `<svg width="${vbWidth}"`);
-        }
-        if (!hasHeight && vbHeight) {
-          processedSvg = processedSvg.replace(/<svg/, `<svg height="${vbHeight}"`);
+      // 确保 SVG 有 xmlns 属性
+      if (!/xmlns=/.test(processedSvg)) {
+        processedSvg = processedSvg.replace(/<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+      }
+
+      // 从 viewBox 或 width/height 中提取尺寸
+      let svgWidth = 0;
+      let svgHeight = 0;
+
+      const widthMatch = processedSvg.match(/width="(\d+)"/);
+      const heightMatch = processedSvg.match(/height="(\d+)"/);
+
+      if (widthMatch) svgWidth = parseInt(widthMatch[1]);
+      if (heightMatch) svgHeight = parseInt(heightMatch[1]);
+
+      // 如果没有具体像素尺寸，从 viewBox 提取
+      if (!svgWidth || !svgHeight) {
+        const viewBoxMatch = processedSvg.match(/viewBox="([^"]+)"/);
+        if (viewBoxMatch) {
+          const parts = viewBoxMatch[1].split(/\s+/).map(Number);
+          if (!svgWidth) svgWidth = parts[2] || 800;
+          if (!svgHeight) svgHeight = parts[3] || 600;
         }
       }
 
-      // 使用 encodeURIComponent 方式构建 Data URL（更可靠）
+      // 确保 SVG 有明确的像素宽高（替换掉 width="100%" 等百分比值）
+      processedSvg = processedSvg.replace(/width="[^"]*"/, `width="${svgWidth}"`);
+      processedSvg = processedSvg.replace(/height="[^"]*"/, `height="${svgHeight}"`);
+
+      console.log(`SVG 尺寸: ${svgWidth}x${svgHeight}, 缩放: ${scale}x`);
+
+      // 使用 encodeURIComponent 方式构建 Data URL
       const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(processedSvg)}`;
 
       // 创建 Image 对象
@@ -133,7 +166,6 @@ export async function svgToPngBase64WithSize(
 
       img.onload = () => {
         try {
-          // 创建 Canvas
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
@@ -142,11 +174,9 @@ export async function svgToPngBase64WithSize(
             return;
           }
 
-          // 获取原始尺寸
-          const originalWidth = img.naturalWidth || img.width || 800;
-          const originalHeight = img.naturalHeight || img.height || 600;
+          const originalWidth = img.naturalWidth || svgWidth;
+          const originalHeight = img.naturalHeight || svgHeight;
 
-          // 设置 Canvas 大小（放大以提高清晰度）
           canvas.width = originalWidth * scale;
           canvas.height = originalHeight * scale;
 
@@ -154,11 +184,11 @@ export async function svgToPngBase64WithSize(
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          // 绘制图片
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          // 转换为 PNG Base64
           const pngBase64 = canvas.toDataURL('image/png');
+
+          console.log(`PNG 转换成功: ${canvas.width}x${canvas.height}`);
 
           resolve({
             base64: pngBase64,
@@ -171,7 +201,7 @@ export async function svgToPngBase64WithSize(
       };
 
       img.onerror = () => {
-        console.error('SVG Image 加载失败，SVG 前200字符:', processedSvg.substring(0, 200));
+        console.error('SVG Image 加载失败，SVG 前500字符:', processedSvg.substring(0, 500));
         reject(new Error('SVG 加载失败（可能包含不支持的元素）'));
       };
 
