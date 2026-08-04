@@ -407,9 +407,26 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
         if (imageBuffer && imageBuffer.byteLength > 0) {
           console.log('步骤1完成: 成功获取图片数据, 大小:', imageBuffer.byteLength);
 
-          // 计算符合Word尺寸限制的尺寸
-          // 使用默认尺寸400x300，然后应用限制
-          const { width: displayWidth, height: displayHeight } = calculateConstrainedSize(400, 300);
+          // 获取图片原始尺寸，保持长宽比
+          console.log('步骤1.5: 获取图片原始尺寸...');
+          const { width: origWidth, height: origHeight } = await getImageDimensions(imageBuffer);
+          console.log(`图片原始尺寸: ${origWidth}x${origHeight}`);
+
+          // 按原始比例缩放到适合Word的尺寸（最大宽度600px）
+          const maxWidth = 600;
+          let displayWidth = origWidth;
+          let displayHeight = origHeight;
+          if (origWidth > maxWidth) {
+            const ratio = maxWidth / origWidth;
+            displayWidth = maxWidth;
+            displayHeight = Math.round(origHeight * ratio);
+          }
+
+          // 应用Word尺寸限制
+          const constrained = calculateConstrainedSize(displayWidth, displayHeight);
+          displayWidth = constrained.width;
+          displayHeight = constrained.height;
+          console.log(`图片显示尺寸: ${displayWidth}x${displayHeight}`);
 
           // 创建图片段落
           console.log('步骤2: 创建ImageRun...');
@@ -920,6 +937,44 @@ async function fetchImageAsBuffer(url: string): Promise<ArrayBuffer | null> {
     console.error('获取图片失败:', error);
     return null;
   }
+}
+
+/**
+ * 获取图片的原始尺寸
+ * @param buffer 图片数据的 ArrayBuffer
+ * @returns 原始宽高 { width, height }
+ */
+function getImageDimensions(buffer: ArrayBuffer): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    try {
+      const blob = new Blob([buffer]);
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+
+      img.onload = () => {
+        const result = { width: img.naturalWidth || 400, height: img.naturalHeight || 300 };
+        URL.revokeObjectURL(url);
+        resolve(result);
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        console.warn('无法获取图片原始尺寸，使用默认400x300');
+        resolve({ width: 400, height: 300 });
+      };
+
+      // 超时保护（5秒）
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        resolve({ width: 400, height: 300 });
+      }, 5000);
+
+      img.src = url;
+    } catch (error) {
+      console.error('获取图片尺寸失败:', error);
+      resolve({ width: 400, height: 300 });
+    }
+  });
 }
 
 /**
