@@ -37,3 +37,6 @@ coverage
 *.zip
 *.rar
 *.7z
+
+# npm cache
+.npm-cache
