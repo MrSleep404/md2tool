@@ -58,4 +58,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // 内联所有动态导入，避免 Mermaid 内部模块在生产环境加载失败
+        inlineDynamicImports: true,
+      },
+    },
+  },
 })
