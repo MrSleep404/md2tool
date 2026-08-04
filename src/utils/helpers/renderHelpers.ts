@@ -170,7 +170,7 @@ export async function svgToPngBase64WithSize(
         }
       };
 
-      img.onerror = (e) => {
+      img.onerror = () => {
         console.error('SVG Image 加载失败，SVG 前200字符:', processedSvg.substring(0, 200));
         reject(new Error('SVG 加载失败（可能包含不支持的元素）'));
       };
