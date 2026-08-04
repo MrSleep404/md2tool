@@ -15,7 +15,7 @@ mermaid.initialize({
   fontFamily: 'arial, sans-serif',
   flowchart: {
     useMaxWidth: true,
-    htmlLabels: true,
+    htmlLabels: false, // 禁用 htmlLabels，生成纯 SVG <text> 元素，避免 Image 加载 SVG 时 foreignObject 导致失败
     curve: 'basis',
   },
   themeVariables: {
@@ -108,13 +108,28 @@ export async function svgToPngBase64WithSize(
 ): Promise<{ base64: string; width: number; height: number }> {
   return new Promise((resolve, reject) => {
     try {
-      // 将 SVG 字符串转换为 Base64 编码的 Data URL
-      const svgBase64 = btoa(unescape(encodeURIComponent(svgString)));
-      const dataUrl = `data:image/svg+xml;base64,${svgBase64}`;
+      // 确保 SVG 有明确的宽高属性
+      let processedSvg = svgString;
+      const hasWidth = /width=/.test(svgString);
+      const hasHeight = /height=/.test(svgString);
+
+      // 从 viewBox 中提取尺寸
+      const viewBoxMatch = svgString.match(/viewBox="([^"]+)"/);
+      if (viewBoxMatch) {
+        const [, , vbWidth, vbHeight] = viewBoxMatch[1].split(/\s+/).map(Number);
+        if (!hasWidth && vbWidth) {
+          processedSvg = processedSvg.replace(/<svg/, `<svg width="${vbWidth}"`);
+        }
+        if (!hasHeight && vbHeight) {
+          processedSvg = processedSvg.replace(/<svg/, `<svg height="${vbHeight}"`);
+        }
+      }
+
+      // 使用 encodeURIComponent 方式构建 Data URL（更可靠）
+      const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(processedSvg)}`;
 
       // 创建 Image 对象
       const img = new Image();
-      img.crossOrigin = 'anonymous';
 
       img.onload = () => {
         try {
@@ -128,8 +143,8 @@ export async function svgToPngBase64WithSize(
           }
 
           // 获取原始尺寸
-          const originalWidth = img.width || 800;
-          const originalHeight = img.height || 600;
+          const originalWidth = img.naturalWidth || img.width || 800;
+          const originalHeight = img.naturalHeight || img.height || 600;
 
           // 设置 Canvas 大小（放大以提高清晰度）
           canvas.width = originalWidth * scale;
@@ -155,8 +170,9 @@ export async function svgToPngBase64WithSize(
         }
       };
 
-      img.onerror = () => {
-        reject(new Error('SVG 加载失败'));
+      img.onerror = (e) => {
+        console.error('SVG Image 加载失败，SVG 前200字符:', processedSvg.substring(0, 200));
+        reject(new Error('SVG 加载失败（可能包含不支持的元素）'));
       };
 
       img.src = dataUrl;
