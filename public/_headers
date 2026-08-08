@@ -1,0 +1,25 @@
+# Cloudflare Pages 安全与 SEO 响应头配置
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  # 允许搜索引擎索引
+  X-Robots-Tag: index, follow
+  # 基础安全头
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  # 权限策略
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# 站点验证文件 - 禁止索引
+/baidu_verify_*
+  X-Robots-Tag: noindex, nofollow
+
+/BingSiteAuth.xml
+  X-Robots-Tag: noindex, nofollow
+
+/robots.txt
+  X-Robots-Tag: noindex, nofollow
+
+/sitemap.xml
+  X-Robots-Tag: noindex, nofollow

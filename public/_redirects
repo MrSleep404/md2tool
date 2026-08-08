@@ -1,0 +1,11 @@
+# Cloudflare Pages 重定向规则
+# https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# 注意：域名级重定向（md2tool.com → www.md2tool.com）
+# 需要在 Cloudflare 控制台 > 规则 > 重定向规则 中配置：
+#   匹配: hostname eq "md2tool.com"
+#   动作: 重定向到 https://www.md2tool.com${request.uri} (301)
+
+# 首页带尾部斜杠规范化
+/home / 301
+/index.html / 301
