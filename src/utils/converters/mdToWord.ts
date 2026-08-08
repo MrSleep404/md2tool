@@ -260,6 +260,14 @@ function parseMarkdownLine(line: string): TextRun[] {
   let remaining = line;
 
   while (remaining.length > 0) {
+    // 优先处理连续下划线（3个或更多），避免被误解析为粗体/斜体/粗斜体标记
+    const underscoreRun = remaining.match(/^_{3,}/);
+    if (underscoreRun) {
+      runs.push(new TextRun({ text: underscoreRun[0], size: 24 }));
+      remaining = remaining.slice(underscoreRun[0].length);
+      continue;
+    }
+
     // 匹配粗体 **text** 或 __text__
     const boldMatch = remaining.match(/^(?:\*\*(.+?)\*\*|__(.+?)__)/);
     // 匹配斜体 *text* 或 _text_
@@ -342,11 +350,149 @@ function parseMarkdownLine(line: string): TextRun[] {
 }
 
 /**
+ * 标题编号格式类型
+ */
+type HeadingNumberFormat =
+  | 'chinese-chapter'    // 第X章、第X节、第X部分
+  | 'chinese-number'     // 一、二、三、
+  | 'decimal'            // 1、2、3
+  | 'decimal-multi'      // 1.1、1.1.1
+  | null;                // 无编号
+
+/**
+ * 标题编号信息
+ */
+interface HeadingNumberInfo {
+  level: number;          // 标题层级 0-5（对应 H1-H6）
+  hasNumber: boolean;     // 是否有编号
+  format: HeadingNumberFormat;
+  text: string;           // 剥离编号后的标题文本
+  chapterWord?: string;   // 章节词（章/节/部分/条/篇），用于"第X章"格式
+}
+
+/**
+ * 标题层级编号配置
+ */
+interface HeadingLevelConfig {
+  format: Exclude<HeadingNumberFormat, null>;
+  chapterWord?: string;
+}
+
+/**
+ * 中文数字字符
+ */
+const CHINESE_NUMBERS = '一二三四五六七八九十百零';
+
+/**
+ * 识别标题文本中的编号格式
+ * @param headingText 标题文本（已去掉 # 前缀）
+ * @param level 标题层级（1-6）
+ * @returns 编号信息
+ */
+function identifyHeadingNumber(headingText: string, level: number): HeadingNumberInfo {
+  const text = headingText.trim();
+
+  // 1. 中文章节格式：第X章、第X节、第X部分、第X条、第X篇
+  const chineseChapterRegex = new RegExp(
+    `^第[${CHINESE_NUMBERS}]+(章|节|部分|条|篇)[\\s．\\.、:：]?(.*)$`
+  );
+  const chineseChapterMatch = text.match(chineseChapterRegex);
+  if (chineseChapterMatch) {
+    return {
+      level: level - 1,
+      hasNumber: true,
+      format: 'chinese-chapter',
+      text: chineseChapterMatch[2].trim(),
+      chapterWord: chineseChapterMatch[1],
+    };
+  }
+
+  // 2. 中文数字格式：一、二、三、（一）等
+  const chineseNumberRegex = new RegExp(
+    `^[${CHINESE_NUMBERS}]+[、．\\.]\\s*(.*)$`
+  );
+  const chineseNumberMatch = text.match(chineseNumberRegex);
+  if (chineseNumberMatch) {
+    return {
+      level: level - 1,
+      hasNumber: true,
+      format: 'chinese-number',
+      text: chineseNumberMatch[1].trim(),
+    };
+  }
+
+  // 3. 阿拉伯数字多级格式：1.1、1.1.1、1.2.3（至少两个数字用点连接）
+  const decimalMultiRegex = /^(\d+)(\.\d+)+[\s．\.、:：]?(.*)$/;
+  const decimalMultiMatch = text.match(decimalMultiRegex);
+  if (decimalMultiMatch) {
+    return {
+      level: level - 1,
+      hasNumber: true,
+      format: 'decimal-multi',
+      text: decimalMultiMatch[3].trim(),
+    };
+  }
+
+  // 4. 阿拉伯数字单级格式：1、1.、1. （后跟空格或标点，且后面有内容）
+  const decimalRegex = /^(\d+)[\s．\.、:：]+(.+)$/;
+  const decimalMatch = text.match(decimalRegex);
+  if (decimalMatch) {
+    return {
+      level: level - 1,
+      hasNumber: true,
+      format: 'decimal',
+      text: decimalMatch[2].trim(),
+    };
+  }
+
+  // 无编号
+  return {
+    level: level - 1,
+    hasNumber: false,
+    format: null,
+    text: headingText,
+  };
+}
+
+/**
+ * 预扫描所有标题，推断每个层级的编号格式
+ * @param lines Markdown 行数组
+ * @returns 每个标题层级对应的编号配置 Map<level, config>
+ */
+function prescanHeadingFormats(lines: string[]): Map<number, HeadingLevelConfig> {
+  const configMap = new Map<number, HeadingLevelConfig>();
+
+  for (const line of lines) {
+    const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+    if (!headingMatch) continue;
+
+    const level = headingMatch[1].length;
+    const text = headingMatch[2];
+    const info = identifyHeadingNumber(text, level);
+
+    // 只记录第一次出现的格式作为该层级的编号格式
+    if (info.hasNumber && info.format && !configMap.has(level - 1)) {
+      configMap.set(level - 1, {
+        format: info.format,
+        chapterWord: info.chapterWord,
+      });
+    }
+  }
+
+  console.log('预扫描标题编号格式:', Object.fromEntries(configMap));
+  return configMap;
+}
+
+/**
  * 解析 Markdown 文本为段落数组
  * @param markdown Markdown 文本
+ * @param headingFormats 预扫描的标题编号格式
  * @returns Paragraph、Table、ImageRun 或 DocxMath 对象数组
  */
-async function parseMarkdownToParagraphs(markdown: string): Promise<{
+async function parseMarkdownToParagraphs(
+  markdown: string,
+  headingFormats: Map<number, HeadingLevelConfig>
+): Promise<{
   paragraphs: (DocxParagraph | DocxTable)[];
   orderedListId: number;
 }> {
@@ -362,6 +508,9 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
   let orderedListCounter = 0;
   let orderedListId = 0;
   let lastWasOrderedList = false;
+  let lastWasUnorderedList = false;
+  // 列表嵌套级别（0=顶层，1=二级，2=三级）
+  let currentListLevel = 0;
 
   let i = 0;
   while (i < lines.length) {
@@ -373,18 +522,20 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
       console.log('  -> 空行');
       paragraphs.push(createParagraphWithSpacing({ text: '' }));
       // 空行时不立即结束列表，只有遇到非列表内容时才结束
-      // 检查下一行是否为有序列表项
-      if (lastWasOrderedList) {
-        const nextLine = lines[i + 1];
-        const nextIsOrderedList = nextLine && /^\d+\.\s+.+$/.test(nextLine);
-        if (!nextIsOrderedList) {
-          // 下一行不是有序列表项，列表结束
-          console.log('  -> 列表结束（下一行不是列表项），重置计数器');
-          orderedListCounter = 0;
-          lastWasOrderedList = false;
-        } else {
-          console.log('  -> 空行但下一行是列表项，保持列表连续性');
-        }
+      const nextLine = lines[i + 1];
+      const nextIsOrderedList = nextLine && /^\s*\d+\.\s*.+$/.test(nextLine);
+      const nextIsUnorderedList = nextLine && /^\s*[-*+]\s+.+$/.test(nextLine);
+
+      if (lastWasOrderedList && !nextIsOrderedList) {
+        console.log('  -> 有序列表结束（下一行不是列表项），重置计数器');
+        orderedListCounter = 0;
+        lastWasOrderedList = false;
+        currentListLevel = 0;
+      }
+      if (lastWasUnorderedList && !nextIsUnorderedList) {
+        console.log('  -> 无序列表结束（下一行不是列表项）');
+        lastWasUnorderedList = false;
+        currentListLevel = 0;
       }
       i++;
       continue;
@@ -493,14 +644,26 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
     if (headingMatch) {
       const level = headingMatch[1].length;
       const text = headingMatch[2];
-      console.log('  -> 检测到标题:', { level, text, fullMatch: headingMatch[0] });
+
+      // 识别编号格式
+      const numberInfo = identifyHeadingNumber(text, level);
+      const levelConfig = headingFormats.get(level - 1);
+      // 只有当标题有编号且与预扫描格式一致时才使用自动编号
+      const useAutoNumber = !!(numberInfo.hasNumber && levelConfig && numberInfo.format === levelConfig.format);
+
+      console.log('  -> 检测到标题:', { level, text, hasNumber: numberInfo.hasNumber, format: numberInfo.format, useAutoNumber });
 
       // 标题前重置列表计数器
       if (lastWasOrderedList) {
-        console.log('  -> 遇到标题，重置列表计数器');
+        console.log('  -> 遇到标题，重置有序列表计数器');
         orderedListCounter = 0;
         lastWasOrderedList = false;
       }
+      if (lastWasUnorderedList) {
+        console.log('  -> 遇到标题，重置无序列表状态');
+        lastWasUnorderedList = false;
+      }
+      currentListLevel = 0;
 
       const headingLevelMap: Record<number, typeof HeadingLevel[keyof typeof HeadingLevel]> = {
         1: HeadingLevel.HEADING_1,
@@ -521,18 +684,26 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
         6: 28, // 四号
       };
 
+      // 有编号时使用剥离编号后的文本，无编号时使用原文
+      const displayText = useAutoNumber ? numberInfo.text : text;
+
       // 为标题创建带黑色字体和加粗的 TextRun
       paragraphs.push(
         createParagraphWithSpacing({
           children: [
             new TextRun({
-              text: text,
+              text: displayText,
               color: '000000', // 黑色
               bold: true, // 加粗
               size: headingSizeMap[level] || 28,
+              font: '宋体', // 标题字体，与编号字体保持一致
             }),
           ],
           heading: headingLevelMap[level] || HeadingLevel.HEADING_6,
+          // 有编号的标题设置 numbering 属性，实现 Word 自动编号
+          ...(useAutoNumber ? {
+            numbering: { reference: 'heading-numbering', level: level - 1, instance: 0 }
+          } : {}),
         })
       );
       i++;
@@ -541,27 +712,36 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
       console.log('  -> 不是标题，正则匹配失败');
     }
 
-    // 无序列表
-    const ulMatch = line.match(/^[-*+]\s+(.+)$/);
+    // 无序列表（支持缩进的多级列表）
+    const ulMatch = line.match(/^(\s*)[-*+]\s+(.+)$/);
     if (ulMatch) {
+      // 根据缩进计算列表级别（每2个空格或1个tab为一级）
+      const indent = ulMatch[1].replace(/\t/g, '  ').length;
+      currentListLevel = Math.min(Math.floor(indent / 2), 2);
+
+      lastWasUnorderedList = true;
+      lastWasOrderedList = false;
+
+      console.log(`  -> 无序列表项 (级别${currentListLevel}): ${ulMatch[2]}`);
+
       paragraphs.push(
         createParagraphWithSpacing({
-          children: parseMarkdownLine(ulMatch[1]),
-          bullet: { level: 0 },
+          children: parseMarkdownLine(ulMatch[2]),
+          numbering: { reference: 'unordered-list', level: currentListLevel },
         })
       );
       i++;
       continue;
     }
 
-    // 有序列表
-    const olMatch = line.match(/^\d+\.\s+(.+)$/);
+    // 有序列表（支持缩进的多级列表）
+    const olMatch = line.match(/^(\s*)\d+\.\s*(.+)$/);
     if (olMatch) {
-      // 从 Markdown 中提取实际编号
-      const actualNumber = line.match(/^(\d+)\./)?.[1];
-      
+      // 根据缩进计算列表级别
+      const indent = olMatch[1].replace(/\t/g, '  ').length;
+      currentListLevel = Math.min(Math.floor(indent / 2), 2);
+
       // 检查是否需要开始新的列表
-      // 只有当前不是列表且遇到第一个列表项，或者明确需要新列表时才创建新列表
       if (!lastWasOrderedList) {
         orderedListId++;
         orderedListCounter = 0;
@@ -570,25 +750,26 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
 
       orderedListCounter++;
       lastWasOrderedList = true;
+      lastWasUnorderedList = false;
 
-      console.log(`  -> 有序列表项 #${orderedListId}.${orderedListCounter}: ${olMatch[1]}, Markdown编号: ${actualNumber}`);
+      console.log(`  -> 有序列表项 #${orderedListId}.${orderedListCounter} (级别${currentListLevel}): ${olMatch[2]}`);
 
-      // 使用文本形式显示编号，而不是依赖 Word 自动编号
+      // 使用 Word 自动编号
+      // instance 属性确保同一个列表的项即使被非列表段落分隔也连续编号
       paragraphs.push(
         createParagraphWithSpacing({
-          children: [
-            new TextRun({ text: `${actualNumber}. `, size: 24 }),
-            ...parseMarkdownLine(olMatch[1])
-          ],
+          children: parseMarkdownLine(olMatch[2]),
+          numbering: { reference: `ordered-list-${orderedListId}`, level: currentListLevel, instance: orderedListId },
         })
       );
       i++;
       continue;
-    } else if (lastWasOrderedList && line.trim() && !line.match(/^\s+/)) {
-      // 只有遇到非列表、非缩进的内容时，列表才结束
-      console.log('  -> 遇到非列表非缩进项，列表结束');
-      lastWasOrderedList = false;
-      orderedListCounter = 0;
+    } else if (lastWasUnorderedList && line.trim() && !line.match(/^\s+/)) {
+      // 遇到非列表、非缩进的内容时，无序列表结束
+      // 有序列表不在此处重置，以支持被空行/补充段落分隔的列表继续编号
+      console.log('  -> 遇到非列表非缩进项，无序列表结束');
+      lastWasUnorderedList = false;
+      currentListLevel = 0;
     }
 
     // 代码块开始
@@ -803,10 +984,11 @@ async function parseMarkdownToParagraphs(markdown: string): Promise<{
       continue;
     }
 
-    // 普通段落
+    // 普通段落（首行缩进2字符 = 480 twips）
     paragraphs.push(
       createParagraphWithSpacing({
         children: parseMarkdownLine(line),
+        indent: { firstLine: 480 },
       })
     );
     i++;
@@ -1040,11 +1222,46 @@ export async function convertMarkdownToWord(
       throw new Error('Markdown 内容不能为空');
     }
 
+    // 预扫描标题编号格式
+    const normalizedMd = markdown.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const allLines = normalizedMd.split('\n');
+    const headingFormats = prescanHeadingFormats(allLines);
+
     // 解析 Markdown 为段落数组（异步）
-    const { paragraphs, orderedListId } = await parseMarkdownToParagraphs(markdown);
+    const { paragraphs, orderedListId } = await parseMarkdownToParagraphs(markdown, headingFormats);
 
     // 创建文档，为每个独立的列表创建numbering配置
     const numberingConfigs = [];
+
+    // 无序列表配置（支持3级）
+    numberingConfigs.push({
+      reference: 'unordered-list',
+      levels: [
+        {
+          level: 0,
+          format: 'bullet' as const,
+          text: '\u2022',
+          alignment: AlignmentType.START,
+          style: { paragraph: { indent: { left: 720, hanging: 360 } } },
+        },
+        {
+          level: 1,
+          format: 'bullet' as const,
+          text: '\u25E6',
+          alignment: AlignmentType.START,
+          style: { paragraph: { indent: { left: 1440, hanging: 360 } } },
+        },
+        {
+          level: 2,
+          format: 'bullet' as const,
+          text: '\u25AA',
+          alignment: AlignmentType.START,
+          style: { paragraph: { indent: { left: 2160, hanging: 360 } } },
+        },
+      ],
+    });
+
+    // 有序列表配置（每个独立列表一个配置，支持3级）
     for (let i = 1; i <= orderedListId; i++) {
       numberingConfigs.push({
         reference: `ordered-list-${i}`,
@@ -1054,12 +1271,110 @@ export async function convertMarkdownToWord(
             format: 'decimal' as const,
             text: '%1.',
             alignment: AlignmentType.START,
+            style: { paragraph: { indent: { left: 720, hanging: 360 } } },
+          },
+          {
+            level: 1,
+            format: 'lowerLetter' as const,
+            text: '%2.',
+            alignment: AlignmentType.START,
+            style: { paragraph: { indent: { left: 1440, hanging: 360 } } },
+          },
+          {
+            level: 2,
+            format: 'lowerRoman' as const,
+            text: '%3.',
+            alignment: AlignmentType.START,
+            style: { paragraph: { indent: { left: 2160, hanging: 360 } } },
           },
         ],
       });
     }
 
-    console.log('创建的numbering配置数量:', numberingConfigs.length);
+    console.log('创建的numbering配置数量:', numberingConfigs.length, '(含1个无序列表 +', orderedListId, '个有序列表)');
+
+    // 标题多级列表配置（仅当有标题编号时创建）
+    if (headingFormats.size > 0) {
+      const headingLevels = [];
+      // 标题字号映射（与 parseMarkdownToParagraphs 中的 headingSizeMap 一致）
+      const headingSizeMap: Record<number, number> = {
+        1: 36, 2: 32, 3: 30, 4: 28, 5: 28, 6: 28,
+      };
+      for (let lvl = 0; lvl < 6; lvl++) {
+        const config = headingFormats.get(lvl);
+        // 编号的 run 样式：与标题文本保持一致（黑色、宋体、加粗、同字号）
+        const numberRunStyle = {
+          color: '000000',
+          font: '宋体',
+          bold: true,
+          size: headingSizeMap[lvl + 1] || 28,
+        };
+
+        if (!config) {
+          // 无编号的级别使用 none 格式（不显示编号）
+          headingLevels.push({
+            level: lvl,
+            format: 'none' as const,
+            text: '',
+            alignment: AlignmentType.START,
+            style: { run: numberRunStyle },
+          });
+          continue;
+        }
+
+        let levelFormat: string;
+        let levelText: string;
+        // isLegalNumberingStyle: 使该级别引用的上级计数器显示为阿拉伯数字（而非继承上级的中文格式）
+        // 用于解决：H1=chineseCounting(第一章) + H2=decimal-multi(1.1) 时，%1 显示"一"而非"1"的问题
+        let isLegal = false;
+
+        switch (config.format) {
+          case 'chinese-chapter':
+            // 中文计数格式：一、二、三... → 第一章、第二章...
+            levelFormat = 'chineseCounting';
+            levelText = `第%${lvl + 1}${config.chapterWord || '章'}`;
+            break;
+          case 'chinese-number':
+            // 中文数字格式：一、二、三、
+            levelFormat = 'ideographDigital';
+            levelText = `%${lvl + 1}、`;
+            break;
+          case 'decimal':
+            // 单级数字格式：1、2、3
+            levelFormat = 'decimal';
+            levelText = `%${lvl + 1}`;
+            break;
+          case 'decimal-multi':
+            // 多级数字格式：1.1、1.1.1（需要引用所有上级计数器）
+            levelFormat = 'decimal';
+            levelText = Array.from({ length: lvl + 1 }, (_, k) => `%${k + 1}`).join('.');
+            // 上级可能是中文格式，设置 isLegalNumberingStyle 使 %1,%2 等显示为阿拉伯数字
+            isLegal = true;
+            break;
+          default:
+            levelFormat = 'none';
+            levelText = '';
+        }
+
+        headingLevels.push({
+          level: lvl,
+          format: levelFormat as any,
+          text: levelText,
+          alignment: AlignmentType.START,
+          // 编号后加空格，使编号和标题文本之间有间距
+          suffix: 'space' as const,
+          ...(isLegal ? { isLegalNumberingStyle: true } : {}),
+          // 顶格不缩进，编号样式与标题文本一致（黑色、宋体、加粗、同字号）
+          style: { run: numberRunStyle },
+        });
+      }
+
+      numberingConfigs.push({
+        reference: 'heading-numbering',
+        levels: headingLevels,
+      });
+      console.log('已添加标题多级列表配置，含', headingFormats.size, '个编号级别');
+    }
 
     const doc = new Document({
       numbering: {
