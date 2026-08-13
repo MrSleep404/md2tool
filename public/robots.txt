@@ -1,15 +1,19 @@
 # robots.txt for MD2Tool
 # https://www.md2tool.com
 
-# 允许所有搜索引擎爬取
 User-agent: *
 Allow: /
 
-# 禁止爬取的路径（如果有）
-# Disallow: /api/
+User-agent: Baiduspider
+Allow: /
+
+User-agent: bingbot
+Allow: /
+
+User-agent: BingSiteAuth
+Allow: /
+
+Disallow: /cdn-cgi/
 
 # Sitemap位置
 Sitemap: https://www.md2tool.com/sitemap.xml
-
-# 爬取延迟（可选，单位：秒）
-# Crawl-delay: 1
