@@ -10,6 +10,7 @@ import MarkdownToExcel from './pages/MarkdownToExcel'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import Help from './pages/Help'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/markdown-to-pdf" element={<MarkdownToPdf />} />
         <Route path="/markdown-to-excel" element={<MarkdownToExcel />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/help" element={<Help />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>

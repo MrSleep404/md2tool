@@ -50,6 +50,10 @@ export default function Footer() {
               联系我们
             </Link>
             {' · '}
+            <Link to="/help" className="text-blue-600 hover:underline">
+              操作说明
+            </Link>
+            {' · '}
             <Link to="/privacy-policy" className="text-blue-600 hover:underline">
               隐私政策
             </Link>

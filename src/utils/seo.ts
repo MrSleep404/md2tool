@@ -94,6 +94,11 @@ export const SEO_CONFIGS = {
     description: '联系MD2Tool团队，提交Bug报告或功能建议。我们欢迎所有形式的贡献，包括代码优化、文档改进和新功能开发。',
     keywords: 'MD2Tool,联系我们,反馈建议,GitHub,开源项目'
   },
+  help: {
+    title: '操作说明 - MD2Tool | 新手教程与常见问题解答',
+    description: 'MD2Tool使用说明：四步完成Markdown与Word、HTML、PDF、Excel的格式转换，包含新手教程、使用技巧和常见问题解答。',
+    keywords: 'MD2Tool,操作说明,使用教程,Markdown转换教程,常见问题,FAQ'
+  },
   privacyPolicy: {
     title: '隐私政策 - MD2Tool | 免费在线Markdown转换工具',
     description: 'MD2Tool隐私政策，详细说明我们如何收集、使用、披露和管理您的个人信息。所有文件转换在浏览器本地完成，不收集上传文件内容。',
