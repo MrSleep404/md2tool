@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { FileText, Download, Loader2, Github, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import Preview from '../components/common/Preview'
@@ -7,13 +8,17 @@ import { convertMarkdownToWord } from '../utils/converters/mdToWord'
 import { convertMarkdownToHtml } from '../utils/converters/mdToHtml'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
+import { getExample } from '../i18n/exampleContent'
 
 /**
  * 主页 - Markdown 转 Word
  */
 export default function Home() {
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language === 'en' ? 'en' : 'zh'
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.home)
+  useSEO(SEO_CONFIGS.home, '/')
 
   const [markdown, setMarkdown] = useState<string>('')
   const [htmlContent, setHtmlContent] = useState<string>('')
@@ -28,71 +33,8 @@ export default function Home() {
   const { enabled: syncScrollEnabled, toggle: toggleSyncScroll } = useSyncScrollState(false)
   useSyncScroll(editorScrollRef, previewScrollRef, syncScrollEnabled)
 
-  // 示例 Markdown 内容
-  const exampleMarkdown = `# 欢迎使用 Markdown 转 Word 工具
-
-这是一个简单易用的 Markdown 转 Word 文档工具，支持 **Mermaid 流程图** 和 **LaTeX 数学公式**。
-
-## 功能特点
-
-- ✅ 支持 Markdown 基本语法
-- ✅ 支持 Mermaid 流程图
-- ✅ 支持 LaTeX 数学公式
-- ✅ 实时预览
-- ✅ 一键下载 Word 文档
-- ✅ 支持文件上传
-
-## 使用方法
-
-1. 在左侧编辑器中输入 Markdown 内容
-2. 右侧会实时预览渲染效果
-3. 点击"下载 Word"按钮即可下载文档
-
-### Mermaid 流程图示例
-
-\`\`\`mermaid
-flowchart LR
-    A[Ask ChatGPT/Claude] --> B{Got Markdown?}
-    B -->|Yes| C[Paste to md2word]
-    C --> D[Export Word/PDF]
-    style A fill:#f9f,stroke:#333
-    style D fill:#9f9,stroke:#333
-\`\`\`
-
-### LaTeX 数学公式示例
-
-行内公式：质能方程 $E = mc^2$ 是物理学中最著名的公式之一。
-
-块级公式：
-
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
-
-### 代码示例
-
-\`\`\`javascript
-function hello() {
-  console.log('Hello, World!')
-}
-\`\`\`
-
-### 图片示例
-
-![测试图片](https://img.shetu66.com/2023/05/15/1684145537979686.png)
-
-> 提示：您也可以拖拽 Markdown 文件到上传区域
-
-| 功能 | 支持 |
-|------|------|
-| 标题 | ✅ |
-| 列表 | ✅ |
-| 代码 | ✅ |
-| 流程图 | ✅ |
-| 公式 | ✅ |
-
----
-
-感谢使用！
-`
+  // 示例 Markdown 内容（跟随界面语言）
+  const exampleMarkdown = getExample(lang, 'home')
 
   // 初始化示例内容（页面加载时自动填充示例）
   useEffect(() => {
@@ -126,7 +68,7 @@ function hello() {
       const text = await file.text()
       setMarkdown(text)
     } catch (err) {
-      setError('文件读取失败，请重试')
+      setError(t('common:errors.readFile'))
       console.error(err)
     }
   }
@@ -134,7 +76,7 @@ function hello() {
   // 下载 Word 文档
   const handleDownloadWord = async () => {
     if (!markdown.trim()) {
-      setError('请先输入 Markdown 内容')
+      setError(t('common:errors.emptyInput'))
       return
     }
 
@@ -145,7 +87,7 @@ function hello() {
       const blob = await convertMarkdownToWord(markdown, 'document.docx')
       saveAs(blob, 'document.docx')
     } catch (err) {
-      setError('转换失败，请重试')
+      setError(t('common:errors.convertFailed'))
       console.error(err)
     } finally {
       setIsConverting(false)
@@ -160,10 +102,10 @@ function hello() {
           <div className="text-center">
             <div className="flex justify-center items-center space-x-3 mb-4">
               <FileText className="h-12 w-12" />
-              <h1 className="text-4xl font-bold">Markdown 转 Word</h1>
+              <h1 className="text-4xl font-bold">{t('home:hero.title')}</h1>
             </div>
             <p className="text-lg text-primary-100 max-w-2xl mx-auto">
-              轻松将 Markdown 文档转换为 Word 格式，支持实时预览和一键下载
+              {t('home:hero.subtitle')}
             </p>
           </div>
         </div>
@@ -198,20 +140,20 @@ function hello() {
           <button
             onClick={() => fileInputRef.current?.click()}
             className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            title="上传Markdown文件 (.md, .markdown, .txt)"
+            title={t('common:tips.uploadMd')}
           >
             <Upload className="h-4 w-4" />
-            <span className="text-sm">上传 MD 文件</span>
+            <span className="text-sm">{t('common:buttons.uploadMd')}</span>
           </button>
 
           {/* 示例内容按钮 */}
           <button
             onClick={() => setMarkdown(exampleMarkdown)}
             className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            title="加载示例内容"
+            title={t('common:tips.example')}
           >
             <RefreshCw className="h-4 w-4" />
-            <span className="text-sm">示例内容</span>
+            <span className="text-sm">{t('common:buttons.example')}</span>
           </button>
 
           {/* 清除内容按钮 */}
@@ -226,10 +168,10 @@ function hello() {
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
                 : 'bg-white text-red-600 border border-red-300 hover:bg-red-50'
             }`}
-            title="清除所有内容"
+            title={t('common:tips.clear')}
           >
             <Trash2 className="h-4 w-4" />
-            <span className="text-sm">清除内容</span>
+            <span className="text-sm">{t('common:buttons.clear')}</span>
           </button>
 
           {/* 分隔线 */}
@@ -250,12 +192,12 @@ function hello() {
             {isConverting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">转换中...</span>
+                <span className="text-sm">{t('common:buttons.converting')}</span>
               </>
             ) : (
               <>
                 <Download className="h-4 w-4" />
-                <span className="text-sm">下载 Word 文档</span>
+                <span className="text-sm">{t('common:buttons.downloadWord')}</span>
               </>
             )}
           </button>
@@ -287,19 +229,17 @@ function hello() {
                       ? 'bg-primary-100 text-primary-700'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
-                  title={syncScrollEnabled 
-                    ? '同步预览已开启。滚动编辑器或预览区域时，另一侧会自动同步滚动位置，保持源码与转换结果的位置对应。点击可关闭此功能。' 
-                    : '点击开启同步预览功能。开启后，滚动编辑器或预览区域时，另一侧会自动同步滚动位置，方便对照源码和转换结果。'}
+                  title={syncScrollEnabled ? t('common:sync.onTip') : t('common:sync.offTip')}
                 >
                   {syncScrollEnabled ? (
                     <>
                       <Link2 className="h-4 w-4" />
-                      <span>同步预览已开</span>
+                      <span>{t('common:sync.on')}</span>
                     </>
                   ) : (
                     <>
                       <Link2Off className="h-4 w-4" />
-                      <span>同步预览已关</span>
+                      <span>{t('common:sync.off')}</span>
                     </>
                   )}
                 </button>
@@ -315,10 +255,10 @@ function hello() {
               <div className="p-2 bg-primary-100 rounded-lg">
                 <FileText className="h-6 w-6 text-primary-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900">实时编辑</h3>
+              <h3 className="text-lg font-medium text-gray-900">{t('home:cards.realtime.title')}</h3>
             </div>
             <p className="text-gray-600">
-              在左侧编辑器中输入或粘贴 Markdown 内容，右侧实时显示渲染效果
+              {t('home:cards.realtime.desc')}
             </p>
           </div>
 
@@ -327,10 +267,10 @@ function hello() {
               <div className="p-2 bg-green-100 rounded-lg">
                 <Github className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900">支持 GFM</h3>
+              <h3 className="text-lg font-medium text-gray-900">{t('home:cards.gfm.title')}</h3>
             </div>
             <p className="text-gray-600">
-              支持 GitHub Flavored Markdown 语法，包括表格、任务列表、删除线等
+              {t('home:cards.gfm.desc')}
             </p>
           </div>
 
@@ -339,10 +279,10 @@ function hello() {
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Download className="h-6 w-6 text-blue-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900">一键下载</h3>
+              <h3 className="text-lg font-medium text-gray-900">{t('home:cards.download.title')}</h3>
             </div>
             <p className="text-gray-600">
-              点击下载按钮即可生成 .docx 文件，完全在浏览器端完成，无需上传服务器
+              {t('home:cards.download.desc')}
             </p>
           </div>
         </div>

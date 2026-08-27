@@ -1,0 +1,20 @@
+{
+  "hero": {
+    "title": "Markdown to Word",
+    "subtitle": "Convert Markdown to Word with live preview and one-click download"
+  },
+  "cards": {
+    "realtime": {
+      "title": "Live Editing",
+      "desc": "Type or paste Markdown in the editor on the left and see the rendered result instantly on the right"
+    },
+    "gfm": {
+      "title": "GFM Support",
+      "desc": "Full support for GitHub Flavored Markdown, including tables, task lists, and strikethrough"
+    },
+    "download": {
+      "title": "One-Click Download",
+      "desc": "Generate a .docx file right in your browser — nothing is ever uploaded to a server"
+    }
+  }
+}

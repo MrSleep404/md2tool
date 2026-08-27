@@ -1,0 +1,128 @@
+{
+  "nav": {
+    "home": "Markdown to Word",
+    "wordToMarkdown": "Word to Markdown",
+    "markdownToHtml": "Markdown to HTML",
+    "htmlToMarkdown": "HTML to Markdown",
+    "markdownToPdf": "Markdown to PDF",
+    "markdownToExcel": "Markdown to Excel"
+  },
+  "menu": "Menu",
+  "switchLang": "中文",
+  "switchLangTitle": "切换到中文",
+  "banner": {
+    "text": "English version available",
+    "switch": "Switch to English",
+    "dismiss": "Close"
+  },
+  "backHome": "Back to Home",
+  "footer": {
+    "privacyTitle": "Privacy First",
+    "privacyDesc": "All file processing happens in your browser — files never leave your device",
+    "securityTitle": "Secure & Private",
+    "securityDesc": "No user data is collected. Temporary data is cleared when you close the page",
+    "fastTitle": "Fast & Efficient",
+    "fastDesc": "Local instant conversion — no waiting for uploads or downloads",
+    "copyright": "© {{year}} MD2Tool. Free to use, no registration required.",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "help": "Help & Guide",
+    "privacy": "Privacy Policy"
+  },
+  "buttons": {
+    "uploadMd": "Upload MD File",
+    "uploadWord": "Upload Word File",
+    "uploadHtml": "Upload HTML File or Snippet",
+    "example": "Sample Content",
+    "clear": "Clear Content",
+    "copyMd": "Copy Markdown",
+    "copyHtml": "Copy HTML Code",
+    "copied": "Copied",
+    "downloadWord": "Download Word Document",
+    "downloadMd": "Download Markdown File",
+    "downloadHtml": "Download HTML File",
+    "downloadPdf": "Download PDF File",
+    "downloadExcel": "Download Excel File",
+    "converting": "Converting...",
+    "generating": "Generating..."
+  },
+  "tips": {
+    "uploadMd": "Upload a Markdown file (.md, .markdown, .txt)",
+    "uploadWord": "Upload a Word file (.docx)",
+    "uploadHtml": "Upload an HTML file (.html, .htm)",
+    "example": "Load sample content",
+    "clear": "Clear all content",
+    "copyMd": "Copy Markdown to clipboard",
+    "copyHtml": "Copy HTML code to clipboard",
+    "downloadMd": "Download the Markdown file",
+    "downloadHtml": "Download the HTML file",
+    "downloadPdf": "Download the PDF file",
+    "downloadExcel": "Download the Excel file"
+  },
+  "sync": {
+    "on": "Sync Scroll On",
+    "off": "Sync Scroll Off",
+    "onTip": "Sync scroll is on. When you scroll the editor or the preview, the other side follows automatically, keeping the source and the result aligned. Click to turn this off.",
+    "offTip": "Click to enable sync scroll. Once enabled, scrolling the editor or the preview keeps the other side in sync, making it easy to compare the source with the result."
+  },
+  "editor": {
+    "markdown": "Markdown Editor",
+    "html": "HTML Editor",
+    "lines": "lines",
+    "placeholderMd": "Type your Markdown here...",
+    "placeholderHtml": "Type your HTML here...",
+    "toolbar": {
+      "h1": "Heading 1",
+      "h2": "Heading 2",
+      "h3": "Heading 3",
+      "bold": "Bold",
+      "italic": "Italic",
+      "strike": "Strikethrough",
+      "link": "Insert link",
+      "image": "Insert image",
+      "code": "Insert code block",
+      "mermaid": "Insert Mermaid diagram",
+      "latex": "Insert LaTeX formula",
+      "ul": "Bulleted list",
+      "ol": "Numbered list",
+      "table": "Insert table",
+      "quote": "Blockquote",
+      "hr": "Horizontal rule",
+      "paragraph": "Paragraph"
+    },
+    "placeholder": {
+      "boldText": "bold text",
+      "italicText": "italic text",
+      "strikeText": "strikethrough text",
+      "linkText": "link text",
+      "imageUrl": "image URL",
+      "imageDesc": "image description",
+      "codeBlock": "code block",
+      "listItem": "list item",
+      "quoteContent": "quote text",
+      "paraContent": "paragraph text"
+    },
+    "snippets": {
+      "mermaid": "graph TD\n    A[Start] --> B[Process]\n    B --> C[End]\n",
+      "mdTable": "| Header 1 | Header 2 | Header 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n",
+      "htmlTable": "<table>\n  <thead>\n    <tr>\n      <th>Header 1</th>\n      <th>Header 2</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Cell 1</td>\n      <td>Cell 2</td>\n    </tr>\n  </tbody>\n</table>\n"
+    }
+  },
+  "preview": {
+    "markdown": "Markdown Preview",
+    "html": "HTML Preview",
+    "emptyTitle": "Nothing to preview yet",
+    "emptyHint": "Enter some content in the editor"
+  },
+  "errors": {
+    "readFile": "Failed to read the file. Please try again.",
+    "emptyInput": "Please enter some Markdown content first.",
+    "convertFailed": "Conversion failed. Please try again.",
+    "pdfFailed": "PDF generation failed. Please try again.",
+    "excelFailed": "Excel generation failed. Please check your Markdown format.",
+    "EMPTY_CONTENT": "Content cannot be empty.",
+    "EMPTY_FILE": "File cannot be empty.",
+    "UNSUPPORTED_FORMAT": "Only .docx Word documents are supported.",
+    "CONVERSION_FAILED": "Conversion failed. Please try again."
+  }
+}

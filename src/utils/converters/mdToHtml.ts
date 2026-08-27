@@ -94,7 +94,7 @@ export async function convertMarkdownToHtml(markdown: string): Promise<string> {
   try {
     // 验证输入
     if (!markdown || typeof markdown !== 'string') {
-      throw new Error('Markdown 内容不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     // 预处理：将 Mermaid 和 LaTeX 转换为 HTML
@@ -106,7 +106,7 @@ export async function convertMarkdownToHtml(markdown: string): Promise<string> {
     return html;
   } catch (error) {
     console.error('Markdown 转 HTML 失败:', error);
-    throw new Error(`Markdown 转 HTML 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 
@@ -311,7 +311,7 @@ function escapeHtml(text: string): string {
 export function convertMarkdownToHtmlSync(markdown: string): string {
   try {
     if (!markdown || typeof markdown !== 'string') {
-      throw new Error('Markdown 内容不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     // 使用 marked 的同步解析方法
@@ -320,7 +320,7 @@ export function convertMarkdownToHtmlSync(markdown: string): string {
     return html;
   } catch (error) {
     console.error('Markdown 转 HTML 失败:', error);
-    throw new Error(`Markdown 转 HTML 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 

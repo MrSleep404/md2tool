@@ -1,0 +1,17 @@
+{
+  "usageTitle": "How to Use",
+  "featuresTitle": "Features",
+  "supportedTitle": "Supported Elements",
+  "notesTitle": "Things to Know",
+  "htmlElementsTitle": "Supported HTML Elements",
+  "convertTraitsTitle": "Conversion Details",
+  "emptyMdHint": "Enter some Markdown on the left",
+  "emptyHtmlHint": "Enter some HTML on the left",
+  "resultTitle": "Conversion Result",
+  "converting": "Converting...",
+  "editorHint": "Enter Markdown containing tables",
+  "tablePreview": "Table Preview",
+  "noTables": "No table data yet",
+  "noTablesHint": "Enter Markdown containing tables on the left",
+  "tableN": "Table {{index}}"
+}

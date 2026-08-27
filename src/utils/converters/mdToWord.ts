@@ -1219,7 +1219,7 @@ export async function convertMarkdownToWord(
 ): Promise<Blob> {
   try {
     if (!markdown || typeof markdown !== 'string') {
-      throw new Error('Markdown 内容不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     // 预扫描标题编号格式
@@ -1394,7 +1394,7 @@ export async function convertMarkdownToWord(
     return blob;
   } catch (error) {
     console.error('Markdown 转 Word 失败:', error);
-    throw new Error(`Markdown 转 Word 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 

@@ -1,5 +1,6 @@
 import { useMemo, useEffect, useRef } from 'react'
 import { FileText } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import 'katex/dist/katex.min.css'
 import { highlightAllCode } from '../../utils/highlight'
 
@@ -24,6 +25,7 @@ interface PreviewProps {
  * 实时渲染 Markdown/HTML 内容
  */
 export default function Preview({ content, type, scrollRef, headerActions, showHeader = true }: PreviewProps) {
+  const { t } = useTranslation('common')
   // 预览容器的引用
   const previewRef = useRef<HTMLDivElement>(null)
 
@@ -60,7 +62,7 @@ export default function Preview({ content, type, scrollRef, headerActions, showH
    * 获取预览标题
    */
   const getPreviewTitle = () => {
-    return type === 'markdown' ? 'Markdown 预览' : 'HTML 预览'
+    return type === 'markdown' ? t('preview.markdown') : t('preview.html')
   }
 
   return (
@@ -95,8 +97,8 @@ export default function Preview({ content, type, scrollRef, headerActions, showH
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-gray-400">
             <FileText className="h-16 w-16 mb-4" />
-            <p className="text-sm">暂无内容预览</p>
-            <p className="text-xs mt-2">请在编辑器中输入内容</p>
+            <p className="text-sm">{t('preview.emptyTitle')}</p>
+            <p className="text-xs mt-2">{t('preview.emptyHint')}</p>
           </div>
         )}
       </div>

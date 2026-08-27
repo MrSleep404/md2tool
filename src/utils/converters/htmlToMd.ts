@@ -136,7 +136,7 @@ export async function convertHtmlToMarkdown(
   try {
     // 验证输入
     if (!html || typeof html !== 'string') {
-      throw new Error('HTML 内容不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     const { cleanHtml: shouldClean = true } = options;
@@ -156,7 +156,7 @@ export async function convertHtmlToMarkdown(
     return optimizedMarkdown;
   } catch (error) {
     console.error('HTML 转 Markdown 失败:', error);
-    throw new Error(`HTML 转 Markdown 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 
@@ -195,7 +195,7 @@ export function convertHtmlToMarkdownSync(
 ): string {
   try {
     if (!html || typeof html !== 'string') {
-      throw new Error('HTML 内容不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     const { cleanHtml: shouldClean = true } = options;
@@ -207,7 +207,7 @@ export function convertHtmlToMarkdownSync(
     return optimizeMarkdown(markdown);
   } catch (error) {
     console.error('HTML 转 Markdown 失败:', error);
-    throw new Error(`HTML 转 Markdown 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 

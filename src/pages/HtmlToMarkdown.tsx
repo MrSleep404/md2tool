@@ -1,17 +1,23 @@
 import { useState, useEffect, useRef } from 'react'
 import { FileCode, FileText, Copy, Download, CheckCircle, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import { convertHtmlToMarkdown } from '../utils/converters/htmlToMd'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
+import { getExample } from '../i18n/exampleContent'
+import { tList } from '../i18n/helpers'
 
 /**
  * HTML 转 Markdown 页面
  */
 export default function HtmlToMarkdown() {
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language === 'en' ? 'en' : 'zh'
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.htmlToMarkdown)
+  useSEO(SEO_CONFIGS.htmlToMarkdown, '/html-to-markdown')
 
   const [html, setHtml] = useState<string>('')
   const [markdown, setMarkdown] = useState<string>('')
@@ -26,52 +32,8 @@ export default function HtmlToMarkdown() {
   const { enabled: syncScrollEnabled, toggle: toggleSyncScroll } = useSyncScrollState(false)
   useSyncScroll(htmlEditorScrollRef, markdownPreviewScrollRef, syncScrollEnabled)
 
-  // 示例 HTML
-  const exampleHtml = `<!DOCTYPE html>
-<html>
-<head>
-  <title>示例文档</title>
-</head>
-<body>
-  <h1>HTML 转 Markdown 工具</h1>
-  <p>这是一个用于将 <strong>HTML</strong> 转换为 <em>Markdown</em> 的工具。</p>
-
-  <h2>功能特点</h2>
-  <ul>
-    <li>支持标准 HTML 标签</li>
-    <li>自动清理样式和脚本</li>
-    <li>实时转换预览</li>
-  </ul>
-
-  <h3>代码示例</h3>
-  <pre><code>const greeting = "Hello, World!";</code></pre>
-
-  <blockquote>
-    <p>这是一个引用块的示例</p>
-  </blockquote>
-
-  <table>
-    <thead>
-      <tr>
-        <th>功能</th>
-        <th>支持</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>标题</td>
-        <td>✅</td>
-      </tr>
-      <tr>
-        <td>列表</td>
-        <td>✅</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p><a href="https://example.com">了解更多信息</a></p>
-</body>
-</html>`
+  // 示例 HTML（跟随界面语言）
+  const exampleHtml = getExample(lang, 'htmlToMd')
 
   // 初始化示例内容
   useEffect(() => {
@@ -125,7 +87,7 @@ export default function HtmlToMarkdown() {
       setError(null)
     }
     reader.onerror = () => {
-      setError('文件读取失败，请重试')
+      setError(t('common:errors.readFile'))
     }
     reader.readAsText(file)
 
@@ -164,10 +126,10 @@ export default function HtmlToMarkdown() {
           <div className="text-center">
             <div className="flex justify-center items-center space-x-3 mb-4">
               <FileCode className="h-12 w-12" />
-              <h1 className="text-4xl font-bold">HTML 转 Markdown</h1>
+              <h1 className="text-4xl font-bold">{t('pages:htmlToMarkdown.hero.title')}</h1>
             </div>
             <p className="text-lg text-purple-100 max-w-2xl mx-auto">
-              将 HTML 代码转换为简洁的 Markdown 格式，支持实时预览
+              {t('pages:htmlToMarkdown.hero.subtitle')}
             </p>
           </div>
         </div>
@@ -195,25 +157,25 @@ export default function HtmlToMarkdown() {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              title="上传HTML文件 (.html, .htm)"
+              title={t('common:tips.uploadHtml')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Upload className="h-4 w-4" />
-              <span className="text-sm">上传 HTML 文件或代码段</span>
+              <span className="text-sm">{t('common:buttons.uploadHtml')}</span>
             </button>
 
             <button
               onClick={handleLoadExample}
-              title="加载示例内容"
+              title={t('common:tips.example')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="text-sm">示例内容</span>
+              <span className="text-sm">{t('common:buttons.example')}</span>
             </button>
 
             <button
               onClick={handleClear}
-              title="清除所有内容"
+              title={t('common:tips.clear')}
               disabled={!html}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 !html
@@ -222,7 +184,7 @@ export default function HtmlToMarkdown() {
               }`}
             >
               <Trash2 className="h-4 w-4" />
-              <span className="text-sm">清除内容</span>
+              <span className="text-sm">{t('common:buttons.clear')}</span>
             </button>
           </div>
 
@@ -230,7 +192,7 @@ export default function HtmlToMarkdown() {
           <div className="flex items-center space-x-2 ml-auto">
             <button
               onClick={handleCopy}
-              title="复制Markdown到剪贴板"
+              title={t('common:tips.copyMd')}
               disabled={!markdown}
               className={`
                 flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all
@@ -243,19 +205,19 @@ export default function HtmlToMarkdown() {
               {copied ? (
                 <>
                   <CheckCircle className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-600">已复制</span>
+                  <span className="text-sm text-green-600">{t('common:buttons.copied')}</span>
                 </>
               ) : (
                 <>
                   <Copy className="h-4 w-4" />
-                  <span className="text-sm">复制 Markdown 内容</span>
+                  <span className="text-sm">{t('common:buttons.copyMd')}</span>
                 </>
               )}
             </button>
 
             <button
               onClick={handleDownload}
-              title="下载Markdown文件"
+              title={t('common:tips.downloadMd')}
               disabled={!markdown}
               className={`
                 flex items-center space-x-2 px-4 py-2 rounded-lg transition-all
@@ -266,7 +228,7 @@ export default function HtmlToMarkdown() {
               `}
             >
               <Download className="h-4 w-4" />
-              <span className="text-sm">下载 Markdown 文件</span>
+              <span className="text-sm">{t('common:buttons.downloadMd')}</span>
             </button>
           </div>
         </div>
@@ -289,7 +251,7 @@ export default function HtmlToMarkdown() {
             <div className="bg-gray-100 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <FileText className="h-4 w-4 text-gray-600" />
-                <span className="text-sm text-gray-700">Markdown 预览</span>
+                <span className="text-sm text-gray-700">{t('common:preview.markdown')}</span>
               </div>
               <button
                 onClick={toggleSyncScroll}
@@ -298,19 +260,17 @@ export default function HtmlToMarkdown() {
                     ? 'bg-purple-100 text-purple-700'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
-                title={syncScrollEnabled
-                  ? '同步预览已开启。滚动编辑器或预览区域时,另一侧会自动同步滚动位置,保持源码与转换结果的位置对应。点击可关闭此功能。'
-                  : '点击开启同步预览功能。开启后,滚动编辑器或预览区域时,另一侧会自动同步滚动位置,方便对照源码和转换结果。'}
+                title={syncScrollEnabled ? t('common:sync.onTip') : t('common:sync.offTip')}
               >
                 {syncScrollEnabled ? (
                   <>
                     <Link2 className="h-4 w-4" />
-                    <span>同步预览已开</span>
+                    <span>{t('common:sync.on')}</span>
                   </>
                 ) : (
                   <>
                     <Link2Off className="h-4 w-4" />
-                    <span>同步预览已关</span>
+                    <span>{t('common:sync.off')}</span>
                   </>
                 )}
               </button>
@@ -324,7 +284,7 @@ export default function HtmlToMarkdown() {
                 </pre>
               ) : (
                 <div className="h-full flex items-center justify-center text-gray-400">
-                  <p>请在左侧输入 HTML 内容</p>
+                  <p>{t('tools:emptyHtmlHint')}</p>
                 </div>
               )}
             </div>
@@ -333,17 +293,17 @@ export default function HtmlToMarkdown() {
 
         {/* 功能说明 */}
         <div className="mt-12">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">功能说明</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">{t('tools:featuresTitle')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center space-x-3 mb-3">
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <FileCode className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">智能清理</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:htmlToMarkdown.cards.smartClean.title')}</h3>
               </div>
               <p className="text-gray-600">
-                自动移除 HTML 中的样式、脚本和注释，提取纯文本内容
+                {t('pages:htmlToMarkdown.cards.smartClean.desc')}
               </p>
             </div>
 
@@ -352,10 +312,10 @@ export default function HtmlToMarkdown() {
                 <div className="p-2 bg-green-100 rounded-lg">
                   <CheckCircle className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">完整支持</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:htmlToMarkdown.cards.fullSupport.title')}</h3>
               </div>
               <p className="text-gray-600">
-                支持标题、列表、表格、代码块、链接等常见 HTML 元素
+                {t('pages:htmlToMarkdown.cards.fullSupport.desc')}
               </p>
             </div>
 
@@ -364,10 +324,10 @@ export default function HtmlToMarkdown() {
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <Download className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">一键下载</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:htmlToMarkdown.cards.download.title')}</h3>
               </div>
               <p className="text-gray-600">
-                转换完成后可直接复制或下载为 .md 文件
+                {t('pages:htmlToMarkdown.cards.download.desc')}
               </p>
             </div>
           </div>
@@ -376,27 +336,20 @@ export default function HtmlToMarkdown() {
         {/* 支持的元素 */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-3">支持的 HTML 元素</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-3">{t('tools:htmlElementsTitle')}</h3>
             <div className="grid grid-cols-2 gap-2 text-gray-600">
-              <div>✅ 标题 (h1-h6)</div>
-              <div>✅ 段落 (p)</div>
-              <div>✅ 链接 (a)</div>
-              <div>✅ 列表 (ul, ol, li)</div>
-              <div>✅ 表格 (table)</div>
-              <div>✅ 代码块 (pre, code)</div>
-              <div>✅ 引用 (blockquote)</div>
-              <div>✅ 粗体/斜体 (strong, em)</div>
+              {tList(t, 'pages:htmlToMarkdown.htmlElements').map((item, index) => (
+                <div key={index}>{item}</div>
+              ))}
             </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-3">转换特性</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-3">{t('tools:convertTraitsTitle')}</h3>
             <ul className="space-y-2 text-gray-600">
-              <li>🔧 自动移除内联样式</li>
-              <li>🔧 自动移除 script 和 style 标签</li>
-              <li>🔧 保留表格结构</li>
-              <li>🔧 代码块支持语言标识</li>
-              <li>🔧 优化 Markdown 格式</li>
+              {tList(t, 'pages:htmlToMarkdown.traits').map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </div>
         </div>

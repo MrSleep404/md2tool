@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Table, Download, Loader2, FileSpreadsheet, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import {
@@ -8,13 +9,17 @@ import {
 } from '../utils/converters/mdToExcel'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
+import { getExample } from '../i18n/exampleContent'
 
 /**
  * Markdown 转 Excel 页面
  */
 export default function MarkdownToExcel() {
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language === 'en' ? 'en' : 'zh'
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.markdownToExcel)
+  useSEO(SEO_CONFIGS.markdownToExcel, '/markdown-to-excel')
 
   const [markdown, setMarkdown] = useState<string>('')
   const [tables, setTables] = useState<Array<{ headers: string[]; rows: string[][] }>>([])
@@ -29,33 +34,8 @@ export default function MarkdownToExcel() {
   const { enabled: syncScrollEnabled, toggle: toggleSyncScroll } = useSyncScrollState(false)
   useSyncScroll(editorScrollRef, previewScrollRef, syncScrollEnabled)
 
-  // 示例 Markdown 内容（包含表格）
-  const exampleMarkdown = `# Markdown 表格转 Excel 示例
-
-这是一个将 Markdown 表格转换为 Excel 文件的工具。
-
-## 示例表格
-
-| 姓名 | 年龄 | 城市 | 职业 |
-|------|------|------|------|
-| 张三 | 28   | 北京 | 工程师 |
-| 李四 | 32   | 上海 | 设计师 |
-| 王五 | 25   | 广州 | 产品经理 |
-
-## 另一个表格
-
-| 产品 | 价格 | 库存 | 状态 |
-|------|------|------|------|
-| 手机 | 2999 | 100  | 在售 |
-| 电脑 | 5999 | 50   | 在售 |
-| 耳机 | 299  | 200  | 缺货 |
-
-## 使用说明
-
-1. 在左侧编辑器中输入包含表格的 Markdown 内容
-2. 右侧会实时显示识别到的表格预览
-3. 点击"下载 Excel"按钮下载转换后的文件
-`
+  // 示例 Markdown 内容（包含表格，跟随界面语言）
+  const exampleMarkdown = getExample(lang, 'mdToExcel')
 
   // 初始化示例内容
   useEffect(() => {
@@ -69,7 +49,7 @@ export default function MarkdownToExcel() {
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
-    
+
     const reader = new FileReader()
     reader.onload = (e) => {
       const content = e.target?.result as string
@@ -77,10 +57,10 @@ export default function MarkdownToExcel() {
       setError(null)
     }
     reader.onerror = () => {
-      setError('文件读取失败，请重试')
+      setError(t('common:errors.readFile'))
     }
     reader.readAsText(file)
-    
+
     // 重置 input 以便可以重复上传同一个文件
     if (event.target) {
       event.target.value = ''
@@ -119,7 +99,7 @@ export default function MarkdownToExcel() {
   // 处理 Excel 下载
   const handleDownloadExcel = async () => {
     if (!markdown.trim()) {
-      setError('请先输入 Markdown 内容')
+      setError(t('common:errors.emptyInput'))
       return
     }
 
@@ -131,7 +111,7 @@ export default function MarkdownToExcel() {
       saveAs(blob, 'markdown-tables.xlsx')
     } catch (err) {
       console.error('Excel 生成错误:', err)
-      setError('Excel 生成失败，请检查 Markdown 格式')
+      setError(t('common:errors.excelFailed'))
     } finally {
       setIsConverting(false)
     }
@@ -145,10 +125,10 @@ export default function MarkdownToExcel() {
           <div className="text-center">
             <div className="flex justify-center items-center space-x-3 mb-4">
               <Table className="h-12 w-12" />
-              <h1 className="text-4xl font-bold">Markdown 转 Excel</h1>
+              <h1 className="text-4xl font-bold">{t('pages:markdownToExcel.hero.title')}</h1>
             </div>
             <p className="text-lg text-indigo-100 max-w-2xl mx-auto">
-              将 Markdown 中的表格数据一键转换为 Excel 文件，支持多表格识别
+              {t('pages:markdownToExcel.hero.subtitle')}
             </p>
           </div>
         </div>
@@ -175,32 +155,32 @@ export default function MarkdownToExcel() {
               accept=".md,.txt,.markdown"
               className="hidden"
             />
-            
+
             {/* 上传文件按钮 */}
             <button
               onClick={handleUploadClick}
-              title="上传Markdown文件 (.md, .markdown, .txt)"
+              title={t('common:tips.uploadMd')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Upload className="h-4 w-4" />
-              <span className="text-sm">上传 MD 文件</span>
+              <span className="text-sm">{t('common:buttons.uploadMd')}</span>
             </button>
 
             {/* 示例内容按钮 */}
             <button
               onClick={handleLoadExample}
-              title="加载示例内容"
+              title={t('common:tips.example')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="text-sm">示例内容</span>
+              <span className="text-sm">{t('common:buttons.example')}</span>
             </button>
 
             {/* 清除内容按钮 */}
             <button
               onClick={handleClear}
               disabled={!markdown}
-              title="清除所有内容"
+              title={t('common:tips.clear')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 !markdown
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
@@ -208,7 +188,7 @@ export default function MarkdownToExcel() {
               }`}
             >
               <Trash2 className="h-4 w-4" />
-              <span className="text-sm">清除内容</span>
+              <span className="text-sm">{t('common:buttons.clear')}</span>
             </button>
           </div>
 
@@ -216,7 +196,7 @@ export default function MarkdownToExcel() {
           <button
             onClick={handleDownloadExcel}
             disabled={isConverting || tables.length === 0}
-            title="下载Excel文件"
+            title={t('common:tips.downloadExcel')}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
               isConverting || tables.length === 0
                 ? 'bg-gray-300 text-white cursor-not-allowed'
@@ -226,12 +206,12 @@ export default function MarkdownToExcel() {
             {isConverting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">转换中...</span>
+                <span className="text-sm">{t('common:buttons.converting')}</span>
               </>
             ) : (
               <>
                 <Download className="h-4 w-4" />
-                <span className="text-sm">下载 Excel 文件</span>
+                <span className="text-sm">{t('common:buttons.downloadExcel')}</span>
               </>
             )}
           </button>
@@ -242,8 +222,8 @@ export default function MarkdownToExcel() {
           {/* 左侧：Markdown 编辑器 */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden h-[calc(100vh-22rem)]">
             <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-              <h3 className="text-sm font-medium text-gray-700">Markdown 编辑器</h3>
-              <p className="text-xs text-gray-500 mt-1">输入包含表格的 Markdown 内容</p>
+              <h3 className="text-sm font-medium text-gray-700">{t('common:editor.markdown')}</h3>
+              <p className="text-xs text-gray-500 mt-1">{t('tools:editorHint')}</p>
             </div>
             <Editor
               content={markdown}
@@ -259,7 +239,7 @@ export default function MarkdownToExcel() {
             <div className="bg-gray-100 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Table className="h-4 w-4 text-gray-600" />
-                <span className="text-sm text-gray-700">表格预览</span>
+                <span className="text-sm text-gray-700">{t('tools:tablePreview')}</span>
               </div>
               <button
                 onClick={toggleSyncScroll}
@@ -268,19 +248,17 @@ export default function MarkdownToExcel() {
                     ? 'bg-indigo-100 text-indigo-700'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
-                title={syncScrollEnabled 
-                  ? '同步预览已开启。滚动编辑器或预览区域时，另一侧会自动同步滚动位置，保持源码与转换结果的位置对应。点击可关闭此功能。' 
-                  : '点击开启同步预览功能。开启后，滚动编辑器或预览区域时，另一侧会自动同步滚动位置，方便对照源码和转换结果。'}
+                title={syncScrollEnabled ? t('common:sync.onTip') : t('common:sync.offTip')}
               >
                 {syncScrollEnabled ? (
                   <>
                     <Link2 className="h-4 w-4" />
-                    <span>同步预览已开</span>
+                    <span>{t('common:sync.on')}</span>
                   </>
                 ) : (
                   <>
                     <Link2Off className="h-4 w-4" />
-                    <span>同步预览已关</span>
+                    <span>{t('common:sync.off')}</span>
                   </>
                 )}
               </button>
@@ -289,15 +267,15 @@ export default function MarkdownToExcel() {
               {tables.length === 0 ? (
                 <div className="text-center py-12 text-gray-400">
                   <FileSpreadsheet className="h-12 w-12 mx-auto mb-4" />
-                  <p className="text-sm">暂无表格数据</p>
-                  <p className="text-xs mt-2">请在左侧输入包含表格的 Markdown</p>
+                  <p className="text-sm">{t('tools:noTables')}</p>
+                  <p className="text-xs mt-2">{t('tools:noTablesHint')}</p>
                 </div>
               ) : (
                 <div className="space-y-8">
                   {tables.map((table, tableIndex) => (
                     <div key={tableIndex}>
                       <h4 className="text-sm font-medium text-gray-600 mb-2">
-                        表格 {tableIndex + 1}
+                        {t('tools:tableN', { index: tableIndex + 1 })}
                       </h4>
                       <div className="overflow-x-auto border border-gray-300 rounded">
                         <table className="min-w-full divide-y divide-gray-300">
@@ -346,10 +324,10 @@ export default function MarkdownToExcel() {
               <div className="p-2 bg-indigo-100 rounded-lg">
                 <Table className="h-6 w-6 text-indigo-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900">自动识别表格</h3>
+              <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToExcel.cards.detect.title')}</h3>
             </div>
             <p className="text-gray-600">
-              自动识别 Markdown 内容中的所有表格，无需手动选择
+              {t('pages:markdownToExcel.cards.detect.desc')}
             </p>
           </div>
 
@@ -358,10 +336,10 @@ export default function MarkdownToExcel() {
               <div className="p-2 bg-blue-100 rounded-lg">
                 <FileSpreadsheet className="h-6 w-6 text-blue-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900">多表格支持</h3>
+              <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToExcel.cards.multi.title')}</h3>
             </div>
             <p className="text-gray-600">
-              支持同时转换多个表格到同一个 Excel 文件的不同位置
+              {t('pages:markdownToExcel.cards.multi.desc')}
             </p>
           </div>
 
@@ -370,10 +348,10 @@ export default function MarkdownToExcel() {
               <div className="p-2 bg-green-100 rounded-lg">
                 <Download className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900">一键下载</h3>
+              <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToExcel.cards.download.title')}</h3>
             </div>
             <p className="text-gray-600">
-              点击下载按钮即可生成 .xlsx 文件，完全在浏览器端完成
+              {t('pages:markdownToExcel.cards.download.desc')}
             </p>
           </div>
         </div>

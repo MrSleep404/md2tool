@@ -1,0 +1,148 @@
+{
+  "wordToMarkdown": {
+    "hero": {
+      "title": "Word 转 Markdown",
+      "subtitle": "上传 Word 文档，一键转换为 Markdown 格式"
+    },
+    "steps": [
+      "点击上方上传区域或拖拽 .docx 文件到上传区",
+      "系统将自动解析 Word 文档并转换为 Markdown 格式",
+      "转换完成后，可复制结果或下载为 .md 文件"
+    ],
+    "supported": [
+      "✅ 标题（H1-H6）",
+      "✅ 段落和文本格式",
+      "✅ 粗体、斜体",
+      "✅ 列表（有序、无序）"
+    ],
+    "notes": [
+      "⚠️ 仅支持 .docx 格式",
+      "⚠️ 复杂表格可能需要手动调整",
+      "⚠️ 图片不会被提取",
+      "⚠️ 最大文件大小: 10MB"
+    ]
+  },
+  "markdownToHtml": {
+    "hero": {
+      "title": "Markdown 转 HTML",
+      "subtitle": "实时将 Markdown 转换为 HTML，支持代码预览和下载"
+    },
+    "tabs": {
+      "code": "HTML 代码",
+      "preview": "预览效果"
+    },
+    "cards": {
+      "realtime": {
+        "title": "实时转换",
+        "desc": "在左侧编辑 Markdown，右侧立即显示对应的 HTML 代码"
+      },
+      "dualPreview": {
+        "title": "双模式预览",
+        "desc": "查看纯 HTML 代码或渲染后的页面效果"
+      },
+      "completeDoc": {
+        "title": "完整文档",
+        "desc": "下载的 HTML 文件包含完整的样式和文档结构"
+      }
+    }
+  },
+  "htmlToMarkdown": {
+    "hero": {
+      "title": "HTML 转 Markdown",
+      "subtitle": "将 HTML 代码转换为简洁的 Markdown 格式，支持实时预览"
+    },
+    "cards": {
+      "smartClean": {
+        "title": "智能清理",
+        "desc": "自动移除 HTML 中的样式、脚本和注释，提取纯文本内容"
+      },
+      "fullSupport": {
+        "title": "完整支持",
+        "desc": "支持标题、列表、表格、代码块、链接等常见 HTML 元素"
+      },
+      "download": {
+        "title": "一键下载",
+        "desc": "转换完成后可直接复制或下载为 .md 文件"
+      }
+    },
+    "htmlElements": [
+      "✅ 标题 (h1-h6)",
+      "✅ 段落 (p)",
+      "✅ 链接 (a)",
+      "✅ 列表 (ul, ol, li)",
+      "✅ 表格 (table)",
+      "✅ 代码块 (pre, code)",
+      "✅ 引用 (blockquote)",
+      "✅ 粗体/斜体 (strong, em)"
+    ],
+    "traits": [
+      "🔧 自动移除内联样式",
+      "🔧 自动移除 script 和 style 标签",
+      "🔧 保留表格结构",
+      "🔧 代码块支持语言标识",
+      "🔧 优化 Markdown 格式"
+    ]
+  },
+  "markdownToPdf": {
+    "hero": {
+      "title": "Markdown 转 PDF",
+      "subtitle": "将 Markdown 文档转换为高质量的 PDF 文件，支持实时预览"
+    },
+    "cards": {
+      "quality": {
+        "title": "高质量输出",
+        "desc": "使用专业渲染引擎，生成清晰、美观的 PDF 文档"
+      },
+      "preview": {
+        "title": "实时预览",
+        "desc": "编辑的同时实时查看渲染效果，确保输出符合预期"
+      },
+      "download": {
+        "title": "一键下载",
+        "desc": "点击按钮即可下载生成的 PDF 文件，无需等待"
+      }
+    },
+    "defaultsTitle": "PDF 默认配置",
+    "defaults": [
+      "📐 页面大小: A4",
+      "📐 页面方向: 纵向",
+      "📐 页边距: 10mm",
+      "📐 字体大小: 12pt",
+      "📐 显示页码: 是"
+    ],
+    "supported": [
+      "✅ 标题（H1-H6）",
+      "✅ 段落和文本格式",
+      "✅ 列表（有序、无序）",
+      "✅ 表格",
+      "✅ 代码块",
+      "✅ 引用块"
+    ],
+    "notes": [
+      "⚠️ PDF 生成过程可能需要几秒钟，请耐心等待",
+      "⚠️ 复杂的表格和代码块可能需要手动调整格式",
+      "⚠️ 图片和链接在 PDF 中可能无法正常显示",
+      "⚠️ 建议使用现代浏览器（Chrome、Firefox、Edge）以获得最佳效果"
+    ]
+  },
+  "markdownToExcel": {
+    "hero": {
+      "title": "Markdown 转 Excel",
+      "subtitle": "将 Markdown 中的表格数据一键转换为 Excel 文件，支持多表格识别"
+    },
+    "cards": {
+      "detect": {
+        "title": "自动识别表格",
+        "desc": "自动识别 Markdown 内容中的所有表格，无需手动选择"
+      },
+      "multi": {
+        "title": "多表格支持",
+        "desc": "支持同时转换多个表格到同一个 Excel 文件的不同位置"
+      },
+      "download": {
+        "title": "一键下载",
+        "desc": "点击下载按钮即可生成 .xlsx 文件，完全在浏览器端完成"
+      }
+    }
+  }
+}

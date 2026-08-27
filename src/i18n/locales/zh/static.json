@@ -1,0 +1,299 @@
+{
+  "help": {
+    "title": "操作说明",
+    "intro": "本页介绍 MD2Tool 各转换工具的使用方法。如果您是第一次使用，建议先阅读下方的新手教程；遇到问题时可以查看常见问题解答（FAQ）。",
+    "tools": {
+      "title": "转换工具一览",
+      "mdToWord": {
+        "title": "Markdown 转 Word",
+        "description": "粘贴 Markdown，一键转换为 Word 文档（DOCX）"
+      },
+      "wordToMarkdown": {
+        "title": "Word 转 Markdown",
+        "description": "上传 .docx 文件，一键转换为 Markdown 文本"
+      },
+      "markdownToHtml": {
+        "title": "Markdown 转 HTML",
+        "description": "粘贴 Markdown，实时预览并导出 HTML 代码"
+      },
+      "htmlToMarkdown": {
+        "title": "HTML 转 Markdown",
+        "description": "粘贴 HTML 代码，转换为干净的 Markdown 文本"
+      },
+      "markdownToPdf": {
+        "title": "Markdown 转 PDF",
+        "description": "将 Markdown 文档渲染为高质量 PDF 文件"
+      },
+      "markdownToExcel": {
+        "title": "Markdown 转 Excel",
+        "description": "将 Markdown 表格转换为 Excel（XLSX）文件"
+      }
+    },
+    "tutorial": {
+      "title": "新手教程",
+      "intro": "四步完成一次转换，流程对所有工具通用：",
+      "steps": [
+        {
+          "title": "选择转换工具",
+          "content": "在首页点击您需要的转换方向卡片（如「Word 转 Markdown」），进入对应的工具页面。MD2Tool 提供 Word、HTML、PDF、Excel 与 Markdown 之间的互转，所有转换均在浏览器本地完成。"
+        },
+        {
+          "title": "输入您的内容",
+          "content": "根据工具类型选择输入方式：文本类工具（Markdown/HTML 相关）直接在左侧编辑器中粘贴或输入内容；文件类工具（Word 转 Markdown）点击上传按钮或把 .docx 文件拖拽进去即可。支持的文件格式为 .docx（旧版 .doc 请先用 Word 另存为 .docx）。"
+        },
+        {
+          "title": "查看实时预览",
+          "content": "输入内容后，右侧会实时显示转换结果预览。Markdown 相关工具的编辑区与预览区支持同步滚动，方便对照检查。如果预览效果不对，可回到左侧修改内容。"
+        },
+        {
+          "title": "导出或复制结果",
+          "content": "确认无误后，点击「转换」或「下载」按钮即可导出文件（DOCX / HTML / PDF / XLSX），文本类结果也可以直接点击「复制」按钮复制到剪贴板。整个过程无需注册、不限次数。"
+        }
+      ]
+    },
+    "tips": {
+      "title": "使用技巧",
+      "latexA": "数学公式使用 LaTeX 语法：行内公式用",
+      "latexB": "，独立公式用",
+      "latexC": "。",
+      "codeblockA": "代码块使用三个反引号标注语言（如",
+      "codeblockB": "），可获得语法高亮。",
+      "mermaidA": "Mermaid 图表用",
+      "mermaidB": "代码块编写，可自动渲染为流程图、时序图等。",
+      "wordNote": "Word 转 Markdown 前，建议先在 Word 中清理多余的手动换行和空格，转换结果会更干净。"
+    },
+    "faq": {
+      "title": "常见问题（FAQ）",
+      "items": [
+        {
+          "q": "使用 MD2Tool 需要注册或付费吗？",
+          "a": "不需要。MD2Tool 完全免费，无需注册登录，也没有次数限制，打开网页即可使用。"
+        },
+        {
+          "q": "我的文件会被上传到服务器吗？",
+          "a": "不会。所有转换都在您的浏览器本地完成，文件内容不会上传、不会存储，关闭页面后临时数据自动清除，请放心使用。"
+        },
+        {
+          "q": "Word 转 Markdown 时，公式和图片能保留吗？",
+          "a": "LaTeX 公式会转换为 Markdown 中的 LaTeX 语法（$...$ / $$...$$）。图片暂不支持提取，转换结果中不包含图片，如有需要请在转换后手动补充。"
+        },
+        {
+          "q": "为什么 .doc 格式的 Word 文件无法上传？",
+          "a": "目前仅支持 .docx 格式（Office 2007 及以上）。如果您的文件是旧版 .doc，请先用 Word 或 WPS 打开，选择「另存为」并保存为 .docx 格式后再上传。"
+        },
+        {
+          "q": "Markdown 转 PDF 时代码块显示为图片是怎么回事？",
+          "a": "为了让 PDF 中的代码块保持完整并避免跨页时被截断，工具会把较长的代码块渲染为图片，这是预期行为，不影响内容。"
+        },
+        {
+          "q": "Markdown 转 Excel 对表格语法有要求吗？",
+          "a": "需要使用标准 Markdown 表格语法（第二行使用 | --- | 分隔表头与表体）。工具会把每个表格导出为一个工作表；如果文档中没有表格，将无法导出有效内容。"
+        },
+        {
+          "q": "转换结果出现乱码或格式错乱怎么办？",
+          "a": "请先确认源文件内容完整且格式标准；也可以尝试减少单次转换的内容量。如果问题仍然存在，欢迎通过「联系我们」页面反馈，附上出现问题的内容片段，我们会尽快修复。"
+        },
+        {
+          "q": "支持哪些 Markdown 扩展语法？",
+          "a": "支持标准 Markdown 语法，以及表格、代码块（含语法高亮）、LaTeX 数学公式、Mermaid 图表、任务列表等常用扩展语法。"
+        }
+      ]
+    },
+    "bottom": {
+      "a": "还有其他问题？欢迎通过",
+      "contact": "联系我们",
+      "b": "反馈，或先到",
+      "home": "首页",
+      "c": "试试具体工具。"
+    }
+  },
+  "about": {
+    "title": "关于 MD2Tool",
+    "introTitle": "项目简介",
+    "intro": {
+      "p1": "MD2Tool 是一款完全免费、开源的在线文档格式转换工具，专注于 Markdown 与其他文档格式之间的互转。我们致力于为开发者和内容创作者提供简单、高效、安全的文档转换服务。",
+      "p2": "所有转换过程都在您的浏览器本地完成，我们不会收集、存储或上传您的任何文件内容，充分保护您的隐私和数据安全。"
+    },
+    "features": {
+      "title": "核心特性",
+      "multiFormat": {
+        "title": "多格式支持",
+        "desc": "支持 Markdown、Word、HTML、PDF、Excel 等多种文档格式的互转，满足不同场景需求。"
+      },
+      "privacy": {
+        "title": "隐私保护",
+        "desc": "所有转换在浏览器本地完成，文件不上传服务器，保护您的敏感信息。"
+      },
+      "fast": {
+        "title": "快速高效",
+        "desc": "无需等待上传下载，本地即时转换，几秒钟即可完成文档格式转换。"
+      },
+      "openSource": {
+        "title": "开源免费",
+        "desc": "完全开源免费，代码托管在 GitHub，欢迎社区贡献和改进。"
+      }
+    },
+    "tech": {
+      "title": "技术架构",
+      "frontendTitle": "前端框架",
+      "frontend": [
+        "• React 18 + TypeScript",
+        "• Vite 构建工具",
+        "• Tailwind CSS 样式",
+        "• React Router 路由"
+      ],
+      "engineTitle": "转换引擎",
+      "engines": [
+        "• docx: Word 文档生成",
+        "• mammoth: Word 文档解析",
+        "• marked: Markdown 解析",
+        "• jspdf: PDF 文档生成"
+      ]
+    },
+    "scenarios": {
+      "title": "适用场景",
+      "items": [
+        "开发者编写技术文档，需要转换为 Word 或 PDF 格式提交",
+        "内容创作者将 Markdown 博客文章导出为多种格式",
+        "团队协作文档格式转换，保持兼容性",
+        "学生撰写作业，需要将 Markdown 转换为 Word 提交",
+        "编写 API 文档，生成 PDF 格式的文档手册"
+      ]
+    },
+    "info": {
+      "title": "项目信息",
+      "projectName": "项目名称：",
+      "license": "开源协议：",
+      "repo": "代码仓库：",
+      "demo": "在线体验："
+    },
+    "contribute": {
+      "title": "参与贡献",
+      "p": "我们欢迎所有形式的贡献，包括但不限于：",
+      "items": [
+        "提交 Bug 报告或功能建议",
+        "改进文档和使用指南",
+        "提交代码优化和新功能",
+        "分享和推广本项目"
+      ],
+      "p2a": "请访问我们的",
+      "repoLink": "GitHub 仓库",
+      "p2b": "参与项目开发。"
+    },
+    "copyright": "© {{year}} MD2Tool. 保留所有权利。"
+  },
+  "contact": {
+    "title": "联系我们",
+    "intro": "感谢您对 MD2Tool 的关注！我们非常重视您的反馈和建议。您可以通过以下方式联系我们：",
+    "ways": {
+      "title": "联系方式",
+      "githubIssues": {
+        "title": "GitHub Issues",
+        "desc": "如果您遇到 Bug 或有功能建议，请提交 Issue。我们会尽快回复。",
+        "button": "提交 Issue"
+      },
+      "repo": {
+        "title": "GitHub 仓库",
+        "desc": "访问项目仓库，查看源代码、提交 Pull Request 或参与讨论。",
+        "button": "访问仓库"
+      },
+      "demo": {
+        "title": "在线体验",
+        "desc": "直接访问在线版本，立即体验所有转换功能。",
+        "button": "立即体验"
+      }
+    },
+    "feedback": {
+      "title": "反馈与建议",
+      "p": "我们非常欢迎您的反馈！无论是 Bug 报告、功能建议还是使用体验，您的意见都将帮助我们改进产品。",
+      "boxTitle": "提交反馈时，建议包含以下信息：",
+      "items": [
+        "问题的详细描述或功能的详细说明",
+        "复现问题的步骤（如果是 Bug）",
+        "期望的行为和实际的行为",
+        "浏览器类型和版本（如果相关）",
+        "截图或录屏（如果有助于理解问题）"
+      ]
+    },
+    "response": {
+      "title": "响应时间",
+      "p": "我们会尽快回复您的反馈。通常情况下：",
+      "items": [
+        { "label": "Bug 报告：", "text": "1-3 个工作日内回复" },
+        { "label": "功能建议：", "text": "1-5 个工作日内回复" },
+        { "label": "Pull Request：", "text": "3-7 个工作日内审核" }
+      ]
+    },
+    "other": {
+      "title": "其他信息",
+      "projectName": "项目名称：",
+      "license": "开源协议：",
+      "maintainer": "维护者："
+    },
+    "copyright": "© {{year}} MD2Tool. 保留所有权利。"
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "lastUpdated": "最后更新日期：{{date}}",
+    "intro": {
+      "title": "引言",
+      "p1": "MD2Tool（以下简称「我们」）致力于保护您的隐私。本隐私政策说明了我们如何收集、使用、披露和管理您的个人信息。",
+      "p2": "使用本网站即表示您同意本隐私政策的条款。如果您不同意本政策，请勿使用本网站。"
+    },
+    "collection": {
+      "title": "信息收集",
+      "weCollectTitle": "我们收集的信息",
+      "weCollect": [
+        { "label": "使用数据：", "text": "我们可能收集有关您如何使用网站的信息，包括访问的页面、访问时间、停留时间等。" },
+        { "label": "设备信息：", "text": "我们可能收集有关您使用的设备类型、浏览器类型、操作系统等信息。" },
+        { "label": "Cookie：", "text": "我们使用 Cookie 和类似技术来改善用户体验和分析网站流量。" }
+      ],
+      "weDontTitle": "我们不收集的信息",
+      "weDont": [
+        { "label": "上传的文件内容：", "text": "我们承诺不收集、存储或传输您上传到网站进行转换的任何文件内容。所有文件转换均在您的浏览器本地完成。" },
+        { "label": "个人身份信息：", "text": "我们不需要您注册账号，不收集姓名、邮箱、电话等个人身份信息。" }
+      ]
+    },
+    "cookies": {
+      "title": "Cookie 和跟踪技术",
+      "p": "我们使用以下类型的 Cookie：",
+      "items": [
+        { "label": "必要 Cookie：", "text": "网站正常运行所必需的 Cookie。" },
+        { "label": "分析 Cookie：", "text": "用于分析网站使用情况和改善用户体验的 Cookie。" },
+        { "label": "广告 Cookie：", "text": "用于展示个性化广告的 Cookie（详见下方「广告服务」部分）。" }
+      ],
+      "p2": "您可以在浏览器设置中管理 Cookie 偏好。请注意，禁用某些 Cookie 可能会影响网站功能。"
+    },
+    "ads": {
+      "title": "广告服务（Google AdSense）",
+      "p1": "我们使用 Google AdSense 在网站上展示广告。Google AdSense 使用 Cookie 来根据用户之前的访问记录或其他网站的兴趣展示广告。",
+      "p2a": "Google 可能会使用 Cookie 和类似技术来收集有关您访问本网站和其他网站的信息，目的是根据您的兴趣展示广告。您可以通过访问",
+      "adsSettingsLink": "Google 广告设置",
+      "p2b": "来关闭个性化广告。",
+      "p3a": "您也可以访问",
+      "aboutAdsLink": "www.aboutads.info",
+      "p3b": "了解有关第三方广告 Cookie 的更多信息。"
+    },
+    "security": {
+      "title": "数据安全",
+      "p": "我们采取适当的安全措施来保护您的信息免受未经授权的访问、使用或披露。然而，互联网传输无法保证 100% 安全，我们无法保证传输信息的安全性。"
+    },
+    "thirdParty": {
+      "title": "第三方链接",
+      "p": "本网站可能包含指向第三方网站的链接。我们不对这些网站的隐私政策或内容负责。建议您阅读这些网站的隐私政策。"
+    },
+    "children": {
+      "title": "儿童隐私",
+      "p": "本网站不面向 13 岁以下的儿童。我们不会故意收集 13 岁以下儿童的个人信息。"
+    },
+    "changes": {
+      "title": "隐私政策变更",
+      "p": "我们可能不时更新本隐私政策。任何变更将在此页面上发布，并更新「最后更新日期」。建议您定期查看本页面。"
+    },
+    "contactUs": {
+      "title": "联系我们",
+      "p": "如果您对本隐私政策有任何疑问，请通过以下方式联系我们："
+    },
+    "copyright": "© {{year}} MD2Tool. 保留所有权利。"
+  }
+}

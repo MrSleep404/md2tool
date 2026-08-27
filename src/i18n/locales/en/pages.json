@@ -1,0 +1,148 @@
+{
+  "wordToMarkdown": {
+    "hero": {
+      "title": "Word to Markdown",
+      "subtitle": "Upload a Word document and convert it to Markdown in one click"
+    },
+    "steps": [
+      "Click the upload button above or drop your .docx file into the upload area",
+      "The Word document is parsed and converted to Markdown automatically",
+      "When the conversion is done, copy the result or download it as a .md file"
+    ],
+    "supported": [
+      "✅ Headings (H1-H6)",
+      "✅ Paragraphs and text formatting",
+      "✅ Bold and italic",
+      "✅ Lists (ordered and unordered)"
+    ],
+    "notes": [
+      "⚠️ Only .docx format is supported",
+      "⚠️ Complex tables may need manual adjustments",
+      "⚠️ Images are not extracted",
+      "⚠️ Maximum file size: 10MB"
+    ]
+  },
+  "markdownToHtml": {
+    "hero": {
+      "title": "Markdown to HTML",
+      "subtitle": "Convert Markdown to HTML in real time, with code view and download"
+    },
+    "tabs": {
+      "code": "HTML Code",
+      "preview": "Preview"
+    },
+    "cards": {
+      "realtime": {
+        "title": "Real-Time Conversion",
+        "desc": "Edit Markdown on the left and the corresponding HTML code appears instantly on the right"
+      },
+      "dualPreview": {
+        "title": "Dual-Mode Preview",
+        "desc": "View the raw HTML code or the rendered page result"
+      },
+      "completeDoc": {
+        "title": "Complete Document",
+        "desc": "The downloaded HTML file includes full styles and document structure"
+      }
+    }
+  },
+  "htmlToMarkdown": {
+    "hero": {
+      "title": "HTML to Markdown",
+      "subtitle": "Convert HTML code into clean Markdown format, with live preview"
+    },
+    "cards": {
+      "smartClean": {
+        "title": "Smart Cleanup",
+        "desc": "Automatically removes styles, scripts, and comments from HTML, extracting pure text content"
+      },
+      "fullSupport": {
+        "title": "Full Support",
+        "desc": "Supports headings, lists, tables, code blocks, links, and other common HTML elements"
+      },
+      "download": {
+        "title": "One-Click Download",
+        "desc": "Copy the result directly or download it as a .md file after conversion"
+      }
+    },
+    "htmlElements": [
+      "✅ Headings (h1-h6)",
+      "✅ Paragraphs (p)",
+      "✅ Links (a)",
+      "✅ Lists (ul, ol, li)",
+      "✅ Tables (table)",
+      "✅ Code blocks (pre, code)",
+      "✅ Blockquotes (blockquote)",
+      "✅ Bold/italic (strong, em)"
+    ],
+    "traits": [
+      "🔧 Removes inline styles automatically",
+      "🔧 Removes script and style tags automatically",
+      "🔧 Preserves table structure",
+      "🔧 Code blocks keep language identifiers",
+      "🔧 Produces well-formatted Markdown"
+    ]
+  },
+  "markdownToPdf": {
+    "hero": {
+      "title": "Markdown to PDF",
+      "subtitle": "Convert Markdown documents into high-quality PDF files, with live preview"
+    },
+    "cards": {
+      "quality": {
+        "title": "High-Quality Output",
+        "desc": "A professional rendering engine produces clean, well-formatted PDF documents"
+      },
+      "preview": {
+        "title": "Live Preview",
+        "desc": "See the rendered result while you type, so the output always matches your expectations"
+      },
+      "download": {
+        "title": "One-Click Download",
+        "desc": "Download the generated PDF with a single click — no waiting"
+      }
+    },
+    "defaultsTitle": "Default PDF Settings",
+    "defaults": [
+      "📐 Page size: A4",
+      "📐 Orientation: Portrait",
+      "📐 Margin: 10mm",
+      "📐 Font size: 12pt",
+      "📐 Page numbers: On"
+    ],
+    "supported": [
+      "✅ Headings (H1-H6)",
+      "✅ Paragraphs and text formatting",
+      "✅ Lists (ordered and unordered)",
+      "✅ Tables",
+      "✅ Code blocks",
+      "✅ Blockquotes"
+    ],
+    "notes": [
+      "⚠️ PDF generation may take a few seconds — please be patient",
+      "⚠️ Complex tables and code blocks may need manual formatting adjustments",
+      "⚠️ Images and links may not display correctly in the PDF",
+      "⚠️ A modern browser (Chrome, Firefox, Edge) is recommended for best results"
+    ]
+  },
+  "markdownToExcel": {
+    "hero": {
+      "title": "Markdown to Excel",
+      "subtitle": "Convert Markdown tables to Excel in one click, with multi-table support"
+    },
+    "cards": {
+      "detect": {
+        "title": "Automatic Table Detection",
+        "desc": "All tables in your Markdown are detected automatically — no manual selection needed"
+      },
+      "multi": {
+        "title": "Multi-Table Support",
+        "desc": "Convert multiple tables into the same Excel file, each placed in its own location"
+      },
+      "download": {
+        "title": "One-Click Download",
+        "desc": "Generate the .xlsx file right in your browser with one click"
+      }
+    }
+  }
+}

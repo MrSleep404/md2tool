@@ -1,17 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { Code, Copy, Download, Loader2, CheckCircle, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import { convertMarkdownToHtml, convertMarkdownToHtmlDocument } from '../utils/converters/mdToHtml'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
+import { getExample } from '../i18n/exampleContent'
 
 /**
  * Markdown 转 HTML 页面
  */
 export default function MarkdownToHtml() {
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language === 'en' ? 'en' : 'zh'
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.markdownToHtml)
+  useSEO(SEO_CONFIGS.markdownToHtml, '/markdown-to-html')
 
   const [markdown, setMarkdown] = useState<string>('')
   const [htmlCode, setHtmlCode] = useState<string>('')
@@ -28,32 +33,8 @@ export default function MarkdownToHtml() {
   const { enabled: syncScrollEnabled, toggle: toggleSyncScroll } = useSyncScrollState(false)
   useSyncScroll(editorScrollRef, previewScrollRef, syncScrollEnabled)
 
-  // 示例 Markdown
-  const exampleMarkdown = `# Markdown 转 HTML
-
-这是一个 **Markdown** 转 **HTML** 的工具。
-
-## 功能特点
-
-- 实时转换
-- 支持标准 Markdown 语法
-- 可复制 HTML 代码
-- 可下载完整 HTML 文档
-
-\`\`\`html
-<p>这是一段示例代码</p>
-\`\`\`
-
-> 支持引用块、表格等复杂格式
-
-| 特性 | 支持 |
-|------|------|
-| 标题 | ✅ |
-| 列表 | ✅ |
-| 表格 | ✅ |
-
-[了解更多](https://example.com)
-`
+  // 示例 Markdown（跟随界面语言）
+  const exampleMarkdown = getExample(lang, 'mdToHtml')
 
   // 初始化示例内容
   useEffect(() => {
@@ -107,7 +88,7 @@ export default function MarkdownToHtml() {
       setError(null)
     }
     reader.onerror = () => {
-      setError('文件读取失败，请重试')
+      setError(t('common:errors.readFile'))
     }
     reader.readAsText(file)
 
@@ -120,7 +101,7 @@ export default function MarkdownToHtml() {
   // 下载 HTML 文件
   const handleDownload = async () => {
     if (!markdown.trim()) {
-      setError('请先输入 Markdown 内容')
+      setError(t('common:errors.emptyInput'))
       return
     }
 
@@ -135,7 +116,7 @@ export default function MarkdownToHtml() {
       const blob = new Blob([htmlDocument], { type: 'text/html;charset=utf-8' })
       saveAs(blob, 'document.html')
     } catch (err) {
-      setError('转换失败，请重试')
+      setError(t('common:errors.convertFailed'))
       console.error(err)
     } finally {
       setIsConverting(false)
@@ -150,10 +131,10 @@ export default function MarkdownToHtml() {
           <div className="text-center">
             <div className="flex justify-center items-center space-x-3 mb-4">
               <Code className="h-12 w-12" />
-              <h1 className="text-4xl font-bold">Markdown 转 HTML</h1>
+              <h1 className="text-4xl font-bold">{t('pages:markdownToHtml.hero.title')}</h1>
             </div>
             <p className="text-lg text-orange-100 max-w-2xl mx-auto">
-              实时将 Markdown 转换为 HTML，支持代码预览和下载
+              {t('pages:markdownToHtml.hero.subtitle')}
             </p>
           </div>
         </div>
@@ -183,20 +164,20 @@ export default function MarkdownToHtml() {
           <div className="flex space-x-3">
             <button
               onClick={() => fileInputRef.current?.click()}
-              title="上传Markdown文件 (.md, .markdown, .txt)"
+              title={t('common:tips.uploadMd')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Upload className="h-4 w-4" />
-              <span className="text-sm">上传 MD 文件</span>
+              <span className="text-sm">{t('common:buttons.uploadMd')}</span>
             </button>
 
             <button
               onClick={() => setMarkdown(exampleMarkdown)}
-              title="加载示例内容"
+              title={t('common:tips.example')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="text-sm">示例内容</span>
+              <span className="text-sm">{t('common:buttons.example')}</span>
             </button>
 
             <button
@@ -205,7 +186,7 @@ export default function MarkdownToHtml() {
                 setError(null)
               }}
               disabled={!markdown}
-              title="清除所有内容"
+              title={t('common:tips.clear')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 !markdown
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
@@ -213,7 +194,7 @@ export default function MarkdownToHtml() {
               }`}
             >
               <Trash2 className="h-4 w-4" />
-              <span className="text-sm">清除内容</span>
+              <span className="text-sm">{t('common:buttons.clear')}</span>
             </button>
           </div>
 
@@ -222,7 +203,7 @@ export default function MarkdownToHtml() {
             <button
               onClick={handleCopy}
               disabled={!htmlCode}
-              title="复制HTML代码到剪贴板"
+              title={t('common:tips.copyHtml')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 !htmlCode
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
@@ -232,12 +213,12 @@ export default function MarkdownToHtml() {
               {copied ? (
                 <>
                   <CheckCircle className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-600">已复制</span>
+                  <span className="text-sm text-green-600">{t('common:buttons.copied')}</span>
                 </>
               ) : (
                 <>
                   <Copy className="h-4 w-4" />
-                  <span className="text-sm">复制 HTML 代码</span>
+                  <span className="text-sm">{t('common:buttons.copyHtml')}</span>
                 </>
               )}
             </button>
@@ -245,7 +226,7 @@ export default function MarkdownToHtml() {
             <button
               onClick={handleDownload}
               disabled={isConverting || !markdown.trim()}
-              title="下载HTML文件"
+              title={t('common:tips.downloadHtml')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 isConverting || !markdown.trim()
                   ? 'bg-gray-300 text-white cursor-not-allowed'
@@ -255,12 +236,12 @@ export default function MarkdownToHtml() {
               {isConverting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="text-sm">转换中...</span>
+                  <span className="text-sm">{t('common:buttons.converting')}</span>
                 </>
               ) : (
                 <>
                   <Download className="h-4 w-4" />
-                  <span className="text-sm">下载 HTML 文件</span>
+                  <span className="text-sm">{t('common:buttons.downloadHtml')}</span>
                 </>
               )}
             </button>
@@ -292,7 +273,7 @@ export default function MarkdownToHtml() {
                       : 'text-gray-600 hover:text-gray-800'
                   }`}
                 >
-                  HTML 代码
+                  {t('pages:markdownToHtml.tabs.code')}
                 </button>
                 <button
                   onClick={() => setActiveTab('preview')}
@@ -302,7 +283,7 @@ export default function MarkdownToHtml() {
                       : 'text-gray-600 hover:text-gray-800'
                   }`}
                 >
-                  预览效果
+                  {t('pages:markdownToHtml.tabs.preview')}
                 </button>
               </div>
 
@@ -314,19 +295,17 @@ export default function MarkdownToHtml() {
                     ? 'bg-orange-100 text-orange-700'
                     : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                 }`}
-                title={syncScrollEnabled 
-                  ? '同步预览已开启。滚动编辑器或预览区域时，另一侧会自动同步滚动位置，保持源码与转换结果的位置对应。点击可关闭此功能。' 
-                  : '点击开启同步预览功能。开启后，滚动编辑器或预览区域时，另一侧会自动同步滚动位置，方便对照源码和转换结果。'}
+                title={syncScrollEnabled ? t('common:sync.onTip') : t('common:sync.offTip')}
               >
                 {syncScrollEnabled ? (
                   <>
                     <Link2 className="h-4 w-4" />
-                    <span>同步预览已开</span>
+                    <span>{t('common:sync.on')}</span>
                   </>
                 ) : (
                   <>
                     <Link2Off className="h-4 w-4" />
-                    <span>同步预览已关</span>
+                    <span>{t('common:sync.off')}</span>
                   </>
                 )}
               </button>
@@ -342,7 +321,7 @@ export default function MarkdownToHtml() {
                   </pre>
                 ) : (
                   <div className="h-full flex items-center justify-center text-gray-400">
-                    <p>请在左侧输入 Markdown 内容</p>
+                    <p>{t('tools:emptyMdHint')}</p>
                   </div>
                 )
               )}
@@ -358,7 +337,7 @@ export default function MarkdownToHtml() {
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center text-gray-400">
-                    <p>请在左侧输入 Markdown 内容</p>
+                    <p>{t('tools:emptyMdHint')}</p>
                   </div>
                 )
               )}
@@ -368,17 +347,17 @@ export default function MarkdownToHtml() {
 
         {/* 功能说明 */}
         <div className="mt-12">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">功能说明</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">{t('tools:featuresTitle')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center space-x-3 mb-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <Code className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">实时转换</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToHtml.cards.realtime.title')}</h3>
               </div>
               <p className="text-gray-600">
-                在左侧编辑 Markdown，右侧立即显示对应的 HTML 代码
+                {t('pages:markdownToHtml.cards.realtime.desc')}
               </p>
             </div>
 
@@ -387,10 +366,10 @@ export default function MarkdownToHtml() {
                 <div className="p-2 bg-green-100 rounded-lg">
                   <CheckCircle className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">双模式预览</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToHtml.cards.dualPreview.title')}</h3>
               </div>
               <p className="text-gray-600">
-                查看纯 HTML 代码或渲染后的页面效果
+                {t('pages:markdownToHtml.cards.dualPreview.desc')}
               </p>
             </div>
 
@@ -399,10 +378,10 @@ export default function MarkdownToHtml() {
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <Download className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">完整文档</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToHtml.cards.completeDoc.title')}</h3>
               </div>
               <p className="text-gray-600">
-                下载的 HTML 文件包含完整的样式和文档结构
+                {t('pages:markdownToHtml.cards.completeDoc.desc')}
               </p>
             </div>
           </div>

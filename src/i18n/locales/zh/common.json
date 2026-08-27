@@ -1,0 +1,128 @@
+{
+  "nav": {
+    "home": "Markdown 转 Word",
+    "wordToMarkdown": "Word 转 Markdown",
+    "markdownToHtml": "Markdown 转 HTML",
+    "htmlToMarkdown": "HTML 转 Markdown",
+    "markdownToPdf": "Markdown 转 PDF",
+    "markdownToExcel": "Markdown 转 Excel"
+  },
+  "menu": "菜单",
+  "switchLang": "EN",
+  "switchLangTitle": "Switch to English",
+  "banner": {
+    "text": "English version available",
+    "switch": "Switch to English",
+    "dismiss": "关闭"
+  },
+  "backHome": "返回首页",
+  "footer": {
+    "privacyTitle": "隐私保护",
+    "privacyDesc": "所有文件处理都在您的浏览器中完成，不会上传到服务器",
+    "securityTitle": "安全可靠",
+    "securityDesc": "不收集任何用户数据，关闭页面后临时数据自动清除",
+    "fastTitle": "快速高效",
+    "fastDesc": "本地即时转换，无需等待上传下载，几秒钟完成",
+    "copyright": "© {{year}} MD2Tool. 免费使用，无需注册",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "help": "操作说明",
+    "privacy": "隐私政策"
+  },
+  "buttons": {
+    "uploadMd": "上传 MD 文件",
+    "uploadWord": "上传 Word 文件",
+    "uploadHtml": "上传 HTML 文件或代码段",
+    "example": "示例内容",
+    "clear": "清除内容",
+    "copyMd": "复制 Markdown 内容",
+    "copyHtml": "复制 HTML 代码",
+    "copied": "已复制",
+    "downloadWord": "下载 Word 文档",
+    "downloadMd": "下载 Markdown 文件",
+    "downloadHtml": "下载 HTML 文件",
+    "downloadPdf": "下载 PDF 文件",
+    "downloadExcel": "下载 Excel 文件",
+    "converting": "转换中...",
+    "generating": "生成中..."
+  },
+  "tips": {
+    "uploadMd": "上传Markdown文件 (.md, .markdown, .txt)",
+    "uploadWord": "上传Word文件 (.docx)",
+    "uploadHtml": "上传HTML文件 (.html, .htm)",
+    "example": "加载示例内容",
+    "clear": "清除所有内容",
+    "copyMd": "复制Markdown到剪贴板",
+    "copyHtml": "复制HTML代码到剪贴板",
+    "downloadMd": "下载Markdown文件",
+    "downloadHtml": "下载HTML文件",
+    "downloadPdf": "下载PDF文件",
+    "downloadExcel": "下载Excel文件"
+  },
+  "sync": {
+    "on": "同步预览已开",
+    "off": "同步预览已关",
+    "onTip": "同步预览已开启。滚动编辑器或预览区域时，另一侧会自动同步滚动位置，保持源码与转换结果的位置对应。点击可关闭此功能。",
+    "offTip": "点击开启同步预览功能。开启后，滚动编辑器或预览区域时，另一侧会自动同步滚动位置，方便对照源码和转换结果。"
+  },
+  "editor": {
+    "markdown": "Markdown 编辑器",
+    "html": "HTML 编辑器",
+    "lines": "行",
+    "placeholderMd": "在此输入 Markdown 内容...",
+    "placeholderHtml": "在此输入 HTML 内容...",
+    "toolbar": {
+      "h1": "标题 1",
+      "h2": "标题 2",
+      "h3": "标题 3",
+      "bold": "粗体",
+      "italic": "斜体",
+      "strike": "删除线",
+      "link": "插入链接",
+      "image": "插入图片",
+      "code": "插入代码块",
+      "mermaid": "插入 Mermaid 流程图",
+      "latex": "插入 LaTeX 数学公式",
+      "ul": "无序列表",
+      "ol": "有序列表",
+      "table": "插入表格",
+      "quote": "引用",
+      "hr": "分割线",
+      "paragraph": "段落"
+    },
+    "placeholder": {
+      "boldText": "粗体文本",
+      "italicText": "斜体文本",
+      "strikeText": "删除线文本",
+      "linkText": "链接文本",
+      "imageUrl": "图片URL",
+      "imageDesc": "图片描述",
+      "codeBlock": "代码块",
+      "listItem": "列表项",
+      "quoteContent": "引用内容",
+      "paraContent": "段落内容"
+    },
+    "snippets": {
+      "mermaid": "graph TD\n    A[开始] --> B[处理]\n    B --> C[结束]\n",
+      "mdTable": "| 标题1 | 标题2 | 标题3 |\n|-------|-------|-------|\n| 内容1 | 内容2 | 内容3 |\n",
+      "htmlTable": "<table>\n  <thead>\n    <tr>\n      <th>标题1</th>\n      <th>标题2</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>内容1</td>\n      <td>内容2</td>\n    </tr>\n  </tbody>\n</table>\n"
+    }
+  },
+  "preview": {
+    "markdown": "Markdown 预览",
+    "html": "HTML 预览",
+    "emptyTitle": "暂无内容预览",
+    "emptyHint": "请在编辑器中输入内容"
+  },
+  "errors": {
+    "readFile": "文件读取失败，请重试",
+    "emptyInput": "请先输入 Markdown 内容",
+    "convertFailed": "转换失败，请重试",
+    "pdfFailed": "PDF 生成失败，请重试",
+    "excelFailed": "Excel 生成失败，请检查 Markdown 格式",
+    "EMPTY_CONTENT": "内容不能为空",
+    "EMPTY_FILE": "文件不能为空",
+    "UNSUPPORTED_FORMAT": "只支持 .docx 格式的 Word 文档",
+    "CONVERSION_FAILED": "转换失败，请重试"
+  }
+}

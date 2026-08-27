@@ -135,11 +135,11 @@ export async function convertWordToMarkdown(file: File): Promise<string> {
   try {
     // 验证文件类型
     if (!file) {
-      throw new Error('文件不能为空');
+      throw new Error('EMPTY_FILE');
     }
 
     if (!file.name.endsWith('.docx')) {
-      throw new Error('只支持 .docx 格式的 Word 文档');
+      throw new Error('UNSUPPORTED_FORMAT');
     }
 
     // 读取文件为 ArrayBuffer
@@ -187,7 +187,7 @@ export async function convertWordToMarkdown(file: File): Promise<string> {
     return markdown;
   } catch (error) {
     console.error('Word 转 Markdown 失败:', error);
-    throw new Error('Word 转 Markdown 失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    throw new Error('CONVERSION_FAILED');
   }
 }
 
@@ -199,7 +199,7 @@ export async function convertWordToMarkdown(file: File): Promise<string> {
 export async function convertWordBufferToMarkdown(arrayBuffer: ArrayBuffer): Promise<string> {
   try {
     if (!arrayBuffer || arrayBuffer.byteLength === 0) {
-      throw new Error('ArrayBuffer 不能为空');
+      throw new Error('EMPTY_FILE');
     }
 
     const result = await mammoth.convertToHtml({ arrayBuffer });
@@ -208,7 +208,7 @@ export async function convertWordBufferToMarkdown(arrayBuffer: ArrayBuffer): Pro
     return markdown;
   } catch (error) {
     console.error('Word 转 Markdown 失败:', error);
-    throw new Error(`Word 转 Markdown 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 

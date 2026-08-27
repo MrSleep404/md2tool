@@ -1,0 +1,299 @@
+{
+  "help": {
+    "title": "User Guide",
+    "intro": "This page explains how to use every MD2Tool converter. If this is your first visit, start with the quick tutorial below; for specific issues, check the FAQ.",
+    "tools": {
+      "title": "All Converters",
+      "mdToWord": {
+        "title": "Markdown to Word",
+        "description": "Paste Markdown and export a Word (.docx) document in one click"
+      },
+      "wordToMarkdown": {
+        "title": "Word to Markdown",
+        "description": "Upload a .docx file and convert it into Markdown text"
+      },
+      "markdownToHtml": {
+        "title": "Markdown to HTML",
+        "description": "Paste Markdown, preview live, and export HTML code"
+      },
+      "htmlToMarkdown": {
+        "title": "HTML to Markdown",
+        "description": "Paste HTML code and convert it into clean Markdown"
+      },
+      "markdownToPdf": {
+        "title": "Markdown to PDF",
+        "description": "Render Markdown documents into high-quality PDF files"
+      },
+      "markdownToExcel": {
+        "title": "Markdown to Excel",
+        "description": "Convert Markdown tables into Excel (.xlsx) files"
+      }
+    },
+    "tutorial": {
+      "title": "Quick Start",
+      "intro": "Four steps to convert a document — the flow is the same for every tool:",
+      "steps": [
+        {
+          "title": "Pick a converter",
+          "content": "On the home page, click the card for the conversion you need (e.g. \"Word to Markdown\"). MD2Tool converts between Markdown and Word, HTML, PDF, and Excel — everything runs locally in your browser."
+        },
+        {
+          "title": "Enter your content",
+          "content": "Text-based tools (Markdown/HTML related) take pasted or typed input in the editor on the left; file-based tools (Word to Markdown) work by clicking the upload button or dropping in a .docx file. The supported format is .docx (for legacy .doc files, save as .docx in Word first)."
+        },
+        {
+          "title": "Check the live preview",
+          "content": "The right side shows the converted result in real time. Markdown tools keep the editor and preview scroll-synced for easy comparison. If something looks off, go back to the left and edit the source."
+        },
+        {
+          "title": "Export or copy the result",
+          "content": "When everything looks right, click Convert or Download to export the file (DOCX / HTML / PDF / XLSX). Text results can also be copied to the clipboard with the Copy button. No registration, no usage limits."
+        }
+      ]
+    },
+    "tips": {
+      "title": "Tips & Tricks",
+      "latexA": "Use LaTeX syntax for math: inline formulas with",
+      "latexB": ", display formulas with",
+      "latexC": ".",
+      "codeblockA": "Wrap code blocks in triple backticks with a language tag (e.g.",
+      "codeblockB": ") to get syntax highlighting.",
+      "mermaidA": "Write Mermaid diagrams inside",
+      "mermaidB": "code blocks — they render automatically as flowcharts, sequence diagrams, and more.",
+      "wordNote": "Before converting Word to Markdown, clean up extra manual line breaks and spaces in Word for a tidier result."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions (FAQ)",
+      "items": [
+        {
+          "q": "Do I need to register or pay to use MD2Tool?",
+          "a": "No. MD2Tool is completely free — no registration or login, and no usage limits. Just open the page and start converting."
+        },
+        {
+          "q": "Are my files uploaded to a server?",
+          "a": "No. All conversions run locally in your browser. File contents are never uploaded or stored, and temporary data is cleared when you close the page."
+        },
+        {
+          "q": "Are formulas and images preserved when converting Word to Markdown?",
+          "a": "LaTeX formulas are converted into Markdown LaTeX syntax ($...$ / $$...$$). Image extraction is not supported yet, so the converted output does not include images — add them manually afterwards if needed."
+        },
+        {
+          "q": "Why can't I upload a .doc Word file?",
+          "a": "Only .docx (Office 2007 and later) is supported. For legacy .doc files, open them in Word or WPS first, choose Save As, and save them as .docx before uploading."
+        },
+        {
+          "q": "Why do code blocks turn into images in the PDF?",
+          "a": "To keep code blocks intact and prevent them from being split across pages, longer code blocks are rendered as images. This is expected behavior and does not affect the content."
+        },
+        {
+          "q": "Does Markdown to Excel have requirements for table syntax?",
+          "a": "Use standard Markdown table syntax (a | --- | row separates the header from the body). Each table is exported to its own location in the Excel file; documents without tables produce no usable output."
+        },
+        {
+          "q": "The result looks garbled or wrongly formatted. What can I do?",
+          "a": "First make sure the source content is complete and well-formed; you can also try converting smaller chunks. If the problem persists, reach out via the Contact page with a snippet of the problematic content and we will fix it as soon as possible."
+        },
+        {
+          "q": "Which Markdown extensions are supported?",
+          "a": "Standard Markdown syntax plus common extensions: tables, code blocks (with syntax highlighting), LaTeX math formulas, Mermaid diagrams, and task lists."
+        }
+      ]
+    },
+    "bottom": {
+      "a": "Still have questions? Feel free to",
+      "contact": "contact us",
+      "b": "or head to the",
+      "home": "home page",
+      "c": "to try the tools."
+    }
+  },
+  "about": {
+    "title": "About MD2Tool",
+    "introTitle": "Introduction",
+    "intro": {
+      "p1": "MD2Tool is a completely free, open-source online document converter focused on conversions between Markdown and other document formats. We aim to give developers and content creators a simple, fast, and secure conversion service.",
+      "p2": "Every conversion runs locally in your browser — we never collect, store, or upload your file contents, keeping your privacy and data safe."
+    },
+    "features": {
+      "title": "Core Features",
+      "multiFormat": {
+        "title": "Multi-Format Support",
+        "desc": "Convert between Markdown, Word, HTML, PDF, Excel, and more to fit any workflow."
+      },
+      "privacy": {
+        "title": "Privacy First",
+        "desc": "Conversions happen entirely in your browser. Files are never uploaded, keeping your sensitive information safe."
+      },
+      "fast": {
+        "title": "Fast & Efficient",
+        "desc": "No upload/download waits — local conversion finishes in seconds."
+      },
+      "openSource": {
+        "title": "Open Source & Free",
+        "desc": "Fully open source and free, hosted on GitHub. Community contributions are welcome."
+      }
+    },
+    "tech": {
+      "title": "Tech Stack",
+      "frontendTitle": "Frontend",
+      "frontend": [
+        "• React 18 + TypeScript",
+        "• Vite build tool",
+        "• Tailwind CSS styling",
+        "• React Router"
+      ],
+      "engineTitle": "Conversion Engines",
+      "engines": [
+        "• docx: Word document generation",
+        "• mammoth: Word document parsing",
+        "• marked: Markdown parsing",
+        "• jspdf: PDF generation"
+      ]
+    },
+    "scenarios": {
+      "title": "Use Cases",
+      "items": [
+        "Developers writing technical docs that need to be submitted as Word or PDF",
+        "Content creators exporting Markdown blog posts to multiple formats",
+        "Teams converting documents between formats while staying compatible",
+        "Students turning Markdown assignments into Word submissions",
+        "Writing API documentation and generating PDF manuals"
+      ]
+    },
+    "info": {
+      "title": "Project Info",
+      "projectName": "Project:",
+      "license": "License:",
+      "repo": "Repository:",
+      "demo": "Live demo:"
+    },
+    "contribute": {
+      "title": "Contributing",
+      "p": "We welcome all kinds of contributions, including but not limited to:",
+      "items": [
+        "Bug reports and feature suggestions",
+        "Documentation and guide improvements",
+        "Code optimizations and new features",
+        "Sharing and promoting the project"
+      ],
+      "p2a": "Visit our",
+      "repoLink": "GitHub repository",
+      "p2b": "to join the project."
+    },
+    "copyright": "© {{year}} MD2Tool. All rights reserved."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "intro": "Thanks for your interest in MD2Tool! We truly value your feedback and suggestions. Here is how to reach us:",
+    "ways": {
+      "title": "Contact Channels",
+      "githubIssues": {
+        "title": "GitHub Issues",
+        "desc": "Found a bug or have a feature idea? Open an issue and we will get back to you soon.",
+        "button": "Open an Issue"
+      },
+      "repo": {
+        "title": "GitHub Repository",
+        "desc": "Browse the source code, submit pull requests, or join the discussion.",
+        "button": "View Repository"
+      },
+      "demo": {
+        "title": "Live Demo",
+        "desc": "Visit the online version and try every conversion feature right away.",
+        "button": "Try It Now"
+      }
+    },
+    "feedback": {
+      "title": "Feedback & Suggestions",
+      "p": "We love feedback — bug reports, feature ideas, or general experience. Every message helps us improve the product.",
+      "boxTitle": "When submitting feedback, please include:",
+      "items": [
+        "A detailed description of the problem or the requested feature",
+        "Steps to reproduce (for bugs)",
+        "Expected behavior vs. actual behavior",
+        "Browser type and version (if relevant)",
+        "Screenshots or a screen recording (if helpful)"
+      ]
+    },
+    "response": {
+      "title": "Response Time",
+      "p": "We reply as quickly as we can. Typical turnaround:",
+      "items": [
+        { "label": "Bug reports:", "text": "replied within 1-3 business days" },
+        { "label": "Feature suggestions:", "text": "replied within 1-5 business days" },
+        { "label": "Pull requests:", "text": "reviewed within 3-7 business days" }
+      ]
+    },
+    "other": {
+      "title": "Other Information",
+      "projectName": "Project:",
+      "license": "License:",
+      "maintainer": "Maintainer:"
+    },
+    "copyright": "© {{year}} MD2Tool. All rights reserved."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: {{date}}",
+    "intro": {
+      "title": "Introduction",
+      "p1": "MD2Tool (\"we\", \"us\") is committed to protecting your privacy. This privacy policy explains how we collect, use, disclose, and manage your personal information.",
+      "p2": "By using this website you agree to the terms of this privacy policy. If you do not agree with it, please do not use this website."
+    },
+    "collection": {
+      "title": "Information Collection",
+      "weCollectTitle": "Information we collect",
+      "weCollect": [
+        { "label": "Usage data:", "text": "We may collect information about how you use the website, including pages visited, visit times, and time spent." },
+        { "label": "Device information:", "text": "We may collect information about your device type, browser type, operating system, and similar details." },
+        { "label": "Cookies:", "text": "We use cookies and similar technologies to improve user experience and analyze website traffic." }
+      ],
+      "weDontTitle": "Information we do NOT collect",
+      "weDont": [
+        { "label": "Uploaded file contents:", "text": "We promise never to collect, store, or transmit the contents of any file you upload for conversion. All file conversion happens locally in your browser." },
+        { "label": "Personal identity information:", "text": "No account registration is required, and we do not collect names, emails, phone numbers, or other personal identity information." }
+      ]
+    },
+    "cookies": {
+      "title": "Cookies and Tracking Technologies",
+      "p": "We use the following types of cookies:",
+      "items": [
+        { "label": "Essential cookies:", "text": "cookies required for the website to function properly." },
+        { "label": "Analytics cookies:", "text": "used to analyze website usage and improve user experience." },
+        { "label": "Advertising cookies:", "text": "used to show personalized ads (see the \"Advertising Services\" section below)." }
+      ],
+      "p2": "You can manage cookie preferences in your browser settings. Note that disabling some cookies may affect website functionality."
+    },
+    "ads": {
+      "title": "Advertising Services (Google AdSense)",
+      "p1": "We use Google AdSense to display ads on this website. Google AdSense uses cookies to show ads based on your previous visits or your activity on other websites.",
+      "p2a": "Google may use cookies and similar technologies to collect information about your visits to this and other websites in order to show ads based on your interests. You can opt out of personalized advertising by visiting",
+      "adsSettingsLink": "Google Ads Settings",
+      "p2b": ".",
+      "p3a": "You can also visit",
+      "aboutAdsLink": "www.aboutads.info",
+      "p3b": "to learn more about third-party advertising cookies."
+    },
+    "security": {
+      "title": "Data Security",
+      "p": "We take appropriate security measures to protect your information from unauthorized access, use, or disclosure. However, no internet transmission is 100% secure, and we cannot guarantee the security of information in transit."
+    },
+    "thirdParty": {
+      "title": "Third-Party Links",
+      "p": "This website may contain links to third-party websites. We are not responsible for the privacy policies or content of those websites. We recommend reading their privacy policies."
+    },
+    "children": {
+      "title": "Children's Privacy",
+      "p": "This website is not directed at children under 13, and we do not knowingly collect personal information from children under 13."
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "p": "We may update this privacy policy from time to time. Any changes will be posted on this page with an updated \"last updated\" date. We recommend checking this page periodically."
+    },
+    "contactUs": {
+      "title": "Contact Us",
+      "p": "If you have any questions about this privacy policy, please contact us in one of the following ways:"
+    },
+    "copyright": "© {{year}} MD2Tool. All rights reserved."
+  }
+}

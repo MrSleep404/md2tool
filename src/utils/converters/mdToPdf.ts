@@ -478,7 +478,7 @@ export async function convertMarkdownToPdf(
   try {
     // 验证输入
     if (!markdown || typeof markdown !== 'string') {
-      throw new Error('Markdown 内容不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     // 合并配置选项
@@ -640,7 +640,7 @@ export async function convertMarkdownToPdf(
     }
   } catch (error) {
     console.error('Markdown 转 PDF 失败:', error);
-    throw new Error(`Markdown 转 PDF 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 
@@ -683,7 +683,7 @@ export async function convertHtmlToPdf(
 ): Promise<Blob> {
   try {
     if (!html || typeof html !== 'string') {
-      throw new Error('HTML 内容不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     const opts: Required<PdfOptions> = { ...DEFAULT_PDF_OPTIONS, ...options };
@@ -790,6 +790,6 @@ export async function convertHtmlToPdf(
     }
   } catch (error) {
     console.error('HTML 转 PDF 失败:', error);
-    throw new Error(`HTML 转 PDF 失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }

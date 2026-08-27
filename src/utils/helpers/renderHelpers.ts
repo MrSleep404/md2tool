@@ -45,7 +45,7 @@ function getUniqueMermaidId(): string {
 export async function renderMermaidToSvg(code: string): Promise<string> {
   try {
     if (!code || typeof code !== 'string') {
-      throw new Error('Mermaid 代码不能为空');
+      throw new Error('EMPTY_CONTENT');
     }
 
     const cleanedCode = code.trim();
@@ -99,7 +99,7 @@ export async function renderMermaidToSvg(code: string): Promise<string> {
     return cleanedSvg;
   } catch (error) {
     console.error('[Mermaid] 渲染失败:', error);
-    throw new Error(`Mermaid 渲染失败: ${error instanceof Error ? error.message : '请检查 Mermaid 语法'}`);
+    throw new Error('CONVERSION_FAILED');
   }
 }
 

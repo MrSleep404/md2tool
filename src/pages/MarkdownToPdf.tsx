@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { FileText, FileDown, Download, Loader2, Upload, RefreshCw, Trash2, Link2, Link2Off } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import Preview from '../components/common/Preview'
@@ -7,13 +8,18 @@ import { convertMarkdownToHtml } from '../utils/converters/mdToHtml'
 import { convertMarkdownToPdf } from '../utils/converters/mdToPdf'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
+import { getExample } from '../i18n/exampleContent'
+import { tList } from '../i18n/helpers'
 
 /**
  * Markdown 转 PDF 页面
  */
 export default function MarkdownToPdf() {
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language === 'en' ? 'en' : 'zh'
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.markdownToPdf)
+  useSEO(SEO_CONFIGS.markdownToPdf, '/markdown-to-pdf')
 
   const [markdown, setMarkdown] = useState<string>('')
   const [htmlContent, setHtmlContent] = useState<string>('')
@@ -28,48 +34,8 @@ export default function MarkdownToPdf() {
   const { enabled: syncScrollEnabled, toggle: toggleSyncScroll } = useSyncScrollState(false)
   useSyncScroll(editorScrollRef, previewScrollRef, syncScrollEnabled)
 
-  // 示例 Markdown
-  const exampleMarkdown = `# Markdown 转 PDF 工具
-
-这是一个将 Markdown 文档转换为 PDF 格式的在线工具。
-
-## 主要功能
-
-- 📄 支持标准 Markdown 语法
-- 📄 实时预览渲染效果
-- 📄 高质量 PDF 输出
-- 📄 自定义页边距和字号
-
-## 使用方法
-
-1. 在左侧编辑器中输入或粘贴 Markdown 内容
-2. 右侧实时显示渲染后的效果
-3. 点击"下载 PDF"按钮生成 PDF 文件
-
-### 示例代码
-
-\`\`\`python
-def hello():
-    print("Hello, PDF!")
-
-hello()
-\`\`\`
-
-### 表格示例
-
-| 功能 | 描述 |
-|------|------|
-| 标题 | 支持 H1-H6 |
-| 列表 | 有序和无序 |
-| 表格 | 完整支持 |
-| 代码 | 高亮显示 |
-
-> 💡 提示：PDF 文件将包含完整的格式和样式
-
----
-
-感谢使用本工具！
-`
+  // 示例 Markdown（跟随界面语言）
+  const exampleMarkdown = getExample(lang, 'mdToPdf')
 
   // 初始化示例内容
   useEffect(() => {
@@ -108,7 +74,7 @@ hello()
       setError(null)
     }
     reader.onerror = () => {
-      setError('文件读取失败，请重试')
+      setError(t('common:errors.readFile'))
     }
     reader.readAsText(file)
 
@@ -139,7 +105,7 @@ hello()
   // 下载 PDF
   const handleDownloadPdf = async () => {
     if (!markdown.trim()) {
-      setError('请先输入 Markdown 内容')
+      setError(t('common:errors.emptyInput'))
       return
     }
 
@@ -157,7 +123,7 @@ hello()
       })
       saveAs(blob, 'document.pdf')
     } catch (err) {
-      setError('PDF 生成失败，请重试')
+      setError(t('common:errors.pdfFailed'))
       console.error(err)
     } finally {
       setIsConverting(false)
@@ -172,10 +138,10 @@ hello()
           <div className="text-center">
             <div className="flex justify-center items-center space-x-3 mb-4">
               <FileDown className="h-12 w-12" />
-              <h1 className="text-4xl font-bold">Markdown 转 PDF</h1>
+              <h1 className="text-4xl font-bold">{t('pages:markdownToPdf.hero.title')}</h1>
             </div>
             <p className="text-lg text-red-100 max-w-2xl mx-auto">
-              将 Markdown 文档转换为高质量的 PDF 文件，支持实时预览
+              {t('pages:markdownToPdf.hero.subtitle')}
             </p>
           </div>
         </div>
@@ -205,25 +171,25 @@ hello()
           <div className="flex space-x-3">
             <button
               onClick={triggerFileUpload}
-              title="上传Markdown文件 (.md, .markdown, .txt)"
+              title={t('common:tips.uploadMd')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Upload className="h-4 w-4" />
-              <span className="text-sm">上传 MD 文件</span>
+              <span className="text-sm">{t('common:buttons.uploadMd')}</span>
             </button>
 
             <button
               onClick={loadExample}
-              title="加载示例内容"
+              title={t('common:tips.example')}
               className="flex items-center space-x-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="text-sm">示例内容</span>
+              <span className="text-sm">{t('common:buttons.example')}</span>
             </button>
 
             <button
               onClick={clearContent}
-              title="清除所有内容"
+              title={t('common:tips.clear')}
               disabled={!markdown}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                 !markdown
@@ -232,14 +198,14 @@ hello()
               }`}
             >
               <Trash2 className="h-4 w-4" />
-              <span className="text-sm">清除内容</span>
+              <span className="text-sm">{t('common:buttons.clear')}</span>
             </button>
           </div>
 
           {/* 右侧下载按钮 */}
           <button
             onClick={handleDownloadPdf}
-            title="下载PDF文件"
+            title={t('common:tips.downloadPdf')}
             disabled={isConverting || !markdown.trim()}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
               isConverting || !markdown.trim()
@@ -250,12 +216,12 @@ hello()
             {isConverting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">生成中...</span>
+                <span className="text-sm">{t('common:buttons.generating')}</span>
               </>
             ) : (
               <>
                 <Download className="h-4 w-4" />
-                <span className="text-sm">下载 PDF 文件</span>
+                <span className="text-sm">{t('common:buttons.downloadPdf')}</span>
               </>
             )}
           </button>
@@ -287,19 +253,17 @@ hello()
                       ? 'bg-red-100 text-red-700'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
-                  title={syncScrollEnabled
-                    ? '同步预览已开启。滚动编辑器或预览区域时，另一侧会自动同步滚动位置，保持源码与转换结果的位置对应。点击可关闭此功能。'
-                    : '点击开启同步预览功能。开启后，滚动编辑器或预览区域时，另一侧会自动同步滚动位置，方便对照源码和转换结果。'}
+                  title={syncScrollEnabled ? t('common:sync.onTip') : t('common:sync.offTip')}
                 >
                   {syncScrollEnabled ? (
                     <>
                       <Link2 className="h-4 w-4" />
-                      <span>同步预览已开</span>
+                      <span>{t('common:sync.on')}</span>
                     </>
                   ) : (
                     <>
                       <Link2Off className="h-4 w-4" />
-                      <span>同步预览已关</span>
+                      <span>{t('common:sync.off')}</span>
                     </>
                   )}
                 </button>
@@ -310,17 +274,17 @@ hello()
 
         {/* 功能说明 */}
         <div className="mt-12">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">功能说明</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">{t('tools:featuresTitle')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center space-x-3 mb-3">
                 <div className="p-2 bg-red-100 rounded-lg">
                   <FileText className="h-6 w-6 text-red-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">高质量输出</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToPdf.cards.quality.title')}</h3>
               </div>
               <p className="text-gray-600">
-                使用专业渲染引擎，生成清晰、美观的 PDF 文档
+                {t('pages:markdownToPdf.cards.quality.desc')}
               </p>
             </div>
 
@@ -329,10 +293,10 @@ hello()
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <FileText className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">实时预览</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToPdf.cards.preview.title')}</h3>
               </div>
               <p className="text-gray-600">
-                编辑的同时实时查看渲染效果，确保输出符合预期
+                {t('pages:markdownToPdf.cards.preview.desc')}
               </p>
             </div>
 
@@ -341,10 +305,10 @@ hello()
                 <div className="p-2 bg-green-100 rounded-lg">
                   <Download className="h-6 w-6 text-green-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">一键下载</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('pages:markdownToPdf.cards.download.title')}</h3>
               </div>
               <p className="text-gray-600">
-                点击按钮即可下载生成的 PDF 文件，无需等待
+                {t('pages:markdownToPdf.cards.download.desc')}
               </p>
             </div>
           </div>
@@ -353,37 +317,31 @@ hello()
         {/* PDF 设置说明 */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-3">PDF 默认配置</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-3">{t('pages:markdownToPdf.defaultsTitle')}</h3>
             <ul className="space-y-2 text-gray-600">
-              <li>📐 页面大小: A4</li>
-              <li>📐 页面方向: 纵向</li>
-              <li>📐 页边距: 10mm</li>
-              <li>📐 字体大小: 12pt</li>
-              <li>📐 显示页码: 是</li>
+              {tList(t, 'pages:markdownToPdf.defaults').map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-3">支持的元素</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-3">{t('tools:supportedTitle')}</h3>
             <ul className="space-y-2 text-gray-600">
-              <li>✅ 标题（H1-H6）</li>
-              <li>✅ 段落和文本格式</li>
-              <li>✅ 列表（有序、无序）</li>
-              <li>✅ 表格</li>
-              <li>✅ 代码块</li>
-              <li>✅ 引用块</li>
+              {tList(t, 'pages:markdownToPdf.supported').map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* 注意事项 */}
         <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <h3 className="text-lg font-medium text-yellow-800 mb-2">注意事项</h3>
+          <h3 className="text-lg font-medium text-yellow-800 mb-2">{t('tools:notesTitle')}</h3>
           <ul className="space-y-2 text-yellow-700">
-            <li>⚠️ PDF 生成过程可能需要几秒钟，请耐心等待</li>
-            <li>⚠️ 复杂的表格和代码块可能需要手动调整格式</li>
-            <li>⚠️ 图片和链接在 PDF 中可能无法正常显示</li>
-            <li>⚠️ 建议使用现代浏览器（Chrome、Firefox、Edge）以获得最佳效果</li>
+            {tList(t, 'pages:markdownToPdf.notes').map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
           </ul>
         </div>
       </div>

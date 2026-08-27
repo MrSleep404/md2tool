@@ -1,0 +1,17 @@
+{
+  "usageTitle": "使用说明",
+  "featuresTitle": "功能说明",
+  "supportedTitle": "支持的元素",
+  "notesTitle": "注意事项",
+  "htmlElementsTitle": "支持的 HTML 元素",
+  "convertTraitsTitle": "转换特性",
+  "emptyMdHint": "请在左侧输入 Markdown 内容",
+  "emptyHtmlHint": "请在左侧输入 HTML 内容",
+  "resultTitle": "转换结果",
+  "converting": "正在转换中...",
+  "editorHint": "输入包含表格的 Markdown 内容",
+  "tablePreview": "表格预览",
+  "noTables": "暂无表格数据",
+  "noTablesHint": "请在左侧输入包含表格的 Markdown",
+  "tableN": "表格 {{index}}"
+}

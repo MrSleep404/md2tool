@@ -1,0 +1,20 @@
+{
+  "hero": {
+    "title": "Markdown 转 Word",
+    "subtitle": "轻松将 Markdown 文档转换为 Word 格式，支持实时预览和一键下载"
+  },
+  "cards": {
+    "realtime": {
+      "title": "实时编辑",
+      "desc": "在左侧编辑器中输入或粘贴 Markdown 内容，右侧实时显示渲染效果"
+    },
+    "gfm": {
+      "title": "支持 GFM",
+      "desc": "支持 GitHub Flavored Markdown 语法，包括表格、任务列表、删除线等"
+    },
+    "download": {
+      "title": "一键下载",
+      "desc": "点击下载按钮即可生成 .docx 文件，完全在浏览器端完成，无需上传服务器"
+    }
+  }
+}
