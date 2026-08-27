@@ -21,6 +21,12 @@ import { useSEO, SEO_CONFIGS } from '../utils/seo'
 // 各工具的入口配置
 const TOOL_LINKS = [
   {
+    to: '/',
+    icon: FileText,
+    title: 'Markdown 转 Word',
+    description: '粘贴 Markdown，一键转换为 Word 文档（DOCX）',
+  },
+  {
     to: '/word-to-markdown',
     icon: FileType,
     title: 'Word 转 Markdown',
