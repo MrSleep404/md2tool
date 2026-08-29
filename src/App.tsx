@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import ScrollToTop from './components/common/ScrollToTop'
 import LanguageSync from './components/common/LanguageSync'
+import { usePageTracking } from './hooks/usePageTracking'
 import Home from './pages/Home'
 import WordToMarkdown from './pages/WordToMarkdown'
 import MarkdownToHtml from './pages/MarkdownToHtml'
@@ -37,6 +38,8 @@ function PageRoutes() {
 }
 
 function App() {
+  usePageTracking()
+
   return (
     <Layout>
       <ScrollToTop />
