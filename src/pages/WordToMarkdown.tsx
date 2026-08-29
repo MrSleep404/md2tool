@@ -5,7 +5,8 @@ import { saveAs } from 'file-saver'
 import { convertWordToMarkdown } from '../utils/converters/wordToMd'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { conversionErrorMessage } from '../utils/conversionError'
-import { tList } from '../i18n/helpers'
+import { tList, tItems } from '../i18n/helpers'
+import PageSeoBlock from '../components/PageSeoBlock'
 
 /**
  * Word 转 Markdown 页面
@@ -13,8 +14,14 @@ import { tList } from '../i18n/helpers'
 export default function WordToMarkdown() {
   const { t } = useTranslation()
 
+  // FAQ 文案（页面区块与 FAQPage JSON-LD 共用）
+  const faq = tItems<{ q: string; a: string }>(t, 'pages:wordToMarkdown.faq')
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.wordToMarkdown, '/word-to-markdown')
+  useSEO(SEO_CONFIGS.wordToMarkdown, '/word-to-markdown', {
+    faqQa: faq.length ? faq : undefined,
+    breadcrumbName: t('pages:wordToMarkdown.hero.title'),
+  })
 
   const [markdown, setMarkdown] = useState<string>('')
   const [isConverting, setIsConverting] = useState(false)
@@ -241,6 +248,9 @@ export default function WordToMarkdown() {
             </ul>
           </div>
         </div>
+
+        {/* SEO 内容区块 */}
+        <PageSeoBlock pageKey="wordToMarkdown" accent="green" />
       </div>
     </div>
   )

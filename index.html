@@ -47,6 +47,37 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
 
+    <!-- 结构化数据：WebApplication（全站工具属性）+ Organization（品牌信息） -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "MD2Tool",
+        "url": "https://www.md2tool.com/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "description": "免费在线Markdown转换工具，支持Markdown转Word、PDF、HTML、Excel，以及Word转Markdown。浏览器本地处理，文件不上传服务器。",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "featureList": [
+          "Markdown to Word (DOCX)",
+          "Markdown to PDF",
+          "Markdown to HTML",
+          "Markdown to Excel (XLSX)",
+          "Word to Markdown",
+          "HTML to Markdown"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "MD2Tool",
+        "url": "https://www.md2tool.com/",
+        "logo": "https://www.md2tool.com/og-image.png"
+      }
+    </script>
+
     <!-- 百度统计（官方原版格式，供代码安装检查识别；国内访客上报，Cloudflare RUM 因 cloudflareinsights.com 国内被阻断而不可用） -->
     <script>
       var _hmt = _hmt || [];

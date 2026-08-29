@@ -1,9 +1,22 @@
 {
+  "seoSection": {
+    "introTitle": "About This Tool",
+    "faqTitle": "Frequently Asked Questions",
+    "relatedTitle": "Related Tools"
+  },
   "wordToMarkdown": {
     "hero": {
       "title": "Word to Markdown",
       "subtitle": "Upload a Word document and convert it to Markdown in one click"
     },
+    "intro": "The Word to Markdown converter turns DOCX documents into clean Markdown source in one click. It parses headings, lists, and tables automatically and outputs standard Markdown syntax, making it easy to migrate existing Word documents to GitHub, Notion, or any Markdown-based writing platform. Everything runs locally in your browser — files are never uploaded.",
+    "faq": [
+      { "q": "Which Word file formats are supported?", "a": "Only .docx files (Word 2007 and later). Re-save older .doc files as .docx in Word first." },
+      { "q": "Are tables and images converted?", "a": "Tables are converted to standard Markdown table syntax. Images are not extracted yet — save them separately. The tool focuses on text and structure." },
+      { "q": "How well is complex formatting recognized?", "a": "Common structures such as headings, lists, tables, bold, italics, and links convert reliably. Text boxes and WordArt-style objects are not supported and may need manual cleanup." },
+      { "q": "Is my Word file uploaded anywhere?", "a": "No. Conversion runs in your browser and the DOCX file never leaves your machine." },
+      { "q": "Where can I use the converted Markdown?", "a": "The output is standard Markdown, ready for GitHub, GitLab, Notion, Obsidian, dev.to, Medium, and any other Markdown-friendly platform." }
+    ],
     "steps": [
       "Click the upload button above or drop your .docx file into the upload area",
       "The Word document is parsed and converted to Markdown automatically",
@@ -27,6 +40,14 @@
       "title": "Markdown to HTML",
       "subtitle": "Convert Markdown to HTML in real time, with code view and download"
     },
+    "intro": "The Markdown to HTML converter provides live, two-mode preview: type Markdown on the left and get HTML code or a rendered view instantly on the right. Copy the HTML snippet for websites, CMS platforms, or blog templates, or download a complete styled HTML document. The whole process runs in your browser with no server involved.",
+    "faq": [
+      { "q": "Can I copy just the HTML snippet?", "a": "Yes. The generated HTML fragment can be pasted directly into a web page, CMS, or email template without any extra wrapper." },
+      { "q": "Does the downloaded HTML file include styles?", "a": "Yes. The full HTML document ships with base typography styles for headings, tables, and code blocks — open it in any browser to see the result." },
+      { "q": "Are code blocks supported?", "a": "Yes. Code blocks are emitted as pre/code elements, ready for syntax highlighting with libraries like highlight.js." },
+      { "q": "Is the conversion real-time?", "a": "Yes. HTML is generated as you type, and you can switch between the Code and Preview tabs at any time." },
+      { "q": "Is my content safe?", "a": "Yes. Conversion happens locally in your browser — content is never sent to or stored on any server." }
+    ],
     "tabs": {
       "code": "HTML Code",
       "preview": "Preview"
@@ -51,6 +72,14 @@
       "title": "HTML to Markdown",
       "subtitle": "Convert HTML code into clean Markdown format, with live preview"
     },
+    "intro": "The HTML to Markdown converter turns web page HTML into clean Markdown text. It strips inline styles, scripts, and comments while preserving headings, lists, tables, links, and images — ideal for archiving web content, migrating blog posts, or organizing notes. Conversion runs entirely in your browser.",
+    "faq": [
+      { "q": "How do I convert a web page to Markdown?", "a": "Open the page, copy the main content HTML via your browser's \"View Page Source\" or developer tools, and paste it into the editor on the left." },
+      { "q": "Which HTML elements are supported?", "a": "Common elements such as h1-h6 headings, paragraphs, links, lists, tables, code blocks, blockquotes, and bold/italic text are supported; script and style tags are removed automatically." },
+      { "q": "Are inline styles preserved?", "a": "No. The output is pure Markdown syntax with style and class attributes stripped, which makes editing and version control easier." },
+      { "q": "Where can I use the converted Markdown?", "a": "Anywhere Markdown is supported: Obsidian, Typora, GitHub, Notion, static site generators, and more." },
+      { "q": "Is the pasted HTML uploaded anywhere?", "a": "No. Parsing and conversion happen locally in your browser — content never leaves your device." }
+    ],
     "cards": {
       "smartClean": {
         "title": "Smart Cleanup",
@@ -88,6 +117,14 @@
       "title": "Markdown to PDF",
       "subtitle": "Convert Markdown documents into high-quality PDF files, with live preview"
     },
+    "intro": "The Markdown to PDF converter produces well-formatted PDF files directly in your browser: A4 portrait pages with 12pt text and page numbers by default, plus a live preview. Export technical documentation, course notes, and project specs without installing any software — everything is processed locally and privately.",
+    "faq": [
+      { "q": "How does the generated PDF look?", "a": "The PDF keeps heading levels, lists, tables, and code block styling, with A4 portrait pages, 10mm margins, 12pt font, and page numbers by default." },
+      { "q": "Do I need to install anything?", "a": "No. Everything runs in your browser — no Word, LaTeX, or browser extensions required." },
+      { "q": "Will Chinese or other non-Latin text break?", "a": "No. Rendering uses system fonts, so Chinese and other scripts display correctly. Chrome, Firefox, and Edge give the best results." },
+      { "q": "Are images and links supported?", "a": "Generally yes, but some remote images may fail to load due to cross-origin restrictions — check the preview before exporting." },
+      { "q": "Are files uploaded to a server?", "a": "No. Both your Markdown and the generated PDF stay in your browser's memory and are never uploaded." }
+    ],
     "cards": {
       "quality": {
         "title": "High-Quality Output",
@@ -130,6 +167,14 @@
       "title": "Markdown to Excel",
       "subtitle": "Convert Markdown tables to Excel in one click, with multi-table support"
     },
+    "intro": "The Markdown to Excel converter turns Markdown tables into XLSX files in one click. It automatically detects every table in your document (multiple tables supported) and keeps header structure and alignment, producing an Excel file you can open in Microsoft Excel or WPS. All processing is local — data never leaves your device.",
+    "faq": [
+      { "q": "Are multiple tables supported?", "a": "Yes. Every Markdown table in the document is detected automatically, and all of them are included in the exported Excel file in order." },
+      { "q": "What table syntax is required?", "a": "Standard GFM table syntax (pipes for columns and a second row for alignment) is recognized, including left, center, and right alignment." },
+      { "q": "Which apps can open the exported file?", "a": "The XLSX output works with Microsoft Excel, WPS Office, Numbers, Google Sheets, and other major spreadsheet apps." },
+      { "q": "What if my Markdown has no tables?", "a": "The tool is built for table conversion. Without valid table syntax in the document, no Excel file can be generated — make sure your content includes tables." },
+      { "q": "Is my table data uploaded?", "a": "No. Parsing and XLSX generation happen entirely in your browser — data never leaves your device." }
+    ],
     "cards": {
       "detect": {
         "title": "Automatic Table Detection",

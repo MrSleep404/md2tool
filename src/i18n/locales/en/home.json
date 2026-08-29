@@ -3,6 +3,14 @@
     "title": "Markdown to Word",
     "subtitle": "Convert Markdown to Word with live preview and one-click download"
   },
+  "intro": "MD2Tool's Markdown to Word converter runs entirely in your browser: edit Markdown on the left, preview the result live, and download a DOCX file you can keep editing in Microsoft Word or WPS. Completely free with no sign-up, and your files are never uploaded.",
+  "faq": [
+    { "q": "Which Markdown elements are supported?", "a": "Headings, paragraphs, ordered and unordered lists, tables, code blocks, blockquotes, bold, italics, and links (GFM syntax) are all converted with matching Word styles." },
+    { "q": "Can I keep editing the generated Word file?", "a": "Yes. The DOCX output keeps heading levels, lists, and table structures, so it opens cleanly in Microsoft Word and WPS Office for further editing." },
+    { "q": "Is my content uploaded to a server?", "a": "No. Conversion happens entirely in your browser — your content never leaves your device." },
+    { "q": "Are there file size or usage limits?", "a": "No. The tool is completely free, with no file size or conversion limits." },
+    { "q": "Do I need to create an account?", "a": "No. Just open the page and start converting — no registration required." }
+  ],
   "cards": {
     "realtime": {
       "title": "Live Editing",

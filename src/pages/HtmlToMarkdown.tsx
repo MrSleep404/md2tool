@@ -8,7 +8,8 @@ import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 import { useExampleContent } from '../hooks/useExampleContent'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
-import { tList } from '../i18n/helpers'
+import { tList, tItems } from '../i18n/helpers'
+import PageSeoBlock from '../components/PageSeoBlock'
 
 /**
  * HTML 转 Markdown 页面
@@ -17,8 +18,14 @@ export default function HtmlToMarkdown() {
   const { t, i18n } = useTranslation()
   const lang = i18n.language === 'en' ? 'en' : 'zh'
 
+  // FAQ 文案（页面区块与 FAQPage JSON-LD 共用）
+  const faq = tItems<{ q: string; a: string }>(t, 'pages:htmlToMarkdown.faq')
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.htmlToMarkdown, '/html-to-markdown')
+  useSEO(SEO_CONFIGS.htmlToMarkdown, '/html-to-markdown', {
+    faqQa: faq.length ? faq : undefined,
+    breadcrumbName: t('pages:htmlToMarkdown.hero.title'),
+  })
 
   const [html, setHtml] = useState<string>('')
   const [markdown, setMarkdown] = useState<string>('')
@@ -348,6 +355,9 @@ export default function HtmlToMarkdown() {
             </ul>
           </div>
         </div>
+
+        {/* SEO 内容区块 */}
+        <PageSeoBlock pageKey="htmlToMarkdown" accent="purple" />
       </div>
     </div>
   )

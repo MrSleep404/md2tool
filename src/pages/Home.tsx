@@ -10,6 +10,8 @@ import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
 import { useExampleContent } from '../hooks/useExampleContent'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
+import { tItems } from '../i18n/helpers'
+import PageSeoBlock from '../components/PageSeoBlock'
 
 /**
  * 主页 - Markdown 转 Word
@@ -18,8 +20,14 @@ export default function Home() {
   const { t, i18n } = useTranslation()
   const lang = i18n.language === 'en' ? 'en' : 'zh'
 
+  // FAQ 文案（页面区块与 FAQPage JSON-LD 共用）
+  const faq = tItems<{ q: string; a: string }>(t, 'home:faq')
+
   // 设置SEO
-  useSEO(SEO_CONFIGS.home, '/')
+  useSEO(SEO_CONFIGS.home, '/', {
+    faqQa: faq.length ? faq : undefined,
+    breadcrumbName: t('home:hero.title'),
+  })
 
   const [markdown, setMarkdown] = useState<string>('')
   const [htmlContent, setHtmlContent] = useState<string>('')
@@ -281,6 +289,9 @@ export default function Home() {
             </p>
           </div>
         </div>
+
+        {/* SEO 内容区块 */}
+        <PageSeoBlock pageKey="home" accent="primary" />
       </div>
     </div>
   )

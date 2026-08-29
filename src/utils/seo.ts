@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { LucideIcon } from 'lucide-react'
+import { FileText, FileInput, Code2, FileCode, FileDown } from 'lucide-react'
 
 /**
  * SEO配置接口
@@ -13,6 +15,16 @@ export interface SEOConfig {
 /** 双语 SEO 配置：每个页面提供 zh / en 两套 */
 export type SEOConfigPair = Record<'zh' | 'en', SEOConfig>
 
+/**
+ * 动态 JSON-LD 附加选项：FAQPage 与 BreadcrumbList 的数据来源
+ */
+export interface SEOJsonLdOptions {
+  /** 每页 FAQ 问答（与页面可见内容一致，用于 FAQPage 富摘要） */
+  faqQa?: Array<{ q: string; a: string }>
+  /** 面包屑末级名称（通常传 hero.title） */
+  breadcrumbName?: string
+}
+
 const SITE_ORIGIN = 'https://www.md2tool.com'
 const OG_IMAGE_URL = `${SITE_ORIGIN}/og-image.png`
 
@@ -21,9 +33,13 @@ const OG_IMAGE_URL = `${SITE_ORIGIN}/og-image.png`
  * @param config 双语SEO配置
  * @param canonicalPath 当前页面在中文版下的路径（如 '/about'），
  *                      提供后会在 <head> 注入 zh/en/x-default 的 alternate 链接（hreflang）
+ * @param options 动态 JSON-LD 附加选项（FAQPage / BreadcrumbList）
  */
-export function useSEO(config: SEOConfigPair, canonicalPath?: string) {
+export function useSEO(config: SEOConfigPair, canonicalPath?: string, options?: SEOJsonLdOptions) {
   const { i18n } = useTranslation()
+
+  // FAQ/面包屑内容序列化后作为依赖，避免每次渲染的字面量对象导致 effect 重跑
+  const jsonLdKey = options ? JSON.stringify(options) : ''
 
   useEffect(() => {
     const lang: 'zh' | 'en' = i18n.language === 'en' ? 'en' : 'zh'
@@ -74,6 +90,29 @@ export function useSEO(config: SEOConfigPair, canonicalPath?: string) {
           : SITE_ORIGIN + canonicalPath
       setCanonicalLink(canonicalUrl)
       setMetaTagContent('meta[property="og:url"]', canonicalUrl)
+
+      // 动态 JSON-LD：FAQPage（富摘要）+ BreadcrumbList（面包屑导航）
+      setJsonLd('faq', options?.faqQa?.length
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: options.faqQa.map((item) => ({
+              '@type': 'Question',
+              name: item.q,
+              acceptedAnswer: { '@type': 'Answer', text: item.a },
+            })),
+          }
+        : null)
+      setJsonLd('breadcrumb', options?.breadcrumbName
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'MD2Tool', item: lang === 'en' ? `${SITE_ORIGIN}/en` : SITE_ORIGIN + '/' },
+              { '@type': 'ListItem', position: 2, name: options.breadcrumbName, item: canonicalUrl },
+            ],
+          }
+        : null)
     }
 
     // 分享图片固定
@@ -84,7 +123,27 @@ export function useSEO(config: SEOConfigPair, canonicalPath?: string) {
     if (canonicalPath) {
       setAlternateLinks(canonicalPath)
     }
-  }, [config, canonicalPath, i18n.language])
+
+    // 本页卸载/切换时清理动态 JSON-LD，避免残留污染下一页
+    return () => {
+      document.head.querySelectorAll('script[data-jsonld-auto]').forEach((el) => el.remove())
+    }
+  }, [config, canonicalPath, i18n.language, jsonLdKey])
+}
+
+/**
+ * 注入/更新单个 JSON-LD 结构化数据脚本（data-jsonld-auto 标记便于统一清理）
+ * @param id 标识（如 'faq'、'breadcrumb'），传 null 表示仅清理
+ */
+function setJsonLd(id: string, data: object | null) {
+  const head = document.head
+  head.querySelectorAll(`script[data-jsonld-auto="${id}"]`).forEach((el) => el.remove())
+  if (!data) return
+  const script = document.createElement('script')
+  script.type = 'application/ld+json'
+  script.setAttribute('data-jsonld-auto', id)
+  script.textContent = JSON.stringify(data)
+  head.appendChild(script)
 }
 
 /**
@@ -295,4 +354,48 @@ export const SEO_CONFIGS: Record<string, SEOConfigPair> = {
       keywords: 'md2tool, privacy policy, user privacy, data security'
     }
   }
+}
+
+/** 工具页标识（内链网络的节点） */
+export type SeoPageKey = 'home' | 'wordToMarkdown' | 'markdownToHtml' | 'htmlToMarkdown' | 'markdownToPdf' | 'markdownToExcel'
+
+/** 相关工具内链条目（名称/描述复用各页 hero 文案，语言切换自动生效；ns 为该页文案所在 i18n namespace） */
+export interface RelatedTool {
+  path: string
+  pageKey: SeoPageKey
+  ns: 'home' | 'pages'
+  icon: LucideIcon
+}
+
+/** 每个工具页的相关工具内链配置（双向互链，见技术方案 §3.3） */
+export const RELATED_TOOLS: Record<SeoPageKey, [RelatedTool, RelatedTool]> = {
+  home: [
+    { path: '/word-to-markdown', pageKey: 'wordToMarkdown', ns: 'pages', icon: FileInput },
+    { path: '/markdown-to-pdf', pageKey: 'markdownToPdf', ns: 'pages', icon: FileDown },
+  ],
+  wordToMarkdown: [
+    { path: '/', pageKey: 'home', ns: 'home', icon: FileText },
+    { path: '/markdown-to-html', pageKey: 'markdownToHtml', ns: 'pages', icon: Code2 },
+  ],
+  markdownToHtml: [
+    { path: '/html-to-markdown', pageKey: 'htmlToMarkdown', ns: 'pages', icon: FileCode },
+    { path: '/markdown-to-pdf', pageKey: 'markdownToPdf', ns: 'pages', icon: FileDown },
+  ],
+  htmlToMarkdown: [
+    { path: '/markdown-to-html', pageKey: 'markdownToHtml', ns: 'pages', icon: Code2 },
+    { path: '/word-to-markdown', pageKey: 'wordToMarkdown', ns: 'pages', icon: FileInput },
+  ],
+  markdownToPdf: [
+    { path: '/', pageKey: 'home', ns: 'home', icon: FileText },
+    { path: '/markdown-to-html', pageKey: 'markdownToHtml', ns: 'pages', icon: Code2 },
+  ],
+  markdownToExcel: [
+    { path: '/html-to-markdown', pageKey: 'htmlToMarkdown', ns: 'pages', icon: FileCode },
+    { path: '/', pageKey: 'home', ns: 'home', icon: FileText },
+  ],
+}
+
+/** SEO 文案取数 key：首页文案在 home namespace（无层级前缀），其余在 pages namespace */
+export function seoI18nKey(ns: 'home' | 'pages', pageKey: SeoPageKey, field: string): string {
+  return ns === 'home' ? `home:${field}` : `pages:${pageKey}.${field}`
 }
