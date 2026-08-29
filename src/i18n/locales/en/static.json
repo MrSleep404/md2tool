@@ -295,5 +295,11 @@
       "p": "If you have any questions about this privacy policy, please contact us in one of the following ways:"
     },
     "copyright": "© {{year}} MD2Tool. All rights reserved."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for may have been moved or deleted. Please check the URL and try again.",
+    "backHome": "Back to Home",
+    "goHelp": "Help & Guide"
   }
 }

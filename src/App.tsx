@@ -12,6 +12,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Help from './pages/Help'
+import NotFound from './pages/NotFound'
 
 /**
  * 页面路由表（相对路径，同时服务于中文无前缀和 /en 前缀两套路由）
@@ -29,6 +30,8 @@ function PageRoutes() {
       <Route path="about" element={<About />} />
       <Route path="contact" element={<Contact />} />
       <Route path="privacy-policy" element={<PrivacyPolicy />} />
+      {/* 未匹配路径：404 页面（注入 noindex 防止软 404 被收录） */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

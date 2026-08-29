@@ -14,6 +14,7 @@ export interface SEOConfig {
 export type SEOConfigPair = Record<'zh' | 'en', SEOConfig>
 
 const SITE_ORIGIN = 'https://www.md2tool.com'
+const OG_IMAGE_URL = `${SITE_ORIGIN}/og-image.png`
 
 /**
  * 设置页面SEO信息的Hook
@@ -65,11 +66,81 @@ export function useSEO(config: SEOConfigPair, canonicalPath?: string) {
       if (el) el.setAttribute('content', content)
     }
 
+    // canonical 指向当前语言版本自身：中文版无前缀，英文版 /en 前缀
+    if (canonicalPath) {
+      const canonicalUrl =
+        lang === 'en'
+          ? SITE_ORIGIN + (canonicalPath === '/' ? '/en' : `/en${canonicalPath}`)
+          : SITE_ORIGIN + canonicalPath
+      setCanonicalLink(canonicalUrl)
+      setMetaTagContent('meta[property="og:url"]', canonicalUrl)
+    }
+
+    // 分享图片固定
+    setMetaTagContent('meta[property="og:image"]', OG_IMAGE_URL)
+    setMetaTagContent('meta[name="twitter:image"]', OG_IMAGE_URL)
+
     // hreflang alternate 链接（辅助通道；主通道是 sitemap 的 xhtml:link）
     if (canonicalPath) {
       setAlternateLinks(canonicalPath)
     }
   }, [config, canonicalPath, i18n.language])
+}
+
+/**
+ * 设置或更新 canonical 链接
+ */
+function setCanonicalLink(url: string) {
+  let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null
+  if (!canonical) {
+    canonical = document.createElement('link')
+    canonical.rel = 'canonical'
+    document.head.appendChild(canonical)
+  }
+  canonical.href = url
+}
+
+/**
+ * 设置或更新单个 meta 标签的 content（不存在时自动创建）
+ */
+function setMetaTagContent(selector: string, content: string) {
+  let el = document.querySelector(selector) as HTMLMetaElement | null
+  if (!el) {
+    el = document.createElement('meta')
+    const propertyMatch = selector.match(/property="([^"]+)"/)
+    const nameMatch = selector.match(/name="([^"]+)"/)
+    if (propertyMatch) {
+      el.setAttribute('property', propertyMatch[1])
+    } else if (nameMatch) {
+      el.setAttribute('name', nameMatch[1])
+    }
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
+}
+
+/**
+ * 动态注入 noindex（用于 404 等不应被索引的页面），离开页面时恢复原状
+ */
+export function useNoIndex() {
+  useEffect(() => {
+    let meta = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null
+    const created = !meta
+    const prevContent = meta?.getAttribute('content') ?? null
+    if (!meta) {
+      meta = document.createElement('meta')
+      meta.setAttribute('name', 'robots')
+      document.head.appendChild(meta)
+    }
+    meta.setAttribute('content', 'noindex, follow')
+    return () => {
+      if (created) {
+        meta?.remove()
+      } else if (meta && prevContent !== null) {
+        meta.setAttribute('content', prevContent)
+      }
+    }
+  }, [])
 }
 
 /**
