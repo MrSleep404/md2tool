@@ -47,11 +47,16 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
 
-    <!-- 百度统计（国内访客上报，Cloudflare RUM 因 cloudflareinsights.com 国内被阻断而不可用） -->
+    <!-- 百度统计（官方原版格式，供代码安装检查识别；国内访客上报，Cloudflare RUM 因 cloudflareinsights.com 国内被阻断而不可用） -->
     <script>
       var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?31c0876a6049acbee87163f124e991f8";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
     </script>
-    <script async src="https://hm.baidu.com/hm.js?31c0876a6049acbee87163f124e991f8"></script>
   </head>
   <body>
     <div id="root">
