@@ -7,6 +7,7 @@ import Preview from '../components/common/Preview'
 import { convertMarkdownToHtml } from '../utils/converters/mdToHtml'
 import { convertMarkdownToPdf } from '../utils/converters/mdToPdf'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
+import { useExampleContent } from '../hooks/useExampleContent'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
 import { tList } from '../i18n/helpers'
@@ -25,7 +26,6 @@ export default function MarkdownToPdf() {
   const [htmlContent, setHtmlContent] = useState<string>('')
   const [isConverting, setIsConverting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const isInitialized = useRef(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // 同步滚动
@@ -37,13 +37,8 @@ export default function MarkdownToPdf() {
   // 示例 Markdown（跟随界面语言）
   const exampleMarkdown = getExample(lang, 'mdToPdf')
 
-  // 初始化示例内容
-  useEffect(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true
-      setMarkdown(exampleMarkdown)
-    }
-  }, [])
+  // 初始化示例内容，并在语言切换后同步（未被用户修改时）
+  useExampleContent(exampleMarkdown, setMarkdown)
 
   // 更新 HTML 预览
   useEffect(() => {

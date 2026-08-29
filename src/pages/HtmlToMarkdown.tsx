@@ -5,6 +5,7 @@ import { saveAs } from 'file-saver'
 import Editor from '../components/common/Editor'
 import { convertHtmlToMarkdown } from '../utils/converters/htmlToMd'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
+import { useExampleContent } from '../hooks/useExampleContent'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
 import { tList } from '../i18n/helpers'
@@ -23,7 +24,6 @@ export default function HtmlToMarkdown() {
   const [markdown, setMarkdown] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
-  const isInitialized = useRef(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // 同步滚动
@@ -35,13 +35,8 @@ export default function HtmlToMarkdown() {
   // 示例 HTML（跟随界面语言）
   const exampleHtml = getExample(lang, 'htmlToMd')
 
-  // 初始化示例内容
-  useEffect(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true
-      setHtml(exampleHtml)
-    }
-  }, [])
+  // 初始化示例内容，并在语言切换后同步（未被用户修改时）
+  useExampleContent(exampleHtml, setHtml)
 
   // 实时转换 Markdown
   useEffect(() => {

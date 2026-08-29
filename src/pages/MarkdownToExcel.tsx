@@ -8,6 +8,7 @@ import {
   previewMarkdownTables,
 } from '../utils/converters/mdToExcel'
 import { useSyncScroll, useSyncScrollState } from '../hooks/useSyncScroll'
+import { useExampleContent } from '../hooks/useExampleContent'
 import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
 
@@ -25,7 +26,6 @@ export default function MarkdownToExcel() {
   const [tables, setTables] = useState<Array<{ headers: string[]; rows: string[][] }>>([])
   const [isConverting, setIsConverting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const isInitialized = useRef(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // 同步滚动
@@ -37,13 +37,8 @@ export default function MarkdownToExcel() {
   // 示例 Markdown 内容（包含表格，跟随界面语言）
   const exampleMarkdown = getExample(lang, 'mdToExcel')
 
-  // 初始化示例内容
-  useEffect(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true
-      setMarkdown(exampleMarkdown)
-    }
-  }, [])
+  // 初始化示例内容，并在语言切换后同步（未被用户修改时）
+  useExampleContent(exampleMarkdown, setMarkdown)
 
   // 处理文件上传
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
