@@ -8,7 +8,7 @@ export type ExampleKey = 'home' | 'mdToHtml' | 'htmlToMd' | 'mdToPdf' | 'mdToExc
 
 const examples: Record<Lang, Record<ExampleKey, string>> = {
   zh: {
-    home: `# 欢迎使用 Markdown 转 Word 工具
+    home: `## 欢迎使用 Markdown 转 Word 工具
 
 这是一个简单易用的 Markdown 转 Word 文档工具，支持 **Mermaid 流程图** 和 **LaTeX 数学公式**。
 
@@ -72,7 +72,7 @@ function hello() {
 
 感谢使用！
 `,
-    mdToHtml: `# Markdown 转 HTML
+    mdToHtml: `## Markdown 转 HTML
 
 这是一个 **Markdown** 转 **HTML** 的工具。
 
@@ -142,7 +142,7 @@ function hello() {
   <p><a href="https://example.com">了解更多信息</a></p>
 </body>
 </html>`,
-    mdToPdf: `# Markdown 转 PDF 工具
+    mdToPdf: `## Markdown 转 PDF 工具
 
 这是一个将 Markdown 文档转换为 PDF 格式的在线工具。
 
@@ -183,7 +183,7 @@ hello()
 
 感谢使用本工具！
 `,
-    mdToExcel: `# Markdown 表格转 Excel 示例
+    mdToExcel: `## Markdown 表格转 Excel 示例
 
 这是一个将 Markdown 表格转换为 Excel 文件的工具。
 
@@ -211,7 +211,7 @@ hello()
 `,
   },
   en: {
-    home: `# Welcome to Markdown to Word
+    home: `## Welcome to Markdown to Word
 
 This is an easy-to-use Markdown to Word converter with **Mermaid diagram** and **LaTeX math** support.
 
@@ -275,7 +275,7 @@ function hello() {
 
 Thanks for using MD2Tool!
 `,
-    mdToHtml: `# Markdown to HTML
+    mdToHtml: `## Markdown to HTML
 
 This is a tool that converts **Markdown** into **HTML**.
 
@@ -345,7 +345,7 @@ This is a tool that converts **Markdown** into **HTML**.
   <p><a href="https://example.com">Learn more</a></p>
 </body>
 </html>`,
-    mdToPdf: `# Markdown to PDF
+    mdToPdf: `## Markdown to PDF
 
 An online tool that converts Markdown documents into PDF files.
 
@@ -386,7 +386,7 @@ hello()
 
 Thanks for using this tool!
 `,
-    mdToExcel: `# Markdown Tables to Excel Example
+    mdToExcel: `## Markdown Tables to Excel Example
 
 This tool converts Markdown tables into Excel files.
 
