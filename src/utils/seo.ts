@@ -237,120 +237,120 @@ export const SEO_CONFIGS: Record<string, SEOConfigPair> = {
   home: {
     zh: {
       title: 'Markdown转Word在线工具 - MD2Tool | 免费转换MD为DOCX',
-      description: '免费在线Markdown转Word工具，一键将Markdown文档转换为Word格式（DOCX）。支持标题、列表、表格、代码块等格式，浏览器本地处理，保护隐私，无需注册。',
+      description: '免费在线Markdown转Word工具，一键将MD文档转换为Word格式（DOCX）。支持标题、列表、表格、代码块与Mermaid图表，完美保留原格式，可下载或导入。浏览器本地处理，文件不上传，保护隐私，无需注册，即刻免费转换。',
       keywords: 'Markdown转Word,MD转DOCX,Markdown转Word在线,免费Markdown转换,Markdown转Word工具'
     },
     en: {
       title: 'Markdown to Word Converter Online - MD2Tool | Free MD to DOCX',
-      description: 'Free online Markdown to Word converter. Convert Markdown to Word (DOCX) instantly with headings, lists, tables, and code blocks. Runs locally in your browser — private, no sign-up required.',
+      description: 'Free online Markdown to Word converter. Convert Markdown to Word (DOCX) instantly, preserving headings, lists, tables, code blocks, and Mermaid diagrams perfectly. Runs locally in your browser — private, no uploads, no sign-up required.',
       keywords: 'markdown to word, md to docx, markdown to word converter, convert markdown to word online, free markdown converter'
     }
   },
   wordToMarkdown: {
     zh: {
       title: 'Word转Markdown在线工具 - MD2Tool | 免费转换DOCX为MD',
-      description: '免费在线Word转Markdown工具，一键将Word文档（DOCX）转换为Markdown格式。支持标题、列表、表格等格式转换，浏览器本地处理，保护隐私。',
+      description: '免费在线Word转Markdown工具，一键将Word文档（DOCX）转换为Markdown格式。支持标题、列表、表格、图片与链接等格式转换，结果准确清晰、易于二次编辑。浏览器本地处理，保护隐私，无需注册，即刻免费转换。',
       keywords: 'Word转Markdown,DOCX转MD,Word转MD在线,免费Word转换,Word转Markdown工具'
     },
     en: {
       title: 'Word to Markdown Converter Online - MD2Tool | Free DOCX to MD',
-      description: 'Convert Word documents (.docx) to Markdown online for free. Headings, lists, and tables are converted in seconds, right in your browser. No registration required.',
+      description: 'Convert Word documents (.docx) to Markdown online for free. Headings, lists, tables, images, and links are converted accurately in seconds, right in your browser, ready for easy editing. No registration required.',
       keywords: 'word to markdown, docx to markdown, word to md converter, convert docx to markdown online, free word converter'
     }
   },
   markdownToHtml: {
     zh: {
       title: 'Markdown转HTML在线工具 - MD2Tool | 免费转换MD为HTML',
-      description: '免费在线Markdown转HTML工具，实时预览转换效果，支持复制HTML代码或下载完整HTML文档。浏览器本地处理，保护隐私，无需注册。',
+      description: '免费在线Markdown转HTML工具，实时预览转换效果，支持复制干净HTML代码或下载完整样式化HTML文档。一键生成美观页面，兼容各类编辑器与博客平台。浏览器本地处理，保护隐私，无需注册，即刻免费转换。',
       keywords: 'Markdown转HTML,MD转HTML,Markdown转HTML在线,免费Markdown转换,Markdown转HTML工具'
     },
     en: {
       title: 'Markdown to HTML Converter Online - MD2Tool | Free MD to HTML',
-      description: 'Convert Markdown to HTML online for free with a live preview. Copy clean HTML code or download a complete styled HTML document. Browser-based and private.',
+      description: 'Convert Markdown to HTML online for free with a live preview. Copy clean HTML code or download a complete styled HTML document. Works with every editor and blog platform. Browser-based, private, and free.',
       keywords: 'markdown to html, md to html, markdown to html converter, convert markdown to html online, free markdown converter'
     }
   },
   htmlToMarkdown: {
     zh: {
       title: 'HTML转Markdown在线工具 - MD2Tool | 免费转换HTML为MD',
-      description: '免费在线HTML转Markdown工具，一键将HTML代码转换为Markdown格式。支持表格、列表、链接等格式，浏览器本地处理，保护隐私。',
+      description: '免费在线HTML转Markdown工具，一键将HTML代码转换为干净易读的Markdown格式。支持标题、列表、表格、链接与代码块，转换结果准确，适合写作与文档管理。浏览器本地处理，保护隐私，无需注册，即刻免费转换。',
       keywords: 'HTML转Markdown,HTML转MD,HTML转MD在线,免费HTML转换,HTML转Markdown工具'
     },
     en: {
       title: 'HTML to Markdown Converter Online - MD2Tool | Free HTML to MD',
-      description: 'Convert HTML to clean Markdown online for free. Supports headings, lists, tables, links, and code blocks. Runs entirely in your browser.',
+      description: 'Convert HTML to clean Markdown online for free. Supports headings, lists, tables, links, and code blocks with accurate results — perfect for writing and document management. Runs entirely in your browser.',
       keywords: 'html to markdown, html to md converter, convert html to markdown online, free html to markdown'
     }
   },
   markdownToPdf: {
     zh: {
       title: 'Markdown转PDF在线工具 - MD2Tool | 免费转换MD为PDF',
-      description: '免费在线Markdown转PDF工具，一键将Markdown文档转换为高质量PDF文件。支持标题、列表、表格、代码块等格式，浏览器本地处理，保护隐私。',
+      description: '免费在线Markdown转PDF工具，一键将MD文档转换为高质量PDF文件。支持实时预览、页码、代码高亮与Mermaid图表，布局精美，适合打印与分享。浏览器本地处理，保护隐私，无需注册，即刻免费转换。',
       keywords: 'Markdown转PDF,MD转PDF,Markdown转PDF在线,免费Markdown转换,Markdown转PDF工具'
     },
     en: {
       title: 'Markdown to PDF Converter Online - MD2Tool | Free MD to PDF',
-      description: 'Convert Markdown to high-quality PDF files online for free. Live preview, page numbers, code highlighting, and Mermaid diagram support. Private and browser-based.',
+      description: 'Convert Markdown to high-quality PDF files online for free. Live preview, page numbers, code highlighting, and Mermaid diagram support. Beautiful layouts, ready to print or share. Private and browser-based.',
       keywords: 'markdown to pdf, md to pdf, markdown to pdf converter, convert markdown to pdf online, free markdown pdf'
     }
   },
   markdownToExcel: {
     zh: {
       title: 'Markdown转Excel在线工具 - MD2Tool | 免费转换MD表格为XLSX',
-      description: '免费在线Markdown转Excel工具，一键将Markdown表格转换为Excel格式（XLSX）。支持表格样式、对齐方式，浏览器本地处理，保护隐私。',
+      description: '免费在线Markdown转Excel工具，一键将Markdown表格转换为Excel格式（XLSX）。自动识别多个表格，保留对齐方式与样式，转换后可直接编辑与下载。浏览器本地处理，文件不上传，保护隐私，无需注册，即刻免费转换。',
       keywords: 'Markdown转Excel,MD转XLSX,Markdown转Excel在线,免费Markdown转换,Markdown转Excel工具'
     },
     en: {
       title: 'Markdown to Excel Converter Online - MD2Tool | Free MD Table to XLSX',
-      description: 'Convert Markdown tables to Excel (XLSX) online for free. Automatic table detection with multi-table support. Everything runs locally in your browser.',
+      description: 'Convert Markdown tables to Excel (XLSX) online for free. Automatic multi-table detection with alignment and styling preserved. Download and edit instantly. Everything runs locally in your browser.',
       keywords: 'markdown to excel, md to xlsx, markdown table to excel, convert markdown to excel online, free markdown converter'
     }
   },
   help: {
     zh: {
       title: '操作说明 - MD2Tool | 新手教程与常见问题解答',
-      description: 'MD2Tool使用说明：四步完成Markdown与Word、HTML、PDF、Excel的格式转换，包含新手教程、使用技巧和常见问题解答。',
+      description: 'MD2Tool操作说明，四步即可完成Markdown与Word、HTML、PDF、Excel之间的格式转换。提供新手教程、使用技巧与常见问题解答，帮助您快速上手，轻松处理各类文档转换需求，全程免费。',
       keywords: 'MD2Tool,操作说明,使用教程,Markdown转换教程,常见问题,FAQ'
     },
     en: {
       title: 'Help & User Guide - MD2Tool | Tutorials and FAQ',
-      description: 'MD2Tool user guide: convert between Markdown and Word, HTML, PDF, and Excel in four steps. Quick-start tutorial, tips and tricks, and FAQ.',
+      description: 'MD2Tool user guide: convert between Markdown and Word, HTML, PDF, and Excel in four easy steps. Quick-start tutorial, tips and tricks, and a detailed FAQ to help you master document conversion quickly, for free.',
       keywords: 'md2tool help, markdown converter guide, how to convert markdown, markdown converter faq'
     }
   },
   about: {
     zh: {
       title: '关于我们 - MD2Tool | 免费在线Markdown转换工具',
-      description: 'MD2Tool是一款完全免费、开源的在线文档格式转换工具，专注于Markdown与其他文档格式之间的互转。浏览器本地处理，保护隐私，无需注册。',
+      description: '了解MD2Tool——一款完全免费、开源的在线文档格式转换工具，专注Markdown与其他格式的互转。所有处理均在浏览器本地完成，文件不上传服务器，全程保护隐私，无需注册，开箱即用。',
       keywords: 'MD2Tool,关于我们,Markdown转换工具,开源工具,免费文档转换'
     },
     en: {
       title: 'About Us - MD2Tool | Free Online Markdown Converter',
-      description: 'MD2Tool is a free, open-source online document converter focused on conversions between Markdown and other formats. All processing runs locally in your browser.',
+      description: 'MD2Tool is a free, open-source online document converter focused on conversions between Markdown and other formats. All processing runs locally in your browser — file contents are never uploaded. No sign-up, ready to use.',
       keywords: 'md2tool, about us, markdown converter, open source tool, free document converter'
     }
   },
   contact: {
     zh: {
       title: '联系我们 - MD2Tool | 免费在线Markdown转换工具',
-      description: '联系MD2Tool团队，提交Bug报告或功能建议。我们欢迎所有形式的贡献，包括代码优化、文档改进和新功能开发。',
+      description: '联系MD2Tool团队，提交Bug报告或功能建议。我们欢迎所有形式的贡献，包括代码优化、文档改进与新功能开发，共同打造更好用、更安全的免费Markdown转换工具。',
       keywords: 'MD2Tool,联系我们,反馈建议,GitHub,开源项目'
     },
     en: {
       title: 'Contact Us - MD2Tool | Free Online Markdown Converter',
-      description: 'Contact the MD2Tool team to report bugs or suggest features. All kinds of contributions are welcome, including code, documentation, and new ideas.',
+      description: 'Contact the MD2Tool team to report bugs or suggest features. All kinds of contributions are welcome, including code, documentation, and new ideas to improve the free Markdown conversion tool.',
       keywords: 'md2tool, contact us, feedback, github, open source'
     }
   },
   privacyPolicy: {
     zh: {
       title: '隐私政策 - MD2Tool | 免费在线Markdown转换工具',
-      description: 'MD2Tool隐私政策，详细说明我们如何收集、使用、披露和管理您的个人信息。所有文件转换在浏览器本地完成，不收集上传文件内容。',
+      description: 'MD2Tool隐私政策，详细说明我们如何收集、使用、披露与管理您的个人信息。所有文件转换均在浏览器本地完成，不收集、不上传您的文件内容，全力保障数据安全与个人隐私。',
       keywords: 'MD2Tool,隐私政策,用户隐私,数据安全,隐私保护'
     },
     en: {
       title: 'Privacy Policy - MD2Tool | Free Online Markdown Converter',
-      description: 'MD2Tool privacy policy: how we collect, use, and manage your information. All file conversion happens locally in your browser — file contents are never uploaded.',
+      description: 'MD2Tool privacy policy: how we collect, use, disclose, and manage your information. All file conversion happens locally in your browser — file contents are never collected or uploaded. Your data stays private.',
       keywords: 'md2tool, privacy policy, user privacy, data security'
     }
   }
