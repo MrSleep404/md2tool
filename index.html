@@ -91,9 +91,12 @@
   </head>
   <body>
     <div id="root">
-      <!-- SEO 兜底内容：爬虫未执行 JS 时也能看到 h1 标签 -->
-      <h1 style="text-align:center;padding:40px 20px;font-family:sans-serif;color:#333;margin-top:20vh;">Markdown转换工具 - 免费在线Markdown转Word/PDF/HTML</h1>
-      <p style="text-align:center;padding:0 20px;font-family:sans-serif;color:#666;font-size:16px;">免费在线Markdown转换工具，支持Markdown转Word、PDF、HTML、Excel，浏览器本地处理，保护隐私。</p>
+      <!-- SEO 兜底内容（方案B）：用 <noscript> 包裹，JS 执行时 React 会替换 #root 内全部内容，保证只保留渲染后的唯一 h1；
+           百度等不执行 JS 的爬虫仍能看到此兜底 h1，兼顾内容可见性 -->
+      <noscript>
+        <h1 style="text-align:center;padding:40px 20px;font-family:sans-serif;color:#333;margin-top:20vh;">Markdown转换工具 - 免费在线Markdown转Word/PDF/HTML</h1>
+        <p style="text-align:center;padding:0 20px;font-family:sans-serif;color:#666;font-size:16px;">免费在线Markdown转换工具，支持Markdown转Word、PDF、HTML、Excel，浏览器本地处理，保护隐私。</p>
+      </noscript>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
