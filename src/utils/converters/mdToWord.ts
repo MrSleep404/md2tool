@@ -1344,13 +1344,36 @@ export async function convertMarkdownToWord(
             levelFormat = 'decimal';
             levelText = `%${lvl + 1}`;
             break;
-          case 'decimal-multi':
-            // 多级数字格式：1.1、1.1.1（需要引用所有上级计数器）
+          case 'decimal-multi': {
+            // 多级数字格式：1.1、1.1.1
+            // 只引用"实际存在编号格式"的层级（从最低编号层级到当前级），
+            // 避免引用从未出现的父级层级 —— Word 对无计数器的 %n 显示为空，但分隔 "." 仍保留，
+            // 从而在编号开头产生多余的点（如 ".3.1"）。
+            const refLevels: number[] = [];
+            for (let pLevel = 0; pLevel <= lvl; pLevel++) {
+              if (pLevel === lvl || headingFormats.has(pLevel)) {
+                refLevels.push(pLevel);
+              }
+            }
             levelFormat = 'decimal';
-            levelText = Array.from({ length: lvl + 1 }, (_, k) => `%${k + 1}`).join('.');
-            // 上级可能是中文格式，设置 isLegalNumberingStyle 使 %1,%2 等显示为阿拉伯数字
-            isLegal = true;
+            levelText = refLevels.map((r) => `%${r + 1}`).join('.');
+            // 仅当被引用的父级层级含中文格式时，才需要 isLegalNumberingStyle：
+            // Word 的 legalFormatting(<w:isLgl>) 用于把 % 引用的中文序号转为阿拉伯数字（第一章 → 1.1）；
+            // 父级为纯阿拉伯数字时无需它（避免超展开产生多余点）。
+            let hasChineseParent = false;
+            for (const r of refLevels) {
+              if (r < lvl) {
+                const parentConfig = headingFormats.get(r);
+                if (parentConfig &&
+                    (parentConfig.format === 'chinese-chapter' || parentConfig.format === 'chinese-number')) {
+                  hasChineseParent = true;
+                  break;
+                }
+              }
+            }
+            isLegal = hasChineseParent;
             break;
+          }
           default:
             levelFormat = 'none';
             levelText = '';
