@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getLangFromPath, localizedPath } from '../../i18n/lang'
+import { saveLangPref } from '../../i18n/detect'
 
 const BANNER_DISMISS_KEY = 'md2tool:langBannerDismissed'
 
@@ -34,7 +35,11 @@ export default function LangBanner() {
         <div className="flex items-center gap-3 flex-shrink-0">
           <Link
             to={localizedPath(pathname, 'en')}
-            onClick={dismiss}
+            onClick={() => {
+              // 用户主动选择英文，记录下来，之后不再被系统语言覆盖
+              saveLangPref('en')
+              dismiss()
+            }}
             className="px-3 py-1 rounded-md bg-white text-blue-700 font-medium hover:bg-blue-50 transition-colors"
           >
             {t('banner.switch')}

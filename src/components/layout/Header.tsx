@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Globe, FileText, FileDown, Code, Table, FileType, FileCode, FileInput } from 'lucide-react'
 import LocalizedLink from '../common/LocalizedLink'
 import { getLangFromPath, localizedPath } from '../../i18n/lang'
+import { saveLangPref } from '../../i18n/detect'
 
 const navItems = [
   { path: '/', key: 'home', icon: FileText },
@@ -113,6 +114,7 @@ export default function Header() {
             {/* 语言切换 */}
             <Link
               to={switchTarget}
+              onClick={() => saveLangPref(isEn ? 'zh' : 'en')}
               title={t('switchLangTitle')}
               className="flex items-center space-x-1 px-2 py-2 rounded-md text-sm font-medium text-gray-600 border border-gray-300 hover:text-gray-900 hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0"
             >
@@ -125,6 +127,7 @@ export default function Header() {
           <div className="xl:hidden flex items-center space-x-2">
             <Link
               to={switchTarget}
+              onClick={() => saveLangPref(isEn ? 'zh' : 'en')}
               title={t('switchLangTitle')}
               className="flex items-center space-x-1 px-2 py-2 rounded-md text-sm font-medium text-gray-600 border border-gray-300 hover:bg-gray-50 transition-colors whitespace-nowrap"
             >
