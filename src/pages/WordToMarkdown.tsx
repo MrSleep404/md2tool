@@ -7,6 +7,7 @@ import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { conversionErrorMessage } from '../utils/conversionError'
 import { tList, tItems } from '../i18n/helpers'
 import PageSeoBlock from '../components/PageSeoBlock'
+import AdBanner from '../components/common/AdBanner'
 
 /**
  * Word 转 Markdown 页面
@@ -248,6 +249,9 @@ export default function WordToMarkdown() {
             </ul>
           </div>
         </div>
+
+        {/* 广告位：置于编辑区下方，不打断核心操作 */}
+        <AdBanner />
 
         {/* SEO 内容区块 */}
         <PageSeoBlock pageKey="wordToMarkdown" accent="green" />

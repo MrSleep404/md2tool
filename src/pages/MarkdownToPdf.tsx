@@ -12,6 +12,7 @@ import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
 import { tList, tItems } from '../i18n/helpers'
 import PageSeoBlock from '../components/PageSeoBlock'
+import AdBanner from '../components/common/AdBanner'
 
 /**
  * Markdown 转 PDF 页面
@@ -273,6 +274,9 @@ export default function MarkdownToPdf() {
             />
           </div>
         </div>
+
+        {/* 广告位：置于编辑区下方，不打断核心操作 */}
+        <AdBanner />
 
         {/* 功能说明 */}
         <div className="mt-12">

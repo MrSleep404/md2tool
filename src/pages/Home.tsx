@@ -12,6 +12,7 @@ import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
 import { tItems } from '../i18n/helpers'
 import PageSeoBlock from '../components/PageSeoBlock'
+import AdBanner from '../components/common/AdBanner'
 
 /**
  * 主页 - Markdown 转 Word
@@ -250,6 +251,9 @@ export default function Home() {
             />
           </div>
         </div>
+
+        {/* 广告位：置于编辑区下方，不打断核心操作 */}
+        <AdBanner />
 
         {/* 功能说明 */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">

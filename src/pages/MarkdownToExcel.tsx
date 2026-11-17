@@ -13,6 +13,7 @@ import { useSEO, SEO_CONFIGS } from '../utils/seo'
 import { getExample } from '../i18n/exampleContent'
 import { tItems } from '../i18n/helpers'
 import PageSeoBlock from '../components/PageSeoBlock'
+import AdBanner from '../components/common/AdBanner'
 
 /**
  * Markdown 转 Excel 页面
@@ -319,6 +320,9 @@ export default function MarkdownToExcel() {
             </div>
           </div>
         </div>
+
+        {/* 广告位：置于编辑区下方，不打断核心操作 */}
+        <AdBanner />
 
         {/* 功能说明 */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
