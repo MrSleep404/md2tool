@@ -178,9 +178,12 @@ for (const [route] of ROUTES) {
       // 中文首页直接覆盖 dist/index.html
       writeFileSync(join(DIST, 'index.html'), html)
     } else {
-      const dir = join(DIST, ...segments)
+      // 输出为 <route>.html 而非 <route>/index.html
+      // 避免 Cloudflare Pages 对目录路径做 308 尾斜杠重定向（/en -> /en/）
+      const dir = join(DIST, ...segments.slice(0, -1))
+      const file = join(dir, `${segments[segments.length - 1]}.html`)
       mkdirSync(dir, { recursive: true })
-      writeFileSync(join(dir, 'index.html'), html)
+      writeFileSync(file, html)
     }
     count++
   }
